@@ -1,0 +1,83 @@
+{% extends "base2.html" %}
+{% block title %}
+    <title>Note-it™ | Send Message</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="jumbotron form-sizer">
+
+        <h1><i class="fas fa-external-link-square-alt"></i> Send a Message</h1>
+
+        <p>Fill in the blanks, and send!</p>
+
+    </div>
+
+    <br>
+
+    <div class="form-size jumbotron">
+
+        <form method="POST">
+
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="titleBlock" value="{{ title }}">
+
+                <small id="titleBlock" class="form-text text-muted">Your message's title</small>
+            </div>
+
+            <div class="input-group">
+
+                <div class="input-group-prepend">
+                    <label for="content" class="input-group-text">Content</label>
+                </div>
+
+                <textarea class="form-control text_box_big" name="content" id="content" placeholder="Example content" aria-describedby="contentBlock">{{ content }}</textarea>
+
+            </div>
+
+            <div class="form-group">
+
+                {% if e %}
+                <br>
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation"></i>  Please Check That you have coped EXACTLY the target user's email!
+                </div>
+                {% endif %}
+                <label for="reciver_email">Reciver Email</label>
+                <input type="text" class="form-control" name="reciver_email" id="reciver_email" placeholder="Example title" aria-describedby="reciver_emailBlock" value="">
+
+                <small id="reciver_emailBlock" class="form-text text-muted"><i class="fas fa-exclamation-circle"></i>Copy the user's email EXACTALLY from the list blow.</small>
+            </div>
+
+            <br>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+
+        </form>
+
+        <hr class="my-4">
+
+
+        {% if all_users == None %}
+        <h1>No users are available. Please contact us <a>(010-2901-5627)</a></h1>
+    {% else %}
+    <div class="list-group">
+        <h1 class="heading">Users <small class="text-muted">for copying</small></h1>
+        <hr class="my-4">
+        {% for user in all_users %}
+
+            <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ user.nick_name }}</h5>
+                    <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                </div>
+            </a>
+
+        {% endfor %}
+
+    </div>
+    {% endif %}
+
+    </div>
+
+{% endblock %}

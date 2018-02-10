@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>Note-it™ | Edit note</title>
+{% endblock %}
+{% block content %}
+
+    <div class="jumbotron form-sizer">
+
+        <h1><i class="far fa-edit"></i> Edit Note: {{ note.title }}</h1>
+
+        <p>Fill in the blanks, and submit!</p>
+
+    </div>
+
+    <br>
+
+    <div class="form-size jumbotron">
+        <form method="post">
+
+            <div class="form-group">
+
+                <label for="title">Title</label>
+                <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="titleBlock" value="{{ note.title }}">
+
+                <small id="titleBlock" class="form-text text-muted">Here, you can put your note's title.</small>
+
+            </div>
+
+            <div class="input-group">
+
+                <div class="input-group-prepend">
+                    <label for="content" class="input-group-text">Content</label>
+                </div>
+
+            <textarea class="form-control text_box_big" name="content" id="content" placeholder="Example content" aria-describedby="contentBlock">
+                {{ note.content }}
+            </textarea>
+
+                <div class="input-group">
+                    <div class="form-check">
+                        {% if note.shared %}
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" name="share" checked>
+                            <label class="form-check-label" for="defaultCheck1">
+                                Share
+                            </label>
+                        {% else %}
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" name="share">
+                            <label class="form-check-label" for="defaultCheck1">
+                                Share
+                            </label>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+            <br>
+            <button type="submit" class="btn btn-primary">Save Note</button>
+
+        </form>
+    </div>
+
+{% endblock %}

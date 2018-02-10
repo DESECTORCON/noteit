@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}
+    {% if "User" in user.nick_name %}
+        <title>Note-it™ | {{ user.nick_name }}-Edit User</title>
+    {% else %}
+        <title>Note-it™ | User {{ user.nick_name }}-Edit User</title>
+    {% endif %}
+{% endblock %}
+{% block content %}
+
+<div class="jumbotron form-size">
+
+        <h4><i class="far fa-edit"></i> Edit {{ user.nick_name }}'s Profile</h4>
+
+        <p>Edit your nickname or password!</p>
+
+    </div>
+
+    <br>
+
+    <div class="form-size jumbotron">
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="Email here!" value="{{ user.email }}" disabled>
+                <small class="form-text text-muted">
+                    You can't edit your email... If you want to do it, please re-register again.
+                </small>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Password here!" value="{{ user.password }}" disabled>
+                <small class="form-text text-muted">
+                    You can't edit your password, too... If you want to do it, please re-register again.
+                </small>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="nickname">Nick Name</label>
+                <input type="text" class="form-control" name="nickname" id="nickname" placeholder="Your nickname" aria-describedby="nicknameHelpBlock" value="{{ user.nick_name }}">
+                <small id="nicknameHelpBlock" class="form-text text-muted">
+                    You're nickname.
+                </small>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+
+        </form>
+    </div>
+
+{% endblock %}

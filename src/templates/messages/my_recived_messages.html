@@ -1,0 +1,38 @@
+{% extends "base2.html" %}
+{% block title %}
+    <title>Note-it™ | Received Messages</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container jumbotron">
+        <h1>{{ user_nickname }}'s Received Messages</h1>
+        <hr class="my-4">
+
+        <div class="list-group">
+
+            {% if messages == [''] or messages == [] %}
+                <div class="alert alert-info" role="alert">
+                    <i class="far fa-frown"></i> No Received Messages...
+                </div>
+            {% else %}
+
+                {% for message in messages %}
+
+                <a href="{{ url_for('.message', message_id=message._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+
+                        <h5 class="mb-1 text-left">{{ '<i class="far fa-envelope-open"></i>'|safe if message.readed_by_reciver else '<i class="far fa-envelope"></i>'|safe }} {{ message.title }}</h5>
+                        <small>Sended at: {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                    </div>
+                </a>
+
+                {% endfor %}
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+{% endblock %}

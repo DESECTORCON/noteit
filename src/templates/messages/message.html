@@ -1,0 +1,33 @@
+{% extends "messages.html" %}
+{% block title %}
+    <title>Note-it™ | Message {{ message.title }}</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+
+        <div class="jumbotron">
+            <p class="text-center font-weight-light">message</p>
+            <h1 class="text-center font-weight-bold">{{ message.title }}</h1>
+
+
+            <p class="font-weight-normal font-italic text-right text-center">From: {{ sender_nickname }}</p>
+            <p class="font-weight-normal font-italic text-right text-center">To: {{ reciver_nickname }}</p>
+            <p class="font-weight-normal font-italic text-right">Sended At: {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</p>
+            {% if message.readed_by_reciver != False %}
+                <p class="font-weight-normal font-italic text-right">Readed At: {{ message.readed_date.strftime("%Y-%m-%d at %H:%M") }}</p>
+            {% else %}
+                <p class="font-weight-normal font-italic text-right">Readed At:                                                        </p>
+            {% endif %}
+
+            <hr class="my-4">
+
+            <h5>Content</h5>
+            <br>
+            <p class="font-italic">{{ message.content }}</p>
+        </div>
+
+    </div>
+
+{% endblock %}

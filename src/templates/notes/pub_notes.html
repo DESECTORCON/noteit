@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="content">
+
+        <h1>Public Notes <small class="text-muted">shared notes</small></h1>
+
+    </div>
+
+<hr class="my-4">
+
+    <div class="list-group">
+
+        {% if notes == [] or notes == None %}
+
+            <div class="alert alert-primary" role="alert">
+                <i class="far fa-frown"></i> There are no shared notes.
+            </div>
+
+        {% endif %}
+
+        {% for note in notes %}
+
+            <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h2 class="mb-1">{{ note.title }}</h2>
+                    <p class="list-group-item-text">Author: {{ note.author_nickname }}</p>
+                </div>
+
+                <div class="d-flex w-100 justify-content-between">
+                    <p class="mb-1"></p>
+                    <p class="list-group-item-text">Created date: {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</p>
+                </div>
+
+            </a>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

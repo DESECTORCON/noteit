@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>Note-it™ | Delete Account?</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="alert alert-danger" role="alert">
+        <div style="font-size:3em; color:Red">
+            <i class="fas fa-exclamation-triangle"></i>  Do You Really Want To Delete Your Account?
+            <br>
+            <small>Once you've deleted your account, your notes and messages are permantly deleted!</small>
+
+            <form method="POST">
+                <button type="submit" class="btn btn-danger">Proceed</button>
+                <button type="button" class="btn btn-secondary"><a href="{{ url_for('home') }}">Go Back</a></button>
+            </form>
+
+        </div>
+    </div>
+
+{% endblock %}
