@@ -64,7 +64,7 @@ def message(message_id, is_sended=False):
     if message is None:
         return 'There was an server error. Please try again a another time!'
 
-    if message.readed_by_reciver is False and is_sended is False and session['_id'] == message.reciver_id:
+    if message.readed_by_reciver is False and is_sended is False and session['_id'] in message.reciver_id and message.readed_date is None:
         message.readed_by_reciver = True
         message.readed_date = datetime.datetime.now()
         message.save_to_mongo()

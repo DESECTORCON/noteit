@@ -1,6 +1,6 @@
 import uuid
 from src.common.database import Database
-import src.models.notes.constants as MessageConstants
+import src.models.messages.constants as MessageConstants
 import datetime
 
 
@@ -57,3 +57,8 @@ class Message(object):
 
     def delete(self):
         Database.remove(MessageConstants.COLLECTION, {"_id": self._id})
+
+    def find_recivers_in_message_obj(self, message_id):
+        message = self.find_by_id(message_id)
+        recivers = message.reciver_id
+        return recivers

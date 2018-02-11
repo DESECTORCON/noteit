@@ -1,1 +1,1 @@
-COLLECTION = "messages"
+COLLECTION = "notes"
