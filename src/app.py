@@ -1,14 +1,19 @@
-from flask import Flask, render_template
-from src.common.database import Database
+from flask import Flask, render_template, session
+import random
+from src.models.messages.message import *
 
 app = Flask(__name__)
 app.config.from_object('src.config')
-app.secret_key = 'hfhawehfwefjwjweojfwpowqkdklfwohor9r83yr2yrf92y39ry239fy2h239298h32fh23892yr839y829ry2r289ryyr923yrqdpkwqpoqr0u38ry2y82y7r'
+app.secret_key = ''
 
 
 @app.before_first_request
 def init_db():
     Database.initialize()
+    random_int = []
+    for i in range(100):
+        random_int.append(random.randint(1, 10000))
+    app.secret_key = ''.join(str(random_int))
 
 
 @app.route('/')
@@ -18,6 +23,16 @@ def home():
 
 @app.route('/message')
 def home2():
+    #try:
+    #    user_messages = Message.find_by_reciver_id(session['_id'])
+    #except KeyError:
+    #    return render_template('home2.html')
+
+    #for message in user_messages:
+
+     #   if message.readed_by_reciver is True and message.readed_date is not None:
+     #       user_messages.remove(message)
+
     return render_template('home2.html')
 
 
