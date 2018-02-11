@@ -32,18 +32,23 @@ def my_sended_messages(user_id):
 def send_message():
 
     all_users = User.get_all()
+    recivers = []
 
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
         try:
-            reciver_id = User.find_by_email(request.form['reciver_email'])._id
+            #reciver_id = User.find_by_email(request.form['reciver_email'])._id
+            recivers_string = request.form['reciver_email'].split()
+            for email in recivers_string:
+                recivers.append(User.find_by_email(email)._id)
+
         except Exception as e:
             return render_template('messages/send_message.html', e=e, all_users=all_users, title=title, content=content)
 
         sender_id = User.find_by_email(session['email'])._id
 
-        message = Message(title=title, content=content, reciver_id=reciver_id, sender_id=sender_id)
+        message = Message(title=title, content=content, reciver_id=recivers, sender_id=sender_id)
         message.save_to_mongo()
 
         return redirect(url_for('.my_sended_messages', user_id=sender_id))
@@ -76,4 +81,13 @@ def all_messages():
     all_messagess = Message.find_all()
 
     return render_template('messages/all_messages.html', all_messagess=all_messagess)
+
+
+@message_blueprint.route('/delete_message/<string:message_id>')
+@user_decorators.require_login
+def delete_message(message_id):
+    message = Message.find_by_id(message_id)
+
+    message.delete()
+    return redirect(url_for('.my_recived_messages', user_id=session['_id']))
 

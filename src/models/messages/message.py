@@ -54,3 +54,6 @@ class Message(object):
     @classmethod
     def find_all(cls):
         return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {})]
+
+    def delete(self):
+        Database.remove(MessageConstants.COLLECTION, {"_id": self._id})

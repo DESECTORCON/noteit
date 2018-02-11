@@ -1,13 +1,13 @@
-{% extends "messages.html" %}
+{% extends "base2.html" %}
 {% block title %}
     <title>Note-it™ | Message {{ message.title }}</title>
 {% endblock %}
 
 {% block content %}
 
-    <div class="container">
+    <div class="container card" style="background-color: #e8e8e8;">
 
-        <div class="jumbotron">
+        <div class="card-body">
             <p class="text-center font-weight-light">message</p>
             <h1 class="text-center font-weight-bold">{{ message.title }}</h1>
 
@@ -26,6 +26,19 @@
             <h5>Content</h5>
             <br>
             <p class="font-italic">{{ message.content }}</p>
+        </div>
+
+    </div>
+
+    <hr class="my-4">
+
+    <div class="card container">
+
+        <div class="card-body">
+
+            <a class="btn btn-outline-primary" href="#">Re-Send</a>
+            <a class="btn btn-outline-warning" href="{{ url_for('message.delete_message', message_id=message._id) }}">Delete</a>
+
         </div>
 
     </div>
