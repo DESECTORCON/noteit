@@ -70,7 +70,13 @@ def message(message_id, is_sended=False):
         message.save_to_mongo()
 
     sender_nickname = User.find_by_id(message.sender_id).nick_name
-    reciver_nickname = User.find_by_id(message.reciver_id).nick_name
+    if type(message.reciver_id) is list:
+        reciver_nickname = []
+        for reciver in message.reciver_id:
+            reciver_nickname.append(User.find_by_id(reciver).nick_name)
+
+    else:
+        reciver_nickname = User.find_by_id(message.reciver_id).nick_name
 
     return render_template('messages/message.html', message=message, sender_nickname=sender_nickname, reciver_nickname=reciver_nickname)
 

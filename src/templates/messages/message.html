@@ -13,7 +13,15 @@
 
 
             <p class="font-weight-normal font-italic text-right text-center">From: {{ sender_nickname }}</p>
-            <p class="font-weight-normal font-italic text-right text-center">To: {{ reciver_nickname }}</p>
+            {% if reciver_nickname.__class__.__name__ in ('list') %}
+                <p class="font-weight-normal font-italic text-right text-center">To: {{ ' / '.join(reciver_nickname) }}</p>
+
+            {% else %}
+
+                <p class="font-weight-normal font-italic text-right text-center">To:</p>
+
+            {% endif %}
+
             <p class="font-weight-normal font-italic text-right">Sended At: {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</p>
             {% if message.readed_by_reciver != False %}
                 <p class="font-weight-normal font-italic text-right">Readed At: {{ message.readed_date.strftime("%Y-%m-%d at %H:%M") }}</p>
