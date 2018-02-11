@@ -1,10 +1,13 @@
 {% extends "base.html" %}
+{% block title %}
+    <title>Note-it™ | Public Notes</title>
+{% endblock %}
 
 {% block content %}
 
     <div class="content">
 
-        <h1>Public Notes <small class="text-muted">shared notes</small></h1>
+        <h1><i class="far fa-clone"></i> Public Notes <small class="text-muted">shared notes</small></h1>
 
     </div>
 
@@ -24,7 +27,7 @@
 
             <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
-                    <h2 class="mb-1">{{ note.title }}</h2>
+                    <h2 class="mb-1"><i class="fas fa-sticky-note"></i> {{ note.title }}</h2>
                     <p class="list-group-item-text">Author: {{ note.author_nickname }}</p>
                 </div>
 
