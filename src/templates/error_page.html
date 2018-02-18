@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="card text-white bg-danger mb-3" style="">
+  <div class="card-header">Error In Server</div>
+  <div class="card-body">
+    <h5 class="card-title"><i class="fas fa-exclamation-triangle"></i>  {{ error_msgr }}</h5>
+    <p class="card-text">There was an error and the server crashed... Please report to the service center(010-2901-5627) or try again .
+        We'll find an solution to this problem soon!  <i class="fas fa-smile"></i>
+    </p>
+  </div>
+</div>
+{% endblock %}

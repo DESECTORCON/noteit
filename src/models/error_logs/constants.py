@@ -1,0 +1,1 @@
+COLLECTION = 'error_logs'
