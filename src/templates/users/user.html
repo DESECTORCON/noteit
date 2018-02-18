@@ -50,17 +50,25 @@
 
         <div class="list-group">
 
-            {% for note in user_notes %}
+            {% if user_notes %}
+                {% for note in user_notes %}
 
-                <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{ note.title }}</h5>
-                <small>{{ note.created_date.strftime('Created at: %Y-%m-%d %H:%M') }}</small>
+                    <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ note.title }}</h5>
+                    <small>{{ note.created_date.strftime('Created at: %Y-%m-%d %H:%M') }}</small>
+                    </div>
+                    <p class="mb-1">{{ note.content.split()[0] + '...' }}</p>
+                    </a>
+
+                {% endfor %}
+            {% else %}
+
+               <div class="alert alert-secondary" role="alert" style="text-align: center;">
+                   This user has no shared notes!<h4><i class="far fa-frown"></i></h4>
                 </div>
-                <p class="mb-1">{{ note.content.split()[0] + '...' }}</p>
-                </a>
 
-            {% endfor %}
+            {% endif %}
 
         </div>
 
