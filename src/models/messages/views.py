@@ -4,6 +4,7 @@ from flask import Blueprint, request, session, url_for, render_template
 from werkzeug.utils import redirect
 from src.models.messages.message import Message
 import src.models.users.decorators as user_decorators
+from src.models.notes.note import Note
 from src.models.users.user import User
 import traceback
 
@@ -156,3 +157,23 @@ def delete_message(message_id):
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during deleteing your message...')
 
+
+@message_blueprint.route('/send_note/<note_id:string>', methods=['GET', 'POST'])
+@user_decorators.require_login
+def send_note(note_id):
+
+    try:
+        note = Note.find_by_id(note_id)
+    except:
+
+        error_msg = traceback.format_exc().split('\n')
+
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='message message reading')
+        Error_obj.save_to_mongo()
+
+        return render_template('error_page.html', error_msgr='Crashed during preparing page...')
+
+    if request.method == 'POST':
+        pass
+
+    return render_template('send_note.html', )
