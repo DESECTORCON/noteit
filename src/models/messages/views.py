@@ -95,6 +95,7 @@ def send_message():
 def message(message_id, is_sended=False):
 
     try:
+        raise SystemError()
         message = Message.find_by_id(message_id)
 
         if message is None:
@@ -158,7 +159,7 @@ def delete_message(message_id):
         return render_template('error_page.html', error_msgr='Crashed during deleteing your message...')
 
 
-@message_blueprint.route('/send_note/<note_id:string>', methods=['GET', 'POST'])
+@message_blueprint.route('/send_note/<string:note_id>', methods=['GET', 'POST'])
 @user_decorators.require_login
 def send_note(note_id):
 
