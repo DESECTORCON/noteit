@@ -95,7 +95,7 @@ def send_message():
 def message(message_id, is_sended=False):
 
     try:
-        raise SystemError()
+
         message = Message.find_by_id(message_id)
 
         if message is None:
