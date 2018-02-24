@@ -54,14 +54,23 @@ def send_message():
         if request.method == 'POST':
             title = request.form['title']
             content = request.form['content']
+
+            if request.form['reciver_email'] in [None, [], ""]:
+                return render_template('messages/send_message.html',
+                                       e='Your receiver field is empty. Please fill in at least ONE receiver.',
+                                       all_users=all_users, title=title,
+                                       content=content)
+
             try:
-                #reciver_id = User.find_by_email(request.form['reciver_email'])._id
+                # reciver_id = User.find_by_email(request.form['reciver_email'])._id
                 recivers_string = request.form['reciver_email'].split()
+
                 for email in recivers_string:
                     recivers.append(User.find_by_email(email)._id)
 
-            except Exception as e:
-                return render_template('messages/send_message.html', e=e, all_users=all_users, title=title, content=content)
+            except Exception:
+                return render_template('messages/send_message.html', e="Please Check That you have coped EXACTLY the target user's email! And separated the emails with spaces!!"
+                                       , all_users=all_users, title=title, content=content)
 
             sender_id = User.find_by_email(session['email'])._id
 
