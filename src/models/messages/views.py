@@ -169,7 +169,7 @@ def send_note(note_id):
 
         error_msg = traceback.format_exc().split('\n')
 
-        Error_obj = Error_(error_msg=''.join(error_msg), error_location='message message reading')
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='send_note note finding/reading')
         Error_obj.save_to_mongo()
 
         return render_template('error_page.html', error_msgr='Crashed during preparing page...')
@@ -177,4 +177,4 @@ def send_note(note_id):
     if request.method == 'POST':
         pass
 
-    return render_template('send_note.html', )
+    return render_template('send_note.html', note=note)
