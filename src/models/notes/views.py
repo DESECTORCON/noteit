@@ -111,7 +111,12 @@ def share_note(note_id):
 def notes():
 
     try:
-        return render_template('/notes/pub_notes.html', notes=Note.find_shared_notes())
+
+        if session['email'] is None and session['_id'] is None:
+            return render_template('/notes/pub_notes.html', notes=Note.find_shared_notes())
+        elif session['email'] and session['_id'] is not None:
+            return render_template('/notes/pub_notes.html', notes=Note.get_only_with_users())
+
     except:
         error_msg = traceback.format_exc().split('\n')
 
