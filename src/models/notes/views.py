@@ -124,8 +124,9 @@ def notes():
         try:
             if session['email'] is None:
                 return render_template('/notes/pub_notes.html', notes=Note.find_shared_notes())
+            else:
+                return render_template('/notes/pub_notes.html', notes=Note.get_only_with_users())
         except:
-
             return render_template('/notes/pub_notes.html', notes=Note.get_only_with_users())
 
     except:
