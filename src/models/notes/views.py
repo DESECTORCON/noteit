@@ -67,7 +67,11 @@ def create_note():
     try:
         if request.method == 'POST':
             share = request.form['inputGroupSelect01']
-            if share is 1:
+
+            if share == '0':
+                return render_template('/notes/create_note.html')
+
+            if share == '1':
                 share = True
                 share_only_with_users = False
 
