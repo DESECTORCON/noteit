@@ -112,15 +112,17 @@ def notes():
 
     try:
 
-        if session['email'] is None and session['_id'] is None:
-            return render_template('/notes/pub_notes.html', notes=Note.find_shared_notes())
-        elif session['email'] and session['_id'] is not None:
+        try:
+            if session['email'] is None:
+                return render_template('/notes/pub_notes.html', notes=Note.find_shared_notes())
+        except:
+
             return render_template('/notes/pub_notes.html', notes=Note.get_only_with_users())
 
     except:
         error_msg = traceback.format_exc().split('\n')
 
-        Error_obj = Error_(error_msg=''.join(error_msg), error_location='nots publick note reading')
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes publick note reading')
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
 
