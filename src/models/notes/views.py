@@ -151,11 +151,27 @@ def edit_note(note_id):
         note = Note.find_by_id(note_id)
 
         if request.method == 'POST':
-            share = request.form.get("share") != None
+
+            if request.method == 'POST':
+                share = request.form['inputGroupSelect01']
+
+                if share == '0':
+                    return render_template('/notes/create_note.html',
+                                           error_msg="You did not selected an Share label. Please select an Share label.")
+
+                if share == '1':
+                    share = True
+                    share_only_with_users = False
+
+                else:
+                    share = False
+                    share_only_with_users = True
+
             title = request.form['title']
             content = request.form['content']
 
             note.shared = share
+            note.share_only_with_users = share_only_with_users
             note.title = title
             note.content = content
             note.save_to_mongo()

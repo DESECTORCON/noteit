@@ -26,6 +26,26 @@
 
             </div>
 
+            <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Share label</label>
+                      </div>
+                      <select class="custom-select" id="inputGroupSelect01" name="inputGroupSelect01" required>
+
+                          <option value="0">Choose...</option>
+                          {% if note.shared == True %}
+
+                              <option value="1" selected>Share with all </option>
+                                <option value="2">Share with only Note-it™ users</option>
+                          {% else %}
+                                <option value="1">Share with all </option>
+                              <option value="2" selected>Share with only Note-it™ users</option>
+
+                          {% endif %}
+
+                      </select>
+            </div>
+
             <div class="input-group">
 
                 <div class="input-group-prepend">
@@ -33,24 +53,9 @@
                 </div>
 
             <textarea class="form-control text_box_big" name="content" id="content" placeholder="Example content" aria-describedby="contentBlock">
-                {{ note.content }}
+                {{ note.content.strip() }}
             </textarea>
 
-                <div class="input-group">
-                    <div class="form-check">
-                        {% if note.shared %}
-                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" name="share" checked>
-                            <label class="form-check-label" for="defaultCheck1">
-                                Share
-                            </label>
-                        {% else %}
-                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" name="share">
-                            <label class="form-check-label" for="defaultCheck1">
-                                Share
-                            </label>
-                        {% endif %}
-                    </div>
-                </div>
 
             </div>
 
