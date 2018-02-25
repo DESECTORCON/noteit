@@ -66,13 +66,22 @@ def create_note():
 
     try:
         if request.method == 'POST':
-            share = request.form.get("share") != None
+            share = request.form['inputGroupSelect01']
+            if share is 1:
+                share = True
+                share_only_with_users = False
+
+            else:
+                share = False
+                share_only_with_users = True
+
             title = request.form['title']
             content = request.form['content']
             author_email = session['email']
             author_nickname = User.find_by_email(author_email).nick_name
 
-            note_for_save = Note(title=title, content=content, author_email=author_email, shared=share, author_nickname=author_nickname)
+            note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
+                                 author_nickname=author_nickname ,share_only_with_users=share_only_with_users)
             note_for_save.save_to_mongo()
 
             return redirect(url_for('.user_notes'))
