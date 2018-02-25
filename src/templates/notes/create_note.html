@@ -4,6 +4,12 @@
 {% endblock %}
 {% block content %}
 
+    {% if error_msg %}
+        <div class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> {{ error_msg }}
+        </div>
+    {% endif %}
+
     <div class="jumbotron form-sizer">
 
         <h1><i class="fas fa-plus-square"></i> Create a Note</h1>

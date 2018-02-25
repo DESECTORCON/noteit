@@ -69,7 +69,8 @@ def create_note():
             share = request.form['inputGroupSelect01']
 
             if share == '0':
-                return render_template('/notes/create_note.html')
+                return render_template('/notes/create_note.html',
+                                       error_msg="You did not selected an Share label. Please select an Share label.")
 
             if share == '1':
                 share = True
@@ -129,9 +130,10 @@ def notes():
             if session['email'] is None:
                 return render_template('/notes/pub_notes.html', notes=Note.find_shared_notes())
             else:
-                return render_template('/notes/pub_notes.html', notes=Note.get_only_with_users())
+                return render_template('/notes/pub_notes.html',
+                                       notes=Note.get_only_with_users() + Note.find_shared_notes())
         except:
-            return render_template('/notes/pub_notes.html', notes=Note.get_only_with_users())
+            return render_template('/notes/pub_notes.html', notes=Note.find_shared_notes())
 
     except:
         error_msg = traceback.format_exc().split('\n')
