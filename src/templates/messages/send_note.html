@@ -5,6 +5,65 @@
 
 {% block content %}
 
+    <div class="jumbotron form-sizer">
 
+        <h1><i class="fas fa-external-link-square-alt"></i> Send a Note</h1>
+
+        <p>Select an note, than submit!</p>
+
+    </div>
+
+    <br>
+
+    <div class="form-size jumbotron">
+
+        <form method="POST">
+
+
+
+            <div class="form-group">
+
+                {% if e %}
+                <br>
+
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation"></i>  {{ e }}
+                </div>
+
+
+                {% endif %}
+                <label for="reciver_email">Reciver Email</label>
+                <input type="text" class="form-control" name="reciver_email" id="reciver_email" placeholder="Example title" aria-describedby="reciver_emailBlock" value="">
+
+                <small id="reciver_emailBlock" class="form-text text-muted"><i class="fas fa-exclamation-circle"></i>Copy the user's email EXACTALLY from the list blow. If you want to send this message to multiple users, please
+separate the user's emails with a space, or ,.</small>
+            </div>
+
+            <br>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+
+        </form>
+
+        <hr class="my-4">
+
+
+
+    <div class="list-group">
+        <h1 class="heading">Users <small class="text-muted">for copying</small></h1>
+        <hr class="my-4">
+        {% for user in all_users %}
+
+            <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ user.nick_name }}</h5>
+                    <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                </div>
+            </a>
+
+        {% endfor %}
+
+    </div>
+
+    </div>
 
 {% endblock %}
