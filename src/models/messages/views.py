@@ -75,7 +75,7 @@ def send_message():
 
             sender_id = User.find_by_email(session['email'])._id
 
-            message = Message(title=title, content=content, reciver_id=recivers, sender_id=sender_id)
+            message = Message(title=title, content=content, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False)
             message.save_to_mongo()
 
             return redirect(url_for('.my_sended_messages', user_id=sender_id))
@@ -159,16 +159,16 @@ def delete_message(message_id):
         return render_template('error_page.html', error_msgr='Crashed during deleteing your message...')
 
 
-@message_blueprint.route('/send_note/<string:note_id>', methods=['GET', 'POST'])
+@message_blueprint.route('/send_note', methods=['GET', 'POST'])
 @user_decorators.require_login
-def send_note(note_id):
+def send_note():
+    all_notes = Note.find_by_user_email(session['email'])
     all_users = User.get_all()
-    recivers = []
 
     if request.method == 'POST':
 
         try:
-            note = Note.find_by_id(note_id)
+            note = Note.find_by_id(request.form['note'])
         except:
 
             error_msg = traceback.format_exc().split('\n')
@@ -179,31 +179,21 @@ def send_note(note_id):
             return render_template('error_page.html', error_msgr='Crashed during preparing page...')
 
         message_title = request.form['title']
-        message_content = request.form['content']
 
-        if request.form['reciver_email'] in [None, [], ""]:
-            return render_template('messages/send_message.html',
-                                   e='Your receiver field is empty. Please fill in at least ONE receiver.',
-                                   all_users=all_users, title=message_title,
-                                   content=message_content)
+        if request.form.getlist("do_delete") in [None, [], ""]:
+            return render_template('messages/send_note.html',
+                                   e="You hadn't selected an reciver. Please select at least ONE reciver.",
+                                   all_users=all_users, title=message_title,)
 
-        try:
-            # reciver_id = User.find_by_email(request.form['reciver_email'])._id
-            recivers_string = request.form['reciver_email'].split()
+        else:
 
-            for email in recivers_string:
-                recivers.append(User.find_by_email(email)._id)
-
-        except Exception:
-            return render_template('messages/send_message.html',
-                                   e="Please Check That you have coped EXACTLY the target user's email! And separated the emails with spaces!!"
-                                   , all_users=all_users, title=message_title, content=message_content)
+            recivers = request.form.getlist("do_delete")
 
         sender_id = User.find_by_email(session['email'])._id
 
-        message = Message(title=message_title, content=message_content + '\n' + note.title + '\n' + note.content, reciver_id=recivers, sender_id=sender_id)
+        message = Message(title=message_title, content=note, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True)
         message.save_to_mongo()
 
         return redirect(url_for('.my_sended_messages', user_id=sender_id))
 
-    return render_template('send_note.html')
+    return render_template('messages/send_note.html', all_notes=all_notes, all_users=all_users)

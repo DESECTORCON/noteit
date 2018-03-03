@@ -32,29 +32,53 @@
 
 
                 {% endif %}
-                <label for="reciver_email">Reciver Email</label>
-                <input type="text" class="form-control" name="reciver_email" id="reciver_email" placeholder="Example title" aria-describedby="reciver_emailBlock" value="">
+                <label for="title"><b>Title</b></label>
+                <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="reciver_emailBlock" value="">
 
             </div>
+                    <hr class="my-4">
 
             <div class="list-group">
         <h1 class="heading">Notes <small class="text-muted">select a note you want to send</small></h1>
-        <hr class="my-4">
-        {% for user in all_users %}
+        {% for note in all_notes %}
 
-            <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+            <b class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ user.nick_name }}</h5>
-                    <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                    <input type="radio" value="{{ note._id }}" name="note" />
+                    <h5 class="mb-1">{{ note.title }}</h5>
+                    <small class="text-muted">Made date {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
                 </div>
-            </a>
+            </b>
 
         {% endfor %}
 
     </div>
 
-            <br>
-            <button type="submit" class="btn btn-primary">Send Message</button>
+                    <hr class="my-4">
+
+             {% if all_users == None %}
+        <h1>No users are available. Please contact us <a>(010-2901-5627)</a></h1>
+    {% else %}
+    <div class="list-group">
+        <h1 class="heading">Users <small class="text-muted">for copying</small></h1>
+        {% for user in all_users %}
+
+            <b class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <input type="checkbox" value="{{ user._id }}" name="user" />
+                    <h5 class="mb-1">{{ user.nick_name }}</h5>
+                    <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                </div>
+            </b>
+
+        {% endfor %}
+
+    </div>
+    {% endif %}
+
+    <br>
+    <button type="submit" class="btn btn-primary">Send Message</button>
+
 
         </form>
 

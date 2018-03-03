@@ -71,3 +71,7 @@ class Note(object):
     def get_only_with_users(cls):
         return [cls(**elem) for elem in Database.find(NoteConstants.COLLECTION,
                                                       {"shared": False, "share_only_with_users": True})]
+
+    @classmethod
+    def get_all(cls):
+        return [cls(**elem) for elem in Database.find(NoteConstants.COLLECTION,{})]
