@@ -35,21 +35,10 @@
                 <label for="reciver_email">Reciver Email</label>
                 <input type="text" class="form-control" name="reciver_email" id="reciver_email" placeholder="Example title" aria-describedby="reciver_emailBlock" value="">
 
-                <small id="reciver_emailBlock" class="form-text text-muted"><i class="fas fa-exclamation-circle"></i>Copy the user's email EXACTALLY from the list blow. If you want to send this message to multiple users, please
-separate the user's emails with a space, or ,.</small>
             </div>
 
-            <br>
-            <button type="submit" class="btn btn-primary">Send Message</button>
-
-        </form>
-
-        <hr class="my-4">
-
-
-
-    <div class="list-group">
-        <h1 class="heading">Users <small class="text-muted">for copying</small></h1>
+            <div class="list-group">
+        <h1 class="heading">Notes <small class="text-muted">select a note you want to send</small></h1>
         <hr class="my-4">
         {% for user in all_users %}
 
@@ -63,6 +52,11 @@ separate the user's emails with a space, or ,.</small>
         {% endfor %}
 
     </div>
+
+            <br>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+
+        </form>
 
     </div>
 

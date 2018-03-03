@@ -165,18 +165,18 @@ def send_note(note_id):
     all_users = User.get_all()
     recivers = []
 
-    try:
-        note = Note.find_by_id(note_id)
-    except:
-
-        error_msg = traceback.format_exc().split('\n')
-
-        Error_obj = Error_(error_msg=''.join(error_msg), error_location='send_note note finding/reading')
-        Error_obj.save_to_mongo()
-
-        return render_template('error_page.html', error_msgr='Crashed during preparing page...')
-
     if request.method == 'POST':
+
+        try:
+            note = Note.find_by_id(note_id)
+        except:
+
+            error_msg = traceback.format_exc().split('\n')
+
+            Error_obj = Error_(error_msg=''.join(error_msg), error_location='send_note note finding/reading')
+            Error_obj.save_to_mongo()
+
+            return render_template('error_page.html', error_msgr='Crashed during preparing page...')
 
         message_title = request.form['title']
         message_content = request.form['content']
@@ -206,4 +206,4 @@ def send_note(note_id):
 
         return redirect(url_for('.my_sended_messages', user_id=sender_id))
 
-    return render_template('send_note.html', note=note)
+    return render_template('send_note.html')
