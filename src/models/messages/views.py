@@ -180,18 +180,18 @@ def send_note():
 
         message_title = request.form['title']
 
-        if request.form.getlist("do_delete") in [None, [], ""]:
+        if request.form.getlist("user") in [None, [], ""]:
             return render_template('messages/send_note.html',
                                    e="You hadn't selected an reciver. Please select at least ONE reciver.",
                                    all_users=all_users, title=message_title,)
 
         else:
 
-            recivers = request.form.getlist("do_delete")
+            recivers = request.form.getlist("user")
 
         sender_id = User.find_by_email(session['email'])._id
 
-        message = Message(title=message_title, content=note, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True)
+        message = Message(title=message_title, content=note._id, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True)
         message.save_to_mongo()
 
         return redirect(url_for('.my_sended_messages', user_id=sender_id))

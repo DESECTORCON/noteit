@@ -29,7 +29,7 @@ class Message(object):
             "readed_date": self.readed_date,
             "sended_date": self.sended_date,
             "readed_by_reciver": self.readed_by_reciver,
-            "is_a_note": self.is_a_noteOBJ
+            "is_a_noteOBJ": self.is_a_noteOBJ
         }
 
     def save_to_db(self):
