@@ -6,7 +6,7 @@ import datetime
 
 class Note(object):
 
-    def __init__(self, title, content, author_email, author_nickname,created_date=None, _id=None, shared=False,
+    def __init__(self, title, content, author_email, author_nickname, created_date=None, _id=None, shared=False,
                  share_only_with_users=False):
         self.title = "No title" if title is None else title
         self.content = "No content" if content is None else content

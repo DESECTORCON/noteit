@@ -115,7 +115,13 @@ def message(message_id, is_sended=False):
         else:
             reciver_nickname = User.find_by_id(message.reciver_id).nick_name
 
-        return render_template('messages/message.html', message=message, sender_nickname=sender_nickname, reciver_nickname=reciver_nickname)
+        if message.is_a_noteOBJ:
+            note = Note.find_by_id(message.content)
+        else:
+            note = None
+
+        return render_template('messages/message.html', message=message, sender_nickname=sender_nickname,
+                               reciver_nickname=reciver_nickname, is_a_note=message.is_a_noteOBJ, note=note)
 
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -161,7 +167,7 @@ def delete_message(message_id):
 
 @message_blueprint.route('/send_note', methods=['GET', 'POST'])
 @user_decorators.require_login
-def send_note():
+def send_note(note_id=None):
     all_notes = Note.find_by_user_email(session['email'])
     all_users = User.get_all()
 
