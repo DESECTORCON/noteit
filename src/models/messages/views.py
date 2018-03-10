@@ -8,13 +8,16 @@ from src.models.notes.note import Note
 from src.models.users.user import User
 import traceback
 
+# Create message blueprint
 message_blueprint = Blueprint('message', __name__)
 
 
+# my_recived_messages : shows recived messages
 @message_blueprint.route('/recived_messages/<string:user_id>')
 @user_decorators.require_login
 def my_recived_messages(user_id):
     try:
+        # Try to find session users messages
         messages = Message.find_by_reciver_id(user_id)
         user_nickname = User.find_by_id(session['_id']).nick_name
 
@@ -27,10 +30,12 @@ def my_recived_messages(user_id):
         return render_template('error_page.html', error_msgr='Crashed during reading your messages')
 
 
+# my_sended_messages : shows sended messages
 @message_blueprint.route('/sended_messages/<string:user_id>')
 @user_decorators.require_login
 def my_sended_messages(user_id):
     try:
+        # Try to find session users sended messages
         messages = Message.find_by_sender_id(user_id)
         user_nickname = User.find_by_id(session['_id']).nick_name
 
@@ -44,15 +49,20 @@ def my_sended_messages(user_id):
         return render_template('error_page.html', error_msgr='Crashed during reading your messages')
 
 
+# send_message : send message
 @message_blueprint.route('/send_message', methods=['GET', 'POST'])
 @user_decorators.require_login
 def send_message():
 
     try:
+        # Getting all users information
         all_users = User.get_all()
         recivers = []
 
+        # if method is post, than save the form
         if request.method == 'POST':
+
+            # Getting form values
             title = request.form['title']
             content = request.form['content']
 
@@ -64,17 +74,22 @@ def send_message():
 
             try:
                 # reciver_id = User.find_by_email(request.form['reciver_email'])._id
+
+                # Try to get recivers from form obj
                 recivers_string = request.form['reciver_email'].split()
 
                 for email in recivers_string:
                     recivers.append(User.find_by_email(email)._id)
 
             except Exception:
+                # if none was found, than render template
                 return render_template('messages/send_message.html', e="Please Check That you have coped EXACTLY the target user's email! And separated the emails with spaces!!"
                                        , all_users=all_users, title=title, content=content)
 
+            # GEt sender id
             sender_id = User.find_by_email(session['email'])._id
 
+            # Save message and save
             message = Message(title=title, content=content, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False)
             message.save_to_mongo()
 
@@ -90,12 +105,14 @@ def send_message():
         return render_template('error_page.html', error_msgr='Crashed during sending your message...')
 
 
+# message : shows message
 @message_blueprint.route('/message/<string:message_id>')
 @user_decorators.require_login
 def message(message_id, is_sended=False):
 
     try:
 
+        # getting message by id
         message = Message.find_by_id(message_id)
 
         if message is None:
