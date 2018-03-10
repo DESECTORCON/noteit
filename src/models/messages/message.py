@@ -6,7 +6,7 @@ import datetime
 
 class Message(object):
 
-    def __init__(self, title, content, reciver_id, sender_id, sended_date=None, readed_date=None ,_id=None, readed_by_reciver=False):
+    def __init__(self, title, content, reciver_id, sender_id, sended_date=None, readed_date=None ,_id=None, readed_by_reciver=False, is_a_noteOBJ=False):
         self._id = uuid.uuid4().hex if _id is None else _id
         self.title = title
         self.content = content
@@ -15,6 +15,7 @@ class Message(object):
         self.readed_date = readed_date
         self.sended_date = datetime.datetime.now() if sended_date is None else sended_date
         self.readed_by_reciver = readed_by_reciver
+        self.is_a_noteOBJ = is_a_noteOBJ
 
     def __repr__(self):
         return "<Message title:{} with sender {} and reciver {}>".format(self.title, self.sender_id, self.reciver_id)
@@ -27,7 +28,8 @@ class Message(object):
             "sender_id": self.sender_id,
             "readed_date": self.readed_date,
             "sended_date": self.sended_date,
-            "readed_by_reciver": self.readed_by_reciver
+            "readed_by_reciver": self.readed_by_reciver,
+            "is_a_noteOBJ": self.is_a_noteOBJ
         }
 
     def save_to_db(self):

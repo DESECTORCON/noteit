@@ -1,0 +1,114 @@
+{% extends "base2.html" %}
+{% block title %}
+    <title>Note-it™ | Send Note</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="jumbotron form-sizer">
+
+        <h1><i class="fas fa-external-link-square-alt"></i> Send a Note</h1>
+
+        <p>Select an note, than submit!</p>
+
+    </div>
+
+    <br>
+
+    <div class="form-size jumbotron">
+
+        <form method="POST">
+
+
+
+            <div class="form-group">
+
+                {% if e %}
+                <br>
+
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-exclamation"></i>  {{ e }}
+                </div>
+
+
+                {% endif %}
+                <label for="title"><b>Title</b></label>
+                <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="reciver_emailBlock" value="">
+
+            </div>
+                    <hr class="my-4">
+
+            <div class="list-group">
+
+                {% if note_ %}
+                    <h1 class="heading">Notes <small class="text-muted">select a note you want to send</small></h1>
+                    {% for note in all_notes %}
+
+                        <b class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                {% if note_._id == note._id %}
+                                    <input type="radio" value="{{ note._id }}" name="note" checked="checked" />
+                                {% else %}
+
+                                    <input type="radio" value="{{ note._id }}" name="note">
+
+                                {% endif %}
+
+                                <h5 class="mb-1">{{ note.title }}</h5>
+                                <small class="text-muted">Made date {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                            </div>
+                        </b>
+                    {% endfor %}
+
+                {% else %}
+
+                    <h1 class="heading">Notes <small class="text-muted">select a note you want to send</small></h1>
+                    {% for note in all_notes %}
+
+                        <b class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <input type="radio" value="{{ note._id }}" name="note" />
+                                <h5 class="mb-1">{{ note.title }}</h5>
+                                <small class="text-muted">Made date {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                            </div>
+                        </b>
+
+                    {% endfor %}
+
+                {% endif %}
+
+
+
+    </div>
+
+                    <hr class="my-4">
+
+             {% if all_users == None %}
+        <h1>No users are available. Please contact us <a>(010-2901-5627)</a></h1>
+    {% else %}
+    <div class="list-group">
+        <h1 class="heading">Users <small class="text-muted">for copying</small></h1>
+        {% for user in all_users %}
+
+            <b class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <input type="checkbox" value="{{ user._id }}" name="user" />
+                    <h5 class="mb-1">{{ user.nick_name }}</h5>
+                    <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                </div>
+            </b>
+
+        {% endfor %}
+
+    </div>
+    {% endif %}
+
+    <br>
+    <button type="submit" class="btn btn-primary">Send Message</button>
+
+
+        </form>
+
+    </div>
+
+{% endblock %}

@@ -45,7 +45,8 @@ def note(note_id):
 
         finally:
 
-            return render_template('/notes/note.html', note=note, author_email_is_session=author_email_is_session, msg_=False, user=user)
+            return render_template('/notes/note.html', note=note,
+                                   author_email_is_session=author_email_is_session, msg_=False, user=user)
 
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -66,13 +67,27 @@ def create_note():
 
     try:
         if request.method == 'POST':
-            share = request.form.get("share") != None
+            share = request.form['inputGroupSelect01']
+
+            if share == '0':
+                return render_template('/notes/create_note.html',
+                                       error_msg="You did not selected an Share label. Please select an Share label.")
+
+            if share == '1':
+                share = True
+                share_only_with_users = False
+
+            else:
+                share = False
+                share_only_with_users = True
+
             title = request.form['title']
             content = request.form['content']
             author_email = session['email']
             author_nickname = User.find_by_email(author_email).nick_name
 
-            note_for_save = Note(title=title, content=content, author_email=author_email, shared=share, author_nickname=author_nickname)
+            note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
+                                 author_nickname=author_nickname ,share_only_with_users=share_only_with_users)
             note_for_save.save_to_mongo()
 
             return redirect(url_for('.user_notes'))
@@ -111,11 +126,20 @@ def share_note(note_id):
 def notes():
 
     try:
-        return render_template('/notes/pub_notes.html', notes=Note.find_shared_notes())
+
+        try:
+            if session['email'] is None:
+                return render_template('/notes/pub_notes.html', notes=Note.find_shared_notes())
+            else:
+                return render_template('/notes/pub_notes.html',
+                                       notes=Note.get_only_with_users() + Note.find_shared_notes())
+        except:
+            return render_template('/notes/pub_notes.html', notes=Note.find_shared_notes())
+
     except:
         error_msg = traceback.format_exc().split('\n')
 
-        Error_obj = Error_(error_msg=''.join(error_msg), error_location='nots publick note reading')
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes publick note reading')
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
 
@@ -128,11 +152,27 @@ def edit_note(note_id):
         note = Note.find_by_id(note_id)
 
         if request.method == 'POST':
-            share = request.form.get("share") != None
+
+            if request.method == 'POST':
+                share = request.form['inputGroupSelect01']
+
+                if share == '0':
+                    return render_template('/notes/create_note.html',
+                                           error_msg="You did not selected an Share label. Please select an Share label.")
+
+                if share == '1':
+                    share = True
+                    share_only_with_users = False
+
+                else:
+                    share = False
+                    share_only_with_users = True
+
             title = request.form['title']
             content = request.form['content']
 
             note.shared = share
+            note.share_only_with_users = share_only_with_users
             note.title = title
             note.content = content
             note.save_to_mongo()

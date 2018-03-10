@@ -14,15 +14,15 @@
     <hr class="my-4">
 
     <div class="list-group">
-            <a class="list-group-item list-group-item list-group-item-action flex-column align-items-start">
+            <b class="list-group-item list-group-item-action flex-column align-items-start">
 
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1"></h5>
                         <small class="text-muted">{{ user_note_count }} Shared Notes</small>
                     </div>
 
-                    <div style="font-size:3em; color:Tomato">
-                        <i class="far fa-user-circle mr-3"></i>
+                    <div style="font-size:6em; color:Tomato">
+                        <i class="far fa-user-circle mr-4"></i>
                     </div>
                     <br>
 
@@ -33,7 +33,7 @@
 
                     <p class="mb-1"><strong>Last Logined: </strong>{{ user.last_logined.strftime('%Y-%m-%d at %H:%M') }}</p>
 
-            </a>
+            </b>
 
     </div>
     </div>
@@ -50,17 +50,25 @@
 
         <div class="list-group">
 
-            {% for note in user_notes %}
+            {% if user_notes %}
+                {% for note in user_notes %}
 
-                <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{ note.title }}</h5>
-                <small>{{ note.created_date.strftime('Created at: %Y-%m-%d %H:%M') }}</small>
+                    <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ note.title }}</h5>
+                    <small>{{ note.created_date.strftime('Created at: %Y-%m-%d %H:%M') }}</small>
+                    </div>
+                    <p class="mb-1">{{ note.content.split()[0] + '...' }}</p>
+                    </a>
+
+                {% endfor %}
+            {% else %}
+
+               <div class="alert alert-secondary" role="alert" style="text-align: center;">
+                   This user has no shared notes!<h4><i class="far fa-frown"></i></h4>
                 </div>
-                <p class="mb-1">{{ note.content.split()[0] + '...' }}</p>
-                </a>
 
-            {% endfor %}
+            {% endif %}
 
         </div>
 
