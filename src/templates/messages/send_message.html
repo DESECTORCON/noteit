@@ -40,9 +40,12 @@
 
                 {% if e %}
                 <br>
+
                 <div class="alert alert-danger" role="alert">
-                    <i class="fas fa-exclamation"></i>  Please Check That you have coped EXACTLY the target user's email! And separated the emails with spaces!!
+                    <i class="fas fa-exclamation"></i>  {{ e }}
                 </div>
+
+
                 {% endif %}
                 <label for="reciver_email">Reciver Email</label>
                 <input type="text" class="form-control" name="reciver_email" id="reciver_email" placeholder="Example title" aria-describedby="reciver_emailBlock" value="">
@@ -78,6 +81,16 @@ separate the user's emails with a space, or ,.</small>
 
     </div>
     {% endif %}
+
+    </div>
+
+
+    <hr class="my-4">
+
+
+    <div class="jumbotron container">
+
+        <h3 class="font-weight-light">Click here if you want to send a note</h3>  <a href="{{ url_for('.send_note') }}" role="button" class="btn btn-outline-primary">Send Note</a>
 
     </div>
 

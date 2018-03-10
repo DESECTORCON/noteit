@@ -4,6 +4,12 @@
 {% endblock %}
 {% block content %}
 
+    {% if error_msg %}
+        <div class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> {{ error_msg }}
+        </div>
+    {% endif %}
+
     <div class="jumbotron form-sizer">
 
         <h1><i class="fas fa-plus-square"></i> Create a Note</h1>
@@ -26,27 +32,31 @@
 
             </div>
 
-            <div class="input-group">
+            <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Share label</label>
+                      </div>
+                      <select class="custom-select" id="inputGroupSelect01" name="inputGroupSelect01" required>
+
+                        <option selected value="0">Choose...</option>
+                        <option value="1">Share with all </option>
+                        <option value="2">Share with only Note-it™ users</option>
+
+                      </select>
+            </div>
+
+
+
+            <div class="input-group mb-3">
 
                 <div class="input-group-prepend">
-                    <label for="content" class="input-group-text">Content</label>
+                        <label class="input-group-text" for="inputGroupSelect01">Content</label>
                 </div>
-
-            <textarea class="form-control text_box_big" name="content" id="content" placeholder="Example content" aria-describedby="contentBlock"></textarea>
-
-                <div class="input-group">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" name="share">
-                        <label class="form-check-label" for="defaultCheck1">
-                            Share
-                        </label>
-                    </div>
-                </div>
-
+                <textarea class="form-control text_box_big" name="content" id="content" placeholder="Example content" aria-describedby="contentBlock"></textarea>
             </div>
 
             <br>
-            <button type="submit" class="btn btn-primary">Save Note</button>
+            <button type="submit" class="btn btn-primary" style="">Save Note</button>
 
         </form>
     </div>
