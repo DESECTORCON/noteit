@@ -45,7 +45,8 @@ def note(note_id):
 
         finally:
 
-            return render_template('/notes/note.html', note=note, author_email_is_session=author_email_is_session, msg_=False, user=user)
+            return render_template('/notes/note.html', note=note,
+                                   author_email_is_session=author_email_is_session, msg_=False, user=user)
 
     except:
         error_msg = traceback.format_exc().split('\n')

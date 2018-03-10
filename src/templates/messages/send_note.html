@@ -39,18 +39,45 @@
                     <hr class="my-4">
 
             <div class="list-group">
-        <h1 class="heading">Notes <small class="text-muted">select a note you want to send</small></h1>
-        {% for note in all_notes %}
 
-            <b class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <input type="radio" value="{{ note._id }}" name="note" />
-                    <h5 class="mb-1">{{ note.title }}</h5>
-                    <small class="text-muted">Made date {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
-                </div>
-            </b>
+                {% if note_ %}
+                    <h1 class="heading">Notes <small class="text-muted">select a note you want to send</small></h1>
+                    {% for note in all_notes %}
 
-        {% endfor %}
+                        <b class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                {% if note_._id == note._id %}
+                                    <input type="radio" value="{{ note._id }}" name="note" checked="checked" />
+                                {% else %}
+
+                                    <input type="radio" value="{{ note._id }}" name="note">
+
+                                {% endif %}
+
+                                <h5 class="mb-1">{{ note.title }}</h5>
+                                <small class="text-muted">Made date {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                            </div>
+                        </b>
+                    {% endfor %}
+
+                {% else %}
+
+                    <h1 class="heading">Notes <small class="text-muted">select a note you want to send</small></h1>
+                    {% for note in all_notes %}
+
+                        <b class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <input type="radio" value="{{ note._id }}" name="note" />
+                                <h5 class="mb-1">{{ note.title }}</h5>
+                                <small class="text-muted">Made date {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                            </div>
+                        </b>
+
+                    {% endfor %}
+
+                {% endif %}
+
+
 
     </div>
 

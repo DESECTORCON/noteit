@@ -33,6 +33,8 @@
 
             <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="btn btn-outline-secondary" role="button">View Author ({{ note.author_nickname }})</a>
 
+            <a href="{{ url_for('message.send_note_radio', note_id=note._id) }}" class="btn btn-outline-info" role="button">Send Note</a>
+
             {% if author_email_is_session %}
 
                 <a href="{{ url_for('.delete_note', note_id=note._id) }}" class="btn btn-outline-danger" role="button">Delete</a>
