@@ -1,11 +1,11 @@
 from flask import Flask, render_template, session
 import random
-from src.models.notes.note import Note
-from src.models.messages.message import *
-import src.config as config
+from models.notes.note import Note
+from models.messages.message import *
+import config as config
 
 app = Flask(__name__)
-app.config.from_object('src.config')
+app.config.from_object('config')
 app.secret_key = ''
 
 
@@ -58,9 +58,9 @@ def loading():
     return render_template('loading.html')
 
 
-from src.models.users.views import user_blueprint
-from src.models.notes.views import note_blueprint
-from src.models.messages.views import message_blueprint
+from models.users.views import user_blueprint
+from models.notes.views import note_blueprint
+from models.messages.views import message_blueprint
 
 app.register_blueprint(user_blueprint, url_prefix="/users")
 app.register_blueprint(note_blueprint, url_prefix="/notes")

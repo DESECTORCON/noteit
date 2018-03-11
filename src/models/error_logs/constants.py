@@ -1,1 +1,0 @@
-COLLECTION = 'error_logs'
