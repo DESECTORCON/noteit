@@ -2,6 +2,7 @@ from flask import Flask, render_template, session
 import random
 from src.models.notes.note import Note
 from src.models.messages.message import *
+import src.config as config
 
 app = Flask(__name__)
 app.config.from_object('src.config')
@@ -34,6 +35,7 @@ def get_notes(email):
 
 @app.route('/')
 def home():
+    max_items = config.MAX_ITEMS
     messages = []
     notes = []
     if session['_id'] is not None:
@@ -43,7 +45,7 @@ def home():
         if messages is None:
             messages = get_read_messages(session['_id'])
 
-    return render_template('home.html', messages=messages[:4], notes=notes[:4])
+    return render_template('home.html', messages=messages[:max_items], notes=notes[:max_items])
 
 
 @app.route('/message')

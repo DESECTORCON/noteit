@@ -25,6 +25,9 @@
     <div class="jumbotron rounded float-left w-50">
 
         {% if notes %}
+            <h2>Your Notes</h2>
+
+            <hr class="my-4">
 
             {% for note in notes %}
 
@@ -54,6 +57,10 @@
     <div class="jumbotron rounded float-right w-50 ">
 
         {% if messages %}
+
+            <h2>Your Messages</h2>
+
+             <hr class="my-4">
 
             {% if messages == [''] or messages == [] %}
                 <div class="alert alert-info" role="alert">
