@@ -44,7 +44,7 @@
         {% else %}
 
             <div class="alert alert-info" role="alert">
-                <i class="far fa-frown"></i> No Received Messages...
+                <i class="far fa-frown"></i> No Notes...
             </div>
 
         {% endif %}
@@ -63,7 +63,7 @@
 
                 {% for message in messages %}
 
-                    <a href="{{ url_for('.message', message_id=message._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <a href="{{ url_for('message.message', message_id=message._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
                         <div class="d-flex w-100 justify-content-between">
 
                             <h5 class="mb-1 text-left">{{ '<i class="far fa-envelope-open"></i>'|safe if message.readed_by_reciver else '<i class="far fa-envelope"></i>'|safe }} {{ message.title }}</h5>
