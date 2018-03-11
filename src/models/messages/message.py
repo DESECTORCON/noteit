@@ -64,3 +64,7 @@ class Message(object):
         message = self.find_by_id(message_id)
         recivers = message.reciver_id
         return recivers
+
+    @classmethod
+    def find_by_recivers_not_readed(cls, reciver_id):
+        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {'reciver_id': reciver_id, "readed_by_reciver":False})]
