@@ -8,15 +8,19 @@ app = Flask(__name__)
 app.config.from_object('config')
 app.secret_key = ''
 
+random_int = []
+for i in range(100):
+    random_int.append(random.randint(1, 10000))
+    app.secret_key = ''.join(str(random_int))
+
 
 @app.before_first_request
 def init():
     Database.initialize()
-    random_int = []
-    for i in range(100):
-        random_int.append(random.randint(1, 10000))
-    app.secret_key = ''.join(str(random_int))
 
+
+@app.before_first_request
+def init2():
     session['_id'] = None
     session['email'] = None
 

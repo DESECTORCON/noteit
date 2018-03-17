@@ -24,10 +24,10 @@
 
     <div class="jumbotron rounded float-left w-50">
 
-        {% if notes %}
-            <h2>Your Notes</h2>
+        <h2>Your Notes</h2>
+        <hr class="my-4">
 
-            <hr class="my-4">
+        {% if notes %}
 
             {% for note in notes %}
 
@@ -56,11 +56,11 @@
 
     <div class="jumbotron rounded float-right w-50 ">
 
+        <h2>Your Messages</h2>
+
+        <hr class="my-4">
+
         {% if messages %}
-
-            <h2>Your Messages</h2>
-
-             <hr class="my-4">
 
             {% if messages == [''] or messages == [] %}
                 <div class="alert alert-info" role="alert">
@@ -90,7 +90,9 @@
 
     </div>
 
-    <br><br><br><br><br><br><br><br>
+    {% for i in range(15) %}
+        <br>
+    {% endfor %}
 {% endif %}
 
 {% endblock %}

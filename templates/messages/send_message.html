@@ -47,45 +47,36 @@
 
 
                 {% endif %}
-                <label for="reciver_email">Reciver Email</label>
-                <input type="text" class="form-control" name="reciver_email" id="reciver_email" placeholder="Example title" aria-describedby="reciver_emailBlock" value="">
-
-                <small id="reciver_emailBlock" class="form-text text-muted"><i class="fas fa-exclamation-circle"></i>Copy the user's email EXACTALLY from the list blow. If you want to send this message to multiple users, please
-separate the user's emails with a space, or ,.</small>
             </div>
 
             <br>
-            <button type="submit" class="btn btn-primary">Send Message</button>
-
-        </form>
-
-        <hr class="my-4">
 
 
-        {% if all_users == None %}
+
+                  <hr class="my-4">
+
+             {% if all_users == None %}
         <h1>No users are available. Please contact us <a>(010-2901-5627)</a></h1>
     {% else %}
     <div class="list-group">
-        <h1 class="heading">Users <small class="text-muted">for copying</small></h1>
-        <hr class="my-4">
+        <h1 class="heading">Users <small class="text-muted">select</small></h1>
         {% for user in all_users %}
 
-            <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+            <b class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
+                    <input type="checkbox" value="{{ user._id }}" name="user" />
                     <h5 class="mb-1">{{ user.nick_name }}</h5>
                     <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
                 </div>
-            </a>
+            </b>
 
         {% endfor %}
 
     </div>
     {% endif %}
 
-    </div>
-
-
-    <hr class="my-4">
+    <br>
+    <button type="submit" class="btn btn-primary">Send Message</button>
 
 
     <div class="jumbotron container">
@@ -93,5 +84,6 @@ separate the user's emails with a space, or ,.</small>
         <h3 class="font-weight-light">Click here if you want to send a note</h3>  <a href="{{ url_for('.send_note') }}" role="button" class="btn btn-outline-primary">Send Note</a>
 
     </div>
+</form></div>
 
 {% endblock %}
