@@ -1,16 +1,13 @@
 import datetime
-import time
 import traceback
-
 from flask import Blueprint, request, session, url_for, render_template
 from werkzeug.utils import redirect
-import src.models.users.errors as UserErrors
-from src.common.utils import Utils
-from src.models.error_logs.error_log import Error_
-from src.models.messages.message import Message
-from src.models.notes.note import Note
-from src.models.users.user import User
-import src.models.users.decorators as user_decorators
+import models.users.errors as UserErrors
+from models.error_logs.error_log import Error_
+from models.messages.message import Message
+from models.notes.note import Note
+from models.users.user import User
+import models.users.decorators as user_decorators
 
 user_blueprint = Blueprint('users', __name__)
 

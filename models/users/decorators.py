@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import session, url_for, request
 from werkzeug.utils import redirect
-from src.app import app
+from app import app
 
 
 def require_login(func):

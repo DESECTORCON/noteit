@@ -1,9 +1,9 @@
 from flask import Blueprint, request, session, url_for, render_template
 from werkzeug.utils import redirect
-from src.models.notes.note import Note
-import src.models.users.decorators as user_decorators
-from src.models.users.user import User
-from src.models.error_logs.error_log import Error_
+from models.notes.note import Note
+import models.users.decorators as user_decorators
+from models.users.user import User
+from models.error_logs.error_log import Error_
 import traceback
 
 note_blueprint = Blueprint('notes', __name__)

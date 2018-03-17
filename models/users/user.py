@@ -1,10 +1,10 @@
 import datetime
 import uuid
-from src.common.utils import Utils
-from src.common.database import Database
-import src.models.users.errors as UserErrors
-import src.models.users.constants as UserConstants
-from src.models.notes.note import Note
+from common.utils import Utils
+from common.database import Database
+import models.users.errors as UserErrors
+import models.users.constants as UserConstants
+from models.notes.note import Note
 from shortid import ShortId
 
 

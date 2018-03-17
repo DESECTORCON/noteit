@@ -1,6 +1,6 @@
 import uuid
-from src.common.database import Database
-import src.models.error_logs.constants as ErrorLogConstants
+from common.database import Database
+import models.error_logs.constants as ErrorLogConstants
 import datetime
 
 

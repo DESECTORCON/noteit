@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>Note-it™ | A Online Note service</title>
+{% endblock %}
+{% block content %}
+
+
+{% if session['email'] == None %}
+    <div class="jumbotron">
+
+        <h1><i class="far fa-sticky-note"></i> Note-it™. The world's notes!</h1>
+        <p>Sign up, and use our note and alarm service!!</p>
+        <p><a class="btn btn-outline-primary" href="{{ url_for('users.register_user') }}" role="button">Sign Up NOW!!</a></p>
+
+    </div>
+{% else %}
+    <div class="jumbotron">
+
+        <h1><i class="far fa-sticky-note"></i> Note-it™. The world's notes!</h1>
+
+    </div>
+
+    <hr class="my-4">
+
+    <div class="jumbotron rounded float-left w-50">
+
+        <h2>Your Notes</h2>
+        <hr class="my-4">
+
+        {% if notes %}
+
+            {% for note in notes %}
+
+                <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+
+                     <div class="d-flex w-100 justify-content-between">
+                            <h4 class="mb-1">
+                        {{ note.title }}</h4>
+
+                         <p class="list-group-item-text">Created date <strong>{{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</strong></p>
+                     </div>
+
+                </a>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="alert alert-info" role="alert">
+                <i class="far fa-frown"></i> No Notes...
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <div class="jumbotron rounded float-right w-50 ">
+
+        <h2>Your Messages</h2>
+
+        <hr class="my-4">
+
+        {% if messages %}
+
+            {% if messages == [''] or messages == [] %}
+                <div class="alert alert-info" role="alert">
+                    <i class="far fa-frown"></i> No Received Messages...
+                </div>
+            {% else %}
+
+                {% for message in messages %}
+
+                    <a href="{{ url_for('message.message', message_id=message._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+
+                            <h5 class="mb-1 text-left">{{ '<i class="far fa-envelope-open"></i>'|safe if message.readed_by_reciver else '<i class="far fa-envelope"></i>'|safe }} {{ message.title }}</h5>
+                            <small>Sended at: {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                        </div>
+                    </a>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                <i class="far fa-frown"></i> No Received Messages...
+            </div>
+        {% endif %}
+
+    </div>
+
+    {% for i in range(15) %}
+        <br>
+    {% endfor %}
+{% endif %}
+
+{% endblock %}

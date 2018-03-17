@@ -1,6 +1,6 @@
 import uuid
-from src.common.database import Database
-import src.models.notes.constants as NoteConstants
+from common.database import Database
+import models.notes.constants as NoteConstants
 import datetime
 
 

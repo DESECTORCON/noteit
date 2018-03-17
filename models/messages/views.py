@@ -1,11 +1,11 @@
 import datetime
-from src.models.error_logs.error_log import Error_
+from models.error_logs.error_log import Error_
 from flask import Blueprint, request, session, url_for, render_template
 from werkzeug.utils import redirect
-from src.models.messages.message import Message
-import src.models.users.decorators as user_decorators
-from src.models.notes.note import Note
-from src.models.users.user import User
+from models.messages.message import Message
+import models.users.decorators as user_decorators
+from models.notes.note import Note
+from models.users.user import User
 import traceback
 
 message_blueprint = Blueprint('message', __name__)
@@ -50,28 +50,19 @@ def send_message():
 
     try:
         all_users = User.get_all()
-        recivers = []
 
         if request.method == 'POST':
             title = request.form['title']
             content = request.form['content']
 
-            if request.form['reciver_email'] in [None, [], ""]:
-                return render_template('messages/send_message.html',
-                                       e='Your receiver field is empty. Please fill in at least ONE receiver.',
-                                       all_users=all_users, title=title,
-                                       content=content)
+            if request.form.getlist("user") in [None, [], ""]:
+                return render_template('messages/send_note.html',
+                                       e="You hadn't selected an reciver. Please select at least ONE reciver.",
+                                       all_users=all_users, title=title, )
 
-            try:
-                # reciver_id = User.find_by_email(request.form['reciver_email'])._id
-                recivers_string = request.form['reciver_email'].split()
+            else:
 
-                for email in recivers_string:
-                    recivers.append(User.find_by_email(email)._id)
-
-            except Exception:
-                return render_template('messages/send_message.html', e="Please Check That you have coped EXACTLY the target user's email! And separated the emails with spaces!!"
-                                       , all_users=all_users, title=title, content=content)
+                recivers = request.form.getlist("user")
 
             sender_id = User.find_by_email(session['email'])._id
 
