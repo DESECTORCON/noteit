@@ -6,7 +6,7 @@
 
     <div class="page-header">
 
-        <h1><strong>{{ user_name.split('@')[0] }}</strong>'s Notes</h1>
+        <h1><i class="fas fa-archive"></i> <strong>{{ user_name.split('@')[0] }}</strong>'s Notes</h1>
 
     </div>
 
@@ -27,7 +27,7 @@
              <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
 
                  <div class="d-flex w-100 justify-content-between">
-                        <h4 class="mb-1">
+                        <h4 class="mb-1"><i class="far fa-sticky-note"></i>
                     {{ note.title }}</h4>
 
                      <p class="list-group-item-text">Created date <strong>{{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</strong></p>
