@@ -62,13 +62,13 @@
         <h1 class="heading">Users <small class="text-muted">select</small></h1>
         {% for user in all_users %}
 
-            <b class="list-group-item list-group-item-action flex-column align-items-start">
+            <label class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                     <input type="checkbox" value="{{ user._id }}" name="user" />
                     <h5 class="mb-1">{{ user.nick_name }}</h5>
                     <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
                 </div>
-            </b>
+            </label>
 
         {% endfor %}
 

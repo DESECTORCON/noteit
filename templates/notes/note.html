@@ -63,7 +63,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-        <a type="button" class="btn btn-outline-warning" role="button">Delete Permanently</a>
+        <a href="{{ url_for('.delete_note', note_id=note._id) }}" class="btn btn-outline-danger" role="button">Permanently Delete</a>
       </div>
     </div>
   </div>
