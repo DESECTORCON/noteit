@@ -73,5 +73,5 @@ class Message(object):
 
     @classmethod
     def find_by_viewers_id(cls, viewer_id):
-        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {"message_viewers": viewer_id})]
+        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {"message_viewers": [viewer_id]})]
 

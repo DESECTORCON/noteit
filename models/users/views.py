@@ -64,7 +64,7 @@ def register_user():
                                             You can send messages to other users too! Check out this website!!""",
                                       reciver_id=User.find_by_email(email)._id,
                                       sender_id=User.find_by_email('SE@SENOREPLAY.COM')._id)
-                    message.save_to_db()
+                    message.save_to_mongo()
                     return redirect(url_for("home"))
 
             except UserErrors.UserError as e:

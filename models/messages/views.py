@@ -15,7 +15,7 @@ message_blueprint = Blueprint('message', __name__)
 @user_decorators.require_login
 def my_recived_messages(user_id):
     try:
-        messages = Message.find_by_viewers_id(user_id)
+        messages = Message.find_by_reciver_id(user_id)
         user_nickname = User.find_by_id(session['_id']).nick_name
 
         return render_template('messages/my_recived_messages.html', messages=messages, user_nickname=user_nickname)
@@ -31,7 +31,7 @@ def my_recived_messages(user_id):
 @user_decorators.require_login
 def my_sended_messages(user_id):
     try:
-        messages = Message.find_by_viewers_id(user_id)
+        messages = Message.find_by_sender_id(user_id)
         user_nickname = User.find_by_id(session['_id']).nick_name
 
         return render_template('messages/my_sended_messages.html', messages=messages, user_nickname=user_nickname)
@@ -146,10 +146,7 @@ def all_messages():
 def delete_message(message_id):
     try:
         message = Message.find_by_id(message_id)
-        message.message_viewers.remove(session['_id'])
-        message.save_to_mongo()
-        if message.message_viewers is []:
-            message.delete()
+        message.delete()
 
         return redirect(url_for('.my_recived_messages', user_id=session['_id']))
 

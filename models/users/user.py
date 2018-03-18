@@ -106,7 +106,7 @@ class User(object):
         Database.remove(UserConstants.COLLECTION, {'_id': self._id})
 
     def delete_user_notes(self):
-        notes = self.find_by_nickname_mulitple(self.nick_name)
+        notes = Note.find_by_user_email(self.email)
 
         for note in notes:
             note.delete()

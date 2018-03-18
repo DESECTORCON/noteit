@@ -157,20 +157,19 @@ def edit_note(note_id):
 
         if request.method == 'POST':
 
-            if request.method == 'POST':
-                share = request.form['inputGroupSelect01']
+            share = request.form['inputGroupSelect01']
 
-                if share == '0':
-                    return render_template('/notes/create_note.html',
-                                           error_msg="You did not selected an Share label. Please select an Share label.")
+            if share == '0':
+                return render_template('/notes/create_note.html',
+                                       error_msg="You did not selected an Share label. Please select an Share label.")
 
-                if share == '1':
-                    share = True
-                    share_only_with_users = False
+            if share == '1':
+                share = True
+                share_only_with_users = False
 
-                else:
-                    share = False
-                    share_only_with_users = True
+            else:
+                share = False
+                share_only_with_users = True
 
             title = request.form['title']
             content = request.form['content']

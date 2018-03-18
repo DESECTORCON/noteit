@@ -55,10 +55,9 @@
 
                     <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ note.title }}</h5>
+                    <h5 class="mb-1"><i class="fas fa-sticky-note"></i> {{ note.title }}</h5>
                     <small>{{ note.created_date.strftime('Created at: %Y-%m-%d %H:%M') }}</small>
                     </div>
-                    <p class="mb-1">{{ note.content.split()[0] + '...' }}</p>
                     </a>
 
                 {% endfor %}
