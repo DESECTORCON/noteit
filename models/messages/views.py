@@ -66,7 +66,9 @@ def send_message():
 
             sender_id = User.find_by_email(session['email'])._id
 
-            message = Message(title=title, content=content, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False)
+            message = Message(title=title, content=content,
+                              reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False,
+                              message_viewers=[recivers, sender_id])
             message.save_to_mongo()
 
             return redirect(url_for('.my_sended_messages', user_id=sender_id))
@@ -144,8 +146,8 @@ def all_messages():
 def delete_message(message_id):
     try:
         message = Message.find_by_id(message_id)
-
         message.delete()
+
         return redirect(url_for('.my_recived_messages', user_id=session['_id']))
 
     except:

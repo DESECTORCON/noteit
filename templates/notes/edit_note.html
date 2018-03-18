@@ -37,9 +37,17 @@
 
                               <option value="1" selected>Share with all </option>
                                 <option value="2">Share with only Note-it™ users</option>
-                          {% else %}
+                            <option value="3">Don't Share</option>
+                          {% elif note.share_only_with_users == True %}
                                 <option value="1">Share with all </option>
                               <option value="2" selected>Share with only Note-it™ users</option>
+                                <option value="3">Don't Share</option>
+
+                          {% else %}
+
+                            <option value="1">Share with all </option>
+                            <option value="2" selected>Share with only Note-it™ users</option>
+                            <option value="3" selected>Don't Share</option>
 
                           {% endif %}
 
