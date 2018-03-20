@@ -9,6 +9,7 @@
 
     {% include 'html_dependencies.html' %}
 
+
 </head>
 <body>
 
@@ -84,6 +85,18 @@
 
         <div class="footer-size jumbotron">
 
+            <p></p>
+
+            <p id="demo"></p>
+
+<script>
+var myVar = setInterval(myTimer, 1000);
+
+function myTimer() {
+    var d = new Date();
+    document.getElementById("demo").innerHTML = d.toLocaleTimeString();
+}
+</script>
             <h7><span class="glyphicon glyphicon-console"></span> Made by <a href="https://www.jetbrains.com/pycharm/">Pycharm</a>
                 and
                 <a href="http://flask.pocoo.org/">Flask</a> and <i class="fab fa-python"></i> <a href="https://www.python.org/">Python</a></h7>
@@ -95,6 +108,7 @@
                             version would be out soon!!
                  </h5>
             </div>
+
 
         </div>
 

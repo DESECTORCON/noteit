@@ -64,6 +64,11 @@ def loading():
     return render_template('loading.html')
 
 
+@app.errorhandler(404)
+def http_error_404(e):
+    return render_template('error.html'), 404
+
+
 from models.users.views import user_blueprint
 from models.notes.views import note_blueprint
 from models.messages.views import message_blueprint
