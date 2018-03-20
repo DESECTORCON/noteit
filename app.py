@@ -17,10 +17,12 @@ for i in range(100):
 @app.before_first_request
 def init():
     Database.initialize()
+    session['_id'] = None
+    session['email'] = None
 
 
-@app.before_first_request
-def init2():
+@app.before_request
+def before_request_session_reset():
     session['_id'] = None
     session['email'] = None
 
