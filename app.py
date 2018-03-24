@@ -35,6 +35,13 @@ def get_notes(email):
 
 @app.route('/')
 def home():
+    try:
+        if session['_id'] is None or session['email'] is None:
+            pass
+    except:
+        session['_id'] = None
+        session['email'] = None
+
     max_items = config.MAX_ITEMS
     messages = []
     notes = []
