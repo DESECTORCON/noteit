@@ -21,12 +21,6 @@ def init():
     session['email'] = None
 
 
-@app.before_request
-def before_request_session_reset():
-    session['_id'] = None
-    session['email'] = None
-
-
 def get_read_messages(session_id):
     return Message.find_by_recivers_not_readed(session_id)
 
