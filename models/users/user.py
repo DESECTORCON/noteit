@@ -81,8 +81,7 @@ class User(object):
                 'nick_name': nick_name,
                 'user_id': "",
             }
-        res = el.index(index="users", doc_type='user', body=doc, id=User.find_by_email(email)._id)
-        print(res['created'])
+        el.index(index="users", doc_type='user', body=doc, id=User.find_by_email(email)._id)
 
         return True
 

@@ -106,21 +106,28 @@ def logout_user():
 def users_page():
     try:
         if request.method == 'POST':
+
             el = Elasticsearch(port=9200)
             data = el.search(index='users', doc_type='user', body={
                                                     "query": {
-                                                        "match_all": {}
+                                                        "term": {"nick_name": request.form['Search_user']}
                                                     }
                                               })
+            print(request.form['Search_user'])
             print(data)
             users = []
-            for user in data['hits']['hits']:
-                users.append(User.find_by_id(user['_id']))
+            try:
+                for user in data['hits']['hits']:
+                    users.append(User.find_by_id(user['_source']['user_id']))
+            except:
+                pass
+            print(users)
+            return render_template('/users/users_page.html', users=users, form=request.form['Search_user'])
 
         else:
             users = User.get_all()
+            return render_template('/users/users_page.html', users=users)
 
-        return render_template('/users/users_page.html', users=users)
 
     except:
         error_msg = traceback.format_exc().split('\n')
