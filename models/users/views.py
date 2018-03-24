@@ -1,5 +1,7 @@
 import datetime
 import traceback
+
+from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template
 from werkzeug.utils import redirect
 import models.users.errors as UserErrors
@@ -103,8 +105,21 @@ def logout_user():
 @user_blueprint.route('/users', methods=['GET', 'POST'])
 def users_page():
     try:
-        users = User.get_all()
-        # TODO: 일래스틱서치 배우고 완료하기
+        if request.method == 'POST':
+            el = Elasticsearch(port=9200)
+            data = el.search(index='users', doc_type='user', body={
+                                                    "query": {
+                                                        "match_all": {}
+                                                    }
+                                              })
+            print(data)
+            users = []
+            for user in data['hits']['hits']:
+                users.append(User.find_by_id(user['_id']))
+
+        else:
+            users = User.get_all()
+
         return render_template('/users/users_page.html', users=users)
 
     except:

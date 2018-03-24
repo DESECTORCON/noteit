@@ -118,6 +118,9 @@ class User(object):
         return [cls(**elem) for elem in Database.find(UserConstants.COLLECTION, {"nick_name": nickname})]
 
     def delete(self):
+        el = Elasticsearch(port=9200)
+        el.delete_by_query(index='users', doc_type='user', body={'query': {'match': {"_id": self._id}}})
+
         Database.remove(UserConstants.COLLECTION, {'_id': self._id})
 
     def delete_user_notes(self):
