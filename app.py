@@ -3,6 +3,7 @@ import random
 from models.notes.note import Note
 from models.messages.message import *
 import config as config
+from models.users.user import User
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -51,6 +52,10 @@ def home():
         messages = get_unread_messages(session['_id'])
         if messages is None:
             messages = get_read_messages(session['_id'])
+
+        user = User.find_by_id(session['_id'])
+
+        return render_template('home.html', messages=messages[:max_items], notes=notes[:max_items], user=user)
 
     return render_template('home.html', messages=messages[:max_items], notes=notes[:max_items])
 
