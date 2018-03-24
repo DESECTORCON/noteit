@@ -6,6 +6,7 @@ import models.users.errors as UserErrors
 import models.users.constants as UserConstants
 from models.notes.note import Note
 from shortid import ShortId
+from elasticsearch import Elasticsearch
 
 
 class User(object):
@@ -45,6 +46,7 @@ class User(object):
 
     @staticmethod
     def register_user(email, password, nick_name):
+        el = Elasticsearch(port=9200)
         """
         This method registers a user using e-mail and password
         The password already comes hashed as sha-512
@@ -65,9 +67,22 @@ class User(object):
         if nick_name == '' or nick_name == None:
 
             User(email, Utils.hash_password(password), nick_name=None).save_to_mongo()
+            doc = {
+                'email': email,
+                'nick_name': nick_name,
+                'user_id': "",
+            }
 
         else:
             User(email, Utils.hash_password(password), nick_name=nick_name).save_to_mongo()
+
+            doc = {
+                'email': email,
+                'nick_name': nick_name,
+                'user_id': "",
+            }
+        res = el.index(index="users", doc_type='user', body=doc, id=User.find_by_email(email)._id)
+        print(res['created'])
 
         return True
 

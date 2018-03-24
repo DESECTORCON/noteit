@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from flask import Flask, render_template, session
 import random
 from models.notes.note import Note
@@ -13,6 +15,12 @@ random_int = []
 for i in range(100):
     random_int.append(random.randint(1, 10000))
     app.secret_key = ''.join(str(random_int))
+
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=5)
 
 
 @app.before_first_request

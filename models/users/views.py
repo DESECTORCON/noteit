@@ -146,6 +146,7 @@ def delete_user(user_id):
             user.delete_user_notes()
             user.delete()
             session['email'] = None
+            session['_id'] = None
             return redirect(url_for('home'))
 
         return render_template('/users/confrim.html')
