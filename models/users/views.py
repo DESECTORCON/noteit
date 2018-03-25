@@ -110,18 +110,19 @@ def users_page():
             el = Elasticsearch(port=9200)
             data = el.search(index='users', doc_type='user', body={
                                                     "query": {
-                                                        "term": {"nick_name": request.form['Search_user']}
+                                                        "prefix": {"nick_name": request.form['Search_user']}
                                                     }
                                               })
-            print(request.form['Search_user'])
-            print(data)
+            # For debug
+            # print(request.form['Search_user'])
+            # print(data)
             users = []
             try:
                 for user in data['hits']['hits']:
                     users.append(User.find_by_id(user['_source']['user_id']))
             except:
                 pass
-            print(users)
+            # print(users)
             return render_template('/users/users_page.html', users=users, form=request.form['Search_user'])
 
         else:
