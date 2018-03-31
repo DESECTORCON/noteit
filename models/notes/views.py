@@ -1,5 +1,5 @@
 from elasticsearch import Elasticsearch
-from flask import Blueprint, request, session, url_for, render_template
+from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
 from models.notes.note import Note
 import models.users.decorators as user_decorators
@@ -71,6 +71,7 @@ def user_notes():
 @note_blueprint.route('/note/<string:note_id>')
 def note(note_id):
     try:
+        raise Exception
         note = Note.find_by_id(note_id)
         user = User.find_by_email(note.author_email)
 
@@ -134,6 +135,8 @@ def create_note():
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
 
+            flash('Your note has successfully created.')
+
             return redirect(url_for('.user_notes'))
 
         return render_template('/notes/create_note.html')
@@ -153,6 +156,13 @@ def delete_note(note_id, redirect_to='.user_notes'):
         note = Note.find_by_id(note_id)
         note.delete_on_elastic()
         note.delete()
+        flash('Your note has successfully created.')
+    except:
+        error_msg = traceback.format_exc().split('\n')
+
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes deleting note')
+        Error_obj.save_to_mongo()
+        return render_template('error_page.html', error_msgr='Crashed during deleting your note...')
     finally:
         return redirect(url_for(redirect_to))
 

@@ -1,7 +1,7 @@
 import datetime
 import traceback
 from elasticsearch import Elasticsearch
-from flask import Blueprint, request, session, url_for, render_template
+from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
 import models.users.errors as UserErrors
 from models.error_logs.error_log import Error_
@@ -30,6 +30,7 @@ def login_user():
                     session['_id'] = user._id
                     user.last_logined = datetime.datetime.now()
                     user.save_to_mongo()
+                    flash('You were successfully logged in')
                     return redirect(url_for("home"))
 
             except UserErrors.UserError as e:

@@ -15,81 +15,92 @@
 
 <br><br><br>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light  fixed-top" style="background-color: #e3f2fd;">
+<nav class="navbar navbar-expand-lg navbar-light bg-light  fixed-top" style="background-color: #e3f2fd;">
 
-        <div class="container">
+    <div class="container">
 
-            <div class="navbar-header">
+        <div class="navbar-header">
 
-                <a href="/" class="navbar-brand" title="Home"><i class="far fa-sticky-note"></i>   Note-it™</a>
-            </div>
+            <a href="/" class="navbar-brand" title="Home"><i class="far fa-sticky-note"></i>   Note-it™</a>
+        </div>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <div id="navbarSupportedContent" class="collapse navbar-collapse">
+        <div id="navbarSupportedContent" class="collapse navbar-collapse">
 
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active"><a href="{{ url_for('notes.notes') }}" class="nav-link"><i class="far fa-clone"></i> Shared Notes</a></li>
-                    <li class="nav-item active"><a href="{{ url_for('users.users_page') }}" class="nav-link"><i class="fas fa-users"></i> Users</a></li>
-                </ul>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active"><a href="{{ url_for('notes.notes') }}" class="nav-link"><i class="far fa-clone"></i> Shared Notes</a></li>
+                <li class="nav-item active"><a href="{{ url_for('users.users_page') }}" class="nav-link"><i class="fas fa-users"></i> Users</a></li>
+            </ul>
 
-                {% if session['email'] %}
+            {% if session['email'] %}
 
-                    <ul class="nav navbar-nav navbar-right justify-content-end ml-auto">
-                        <li class="nav-item active"><a href="{{ url_for('notes.user_notes') }}" class="nav-link"><i class="fas fa-sticky-note"></i>    My Notes</a></li>
-                    </ul>
+            <ul class="nav navbar-nav navbar-right justify-content-end ml-auto">
+                <li class="nav-item active"><a href="{{ url_for('notes.user_notes') }}" class="nav-link"><i class="fas fa-sticky-note"></i>    My Notes</a></li>
+            </ul>
 
-                    <ul class="nav navbar-nav navbar-right justify-content-end">
-                        <li class="nav-item active"><a href="{{ url_for('users.user_page', user_id=session['email']) }}" class="nav-link"><i class="fas fa-user-circle"></i>    My Profile</a></li>
-                    </ul>
+            <ul class="nav navbar-nav navbar-right justify-content-end">
+                <li class="nav-item active"><a href="{{ url_for('users.user_page', user_id=session['email']) }}" class="nav-link"><i class="fas fa-user-circle"></i>    My Profile</a></li>
+            </ul>
 
-                    <ul class="nav navbar-nav navbar-right justify-content-end ">
-                        <li class="nav-item active"><a href="{{ url_for('home2') }}" class="nav-link"><i class="fas fa-envelope"></i>  Message Center™</a></li>
-                    </ul>
+            <ul class="nav navbar-nav navbar-right justify-content-end ">
+                <li class="nav-item active"><a href="{{ url_for('home2') }}" class="nav-link"><i class="fas fa-envelope"></i>  Message Center™</a></li>
+            </ul>
 
-                    <ul class="nav navbar-nav navbar-right justify-content-end ">
-                        <li class="nav-item active"><a href="{{ url_for('users.logout_user') }}" class="nav-link"><i class="fas fa-sign-out-alt"></i>    Log out</a></li>
-                    </ul>
+            <ul class="nav navbar-nav navbar-right justify-content-end ">
+                <li class="nav-item active"><a href="{{ url_for('users.logout_user') }}" class="nav-link"><i class="fas fa-sign-out-alt"></i>    Log out</a></li>
+            </ul>
 
-                {% else %}
+            {% else %}
 
-                    <ul class="nav navbar-nav navbar-right justify-content-end ml-auto">
-                        <li class="nav-item active"><a href="{{ url_for('users.register_user') }}" class="nav-link"><i class="fas fa-user-plus"></i>   Sign up</a></li>
-                    </ul>
+            <ul class="nav navbar-nav navbar-right justify-content-end ml-auto">
+                <li class="nav-item active"><a href="{{ url_for('users.register_user') }}" class="nav-link"><i class="fas fa-user-plus"></i>   Sign up</a></li>
+            </ul>
 
-                    <ul class="nav navbar-nav navbar-right justify-content-end">
-                        <li class="nav-item active"><a href="{{ url_for('users.login_user') }}" class="nav-link"><i class="fas fa-sign-in-alt"></i> Log in</a></li>
-                    </ul>
+            <ul class="nav navbar-nav navbar-right justify-content-end">
+                <li class="nav-item active"><a href="{{ url_for('users.login_user') }}" class="nav-link"><i class="fas fa-sign-in-alt"></i> Log in</a></li>
+            </ul>
 
-                {% endif %}
-
-            </div>
+            {% endif %}
 
         </div>
 
-    </nav>
-
-    <br>
-
-    <div class="content container">
-        {% block content %}
-
-        {% endblock %}
     </div>
 
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+</nav>
 
-    <footer>
+<br>
 
-        <div class="footer-size jumbotron">
+<div class="content container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <i class="fas fa-info-circle"></i>  {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
 
-            <p></p>
+    {% block content %}
 
-            <p id="demo"></p>
+    {% endblock %}
+</div>
 
-<script>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+<footer>
+
+    <div class="footer-size jumbotron">
+
+        <p></p>
+
+        <p id="demo"></p>
+
+        <script>
 var myVar = setInterval(myTimer, 1000);
 
 function myTimer() {
@@ -97,22 +108,22 @@ function myTimer() {
     document.getElementById("demo").innerHTML = d.toLocaleTimeString();
 }
 </script>
-            <h7><span class="glyphicon glyphicon-console"></span> Made by <a href="https://www.jetbrains.com/pycharm/">Pycharm</a>
-                and
-                <a href="http://flask.pocoo.org/">Flask</a> and <i class="fab fa-python"></i> <a href="https://www.python.org/">Python</a></h7>
+        <h7><span class="glyphicon glyphicon-console"></span> Made by <a href="https://www.jetbrains.com/pycharm/">Pycharm</a>
+            and
+            <a href="http://flask.pocoo.org/">Flask</a> and <i class="fab fa-python"></i> <a href="https://www.python.org/">Python</a></h7>
 
-            <hr class="my-4">
+        <hr class="my-4">
 
-            <div class="alert alert-warning" role="alert">
-                 <h5><i class="fas fa-exclamation-triangle"></i> WARNING: This page is still in test state. The full
-                            version would be out soon!!
-                 </h5>
-            </div>
-
-
+        <div class="alert alert-warning" role="alert">
+            <h5><i class="fas fa-exclamation-triangle"></i> WARNING: This page is still in test state. The full
+                version would be out soon!!
+            </h5>
         </div>
 
-    </footer>
+
+    </div>
+
+</footer>
 
 </body>
 </html>
