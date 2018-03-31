@@ -23,10 +23,10 @@ def user_notes():
             el = Elasticsearch(port=9200)
             if request.form['Search_note'] is '':
                 data = el.search(index='notes', doc_type='note', body={
-                                                        "query": {
-                                                            "match_all": {}
-                                                        }
-                                                  })
+                    "query": {
+                        "match_all": {}
+                    }
+                })
             else:
                 data = el.search(index='notes', doc_type='note', body={
                     "query": {
@@ -41,10 +41,10 @@ def user_notes():
             except:
                 pass
             # print(users)
-            return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name, form=request.form['Search_note'])
+            return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
+                                   form=request.form['Search_note'])
 
         else:
-
 
             return render_template('/notes/my_notes.html', user_name=user_name, user_notes=user_notes)
 
@@ -58,7 +58,6 @@ def user_notes():
 
 @note_blueprint.route('/note/<string:note_id>')
 def note(note_id):
-
     try:
         note = Note.find_by_id(note_id)
         user = User.find_by_email(note.author_email)
@@ -93,7 +92,6 @@ def note(note_id):
 @note_blueprint.route('/add_note', methods=['GET', 'POST'])
 @user_decorators.require_login
 def create_note():
-
     try:
         if request.method == 'POST':
             share = request.form['inputGroupSelect01']
@@ -120,7 +118,7 @@ def create_note():
             author_nickname = User.find_by_email(author_email).nick_name
 
             note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
-                                 author_nickname=author_nickname ,share_only_with_users=share_only_with_users)
+                                 author_nickname=author_nickname, share_only_with_users=share_only_with_users)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
 
@@ -139,7 +137,6 @@ def create_note():
 @note_blueprint.route('/delete_note/<string:note_id>')
 @user_decorators.require_login
 def delete_note(note_id, redirect_to='.user_notes'):
-
     try:
         note = Note.find_by_id(note_id)
         note.delete_on_elastic()
@@ -151,17 +148,54 @@ def delete_note(note_id, redirect_to='.user_notes'):
 @note_blueprint.route('/share_note/<string:note_id>')
 @user_decorators.require_login
 def share_note(note_id):
-
     try:
         Note.find_by_id(note_id).share_or_unshare()
     finally:
         return redirect(url_for('.note', note_id=note_id, msg='Your note is shared!!', msg_=True))
 
 
-@note_blueprint.route('/pub_notes/')
+@note_blueprint.route('/pub_notes/', methods=['GET', 'POST'])
 def notes():
-
     try:
+
+        if request.method == 'POST':
+            form_ = request.form['Search_note']
+
+            el = Elasticsearch(port=9200)
+
+            if form_ is '':
+                data = el.search(index='notes', doc_type='note', body={
+                    "query": {
+                        "match_all": {}
+                    }
+                })
+            else:
+                data = el.search(index='notes', doc_type='note', body={
+                    "query": {
+                        "bool": {
+                            "should": [
+                                {
+                                    "prefix": {"title": form_},
+                                },
+                                {
+                                    "prefix": {"author_nickname": form_},
+                                },
+                                {
+                                    "term": {"content": form_}
+                                }
+                            ]
+                        }
+                    }
+                })
+
+            notes = []
+            try:
+                for note in data['hits']['hits']:
+                    notes.append(Note.find_by_id(note['_source']['note_id']))
+            except:
+                pass
+
+            return render_template('/notes/pub_notes.html', notes=notes, form=form_)
 
         try:
             if session['email'] is None:
@@ -175,7 +209,7 @@ def notes():
     except:
         error_msg = traceback.format_exc().split('\n')
 
-        Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes publick note reading')
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes public note reading')
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
 
@@ -183,7 +217,6 @@ def notes():
 @note_blueprint.route('/edit_note/<string:note_id>', methods=['GET', 'POST'])
 @user_decorators.require_login
 def edit_note(note_id):
-
     try:
         note = Note.find_by_id(note_id)
 
@@ -220,6 +253,7 @@ def edit_note(note_id):
     except:
         error_msg = traceback.format_exc().split('\n')
 
-        Error_obj = Error_(error_msg=''.join(error_msg), error_location='edit_note saveing and getting input from html file')
+        Error_obj = Error_(error_msg=''.join(error_msg),
+                           error_location='edit_note saveing and getting input from html file')
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during saving your note...')
