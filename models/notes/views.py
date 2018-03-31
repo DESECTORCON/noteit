@@ -20,8 +20,11 @@ def user_notes():
         user_name = user.email
 
         if request.method == 'POST':
+            form_ = request.form['Search_note']
+
             el = Elasticsearch(port=9200)
-            if request.form['Search_note'] is '':
+
+            if form_ is '':
                 data = el.search(index='notes', doc_type='note', body={
                     "query": {
                         "match_all": {}
@@ -30,7 +33,16 @@ def user_notes():
             else:
                 data = el.search(index='notes', doc_type='note', body={
                     "query": {
-                        "prefix": {"title": request.form['Search_note']}
+                        "bool": {
+                            "should": [
+                                {
+                                    "prefix": {"title": form_},
+                                },
+                                {
+                                    "term": {"content": form_}
+                                }
+                            ]
+                        }
                     }
                 })
 
@@ -42,7 +54,7 @@ def user_notes():
                 pass
             # print(users)
             return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
-                                   form=request.form['Search_note'])
+                                   form=form_)
 
         else:
 
@@ -143,15 +155,6 @@ def delete_note(note_id, redirect_to='.user_notes'):
         note.delete()
     finally:
         return redirect(url_for(redirect_to))
-
-
-@note_blueprint.route('/share_note/<string:note_id>')
-@user_decorators.require_login
-def share_note(note_id):
-    try:
-        Note.find_by_id(note_id).share_or_unshare()
-    finally:
-        return redirect(url_for('.note', note_id=note_id, msg='Your note is shared!!', msg_=True))
 
 
 @note_blueprint.route('/pub_notes/', methods=['GET', 'POST'])

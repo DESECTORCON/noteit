@@ -66,14 +66,6 @@ class Note(object):
         del el
         return True
 
-    def share_or_unshare(self):
-
-        if self.shared == False:
-            self.shared = True
-        else:
-            self.shared = False
-        self.save_to_mongo()
-
     @classmethod
     def find_shared_notes(cls):
         return [cls(**elem) for elem in Database.find(NoteConstants.COLLECTION,
