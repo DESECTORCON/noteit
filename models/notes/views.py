@@ -71,7 +71,6 @@ def user_notes():
 @note_blueprint.route('/note/<string:note_id>')
 def note(note_id):
     try:
-        raise Exception
         note = Note.find_by_id(note_id)
         user = User.find_by_email(note.author_email)
 
