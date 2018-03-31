@@ -1,0 +1,5 @@
+Collecting elasticsearch
+  Using cached elasticsearch-6.2.0-py2.py3-none-any.whl
+Requirement already satisfied: urllib3<1.23,>=1.21.1 in /Users/choeminjun/Web_dev_VE/Web_dev_VE_/lib/python3.4/site-packages (from elasticsearch)
+Installing collected packages: elasticsearch
+Successfully installed elasticsearch-6.2.0

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>Note-it™ | 404 Not Found</title>
+    <script>
+        alert('Hey! This web page does not exist!');
+           setTimeout(function () {
+             window.location.href = "/"; //will redirect to your blog page (an ex: blog.html)
+            }, 900); //will call the function after 2 secs.
+        alert('We will redirect you to the home page.')
+
+
+
+    </script>
+{% endblock %}
+
+{% block content %}
+
+    <h1>404 Error</h1>
+    <p>You will be redirected in a moment!!</p>
+
+{% endblock %}

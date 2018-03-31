@@ -1,6 +1,7 @@
 import datetime
 import traceback
-from flask import Blueprint, request, session, url_for, render_template
+from elasticsearch import Elasticsearch
+from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
 import models.users.errors as UserErrors
 from models.error_logs.error_log import Error_
@@ -29,6 +30,7 @@ def login_user():
                     session['_id'] = user._id
                     user.last_logined = datetime.datetime.now()
                     user.save_to_mongo()
+                    flash('You were successfully logged in')
                     return redirect(url_for("home"))
 
             except UserErrors.UserError as e:
@@ -56,15 +58,15 @@ def register_user():
 
             try:
                 if User.register_user(email, password, nick_name):
-                    user = User.find_by_email(email)._id
+                    user_id = User.find_by_email(email)._id
                     session['email'] = email
-                    session['_id'] = user
+                    session['_id'] = user_id
                     message = Message(title="Welcome to Note-it™!",
                                       content="""Welcome to Note-it! You can make a note,
                                             and share it with other users! Or you can
                                             just keep the note to your selves.
                                             You can send messages to other users too! Check out this website!!""",
-                                      reciver_id=user,
+                                      reciver_id=user_id,
                                       sender_id=User.find_by_email('SE@SENOREPLAY.COM')._id)
                     message.save_to_mongo()
                     return redirect(url_for("home"))
@@ -103,9 +105,30 @@ def logout_user():
 @user_blueprint.route('/users', methods=['GET', 'POST'])
 def users_page():
     try:
-        users = User.get_all()
-        # TODO: 일래스틱서치 배우고 완료하기
-        return render_template('/users/users_page.html', users=users)
+        if request.method == 'POST':
+
+            el = Elasticsearch(port=9200)
+            data = el.search(index='users', doc_type='user', body={
+                                                    "query": {
+                                                        "prefix": {"nick_name": request.form['Search_user']}
+                                                    }
+                                              })
+            # For debug
+            # print(request.form['Search_user'])
+            # print(data)
+            users = []
+            try:
+                for user in data['hits']['hits']:
+                    users.append(User.find_by_id(user['_source']['user_id']))
+            except:
+                pass
+            # print(users)
+            return render_template('/users/users_page.html', users=users, form=request.form['Search_user'])
+
+        else:
+            users = User.get_all()
+            return render_template('/users/users_page.html', users=users)
+
 
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -146,6 +169,7 @@ def delete_user(user_id):
             user.delete_user_notes()
             user.delete()
             session['email'] = None
+            session['_id'] = None
             return redirect(url_for('home'))
 
         return render_template('/users/confrim.html')

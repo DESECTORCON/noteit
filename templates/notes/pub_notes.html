@@ -1,45 +1,60 @@
 {% extends "base.html" %}
 {% block title %}
-    <title>Note-it™ | Public Notes</title>
+<title>Note-it™ | Public Notes</title>
 {% endblock %}
 
 {% block content %}
 
-    <div class="content">
+<div class="content">
 
-        <h1><i class="far fa-clone"></i> Public Notes <small class="text-muted">shared notes</small></h1>
+    <h1><i class="far fa-clone"></i> Public Notes <small class="text-muted">shared notes</small></h1>
 
-    </div>
+</div>
 
 <hr class="my-4">
 
-    <div class="list-group">
+<div class="list-group">
 
-        {% if notes == [] or notes == None %}
 
-            <div class="alert alert-primary" role="alert">
-                <i class="far fa-frown"></i> There are no shared notes.
-            </div>
+    <form class="form-row my-2 my-lg-0" method="POST">
+        <div class="col">
+            {% if form %}
+            <input class="form-control mr-sm-2" type="search" placeholder="Search Author name, title and content!" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
+            {% else %}
+            <input class="form-control mr-sm-2" type="search" placeholder="Search Author name, title and content!" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
+            {% endif %}
 
-        {% endif %}
+        </div>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
 
-        {% for note in notes %}
+    <br>
 
-            <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
-                <div class="d-flex w-100 justify-content-between">
-                    <h2 class="mb-1"><i class="fas fa-sticky-note"></i> {{ note.title }}</h2>
-                    <p class="list-group-item-text">Author: {{ note.author_nickname }}</p>
-                </div>
+    {% if notes == [] or notes == None %}
 
-                <div class="d-flex w-100 justify-content-between">
-                    <p class="mb-1"></p>
-                    <p class="list-group-item-text">Created date: {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</p>
-                </div>
-
-            </a>
-
-        {% endfor %}
-
+    <div class="alert alert-primary" role="alert">
+        <i class="far fa-frown"></i> There are no shared notes.
     </div>
+
+    {% endif %}
+
+    {% for note in notes %}
+
+    <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h2 class="mb-1"><i class="fas fa-sticky-note"></i> {{ note.title }}</h2>
+            <p class="list-group-item-text">Author: {{ note.author_nickname }}</p>
+        </div>
+
+        <div class="d-flex w-100 justify-content-between">
+            <p class="mb-1"></p>
+            <p class="list-group-item-text">Created date: {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</p>
+        </div>
+
+    </a>
+
+    {% endfor %}
+
+</div>
 
 {% endblock %}

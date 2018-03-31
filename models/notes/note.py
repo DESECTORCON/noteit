@@ -1,4 +1,7 @@
 import uuid
+
+from elasticsearch import Elasticsearch
+
 from common.database import Database
 import models.notes.constants as NoteConstants
 import datetime
@@ -49,13 +52,19 @@ class Note(object):
     def delete(self):
         Database.remove(NoteConstants.COLLECTION, {'_id': self._id})
 
-    def share_or_unshare(self):
-
-        if self.shared == False:
-            self.shared = True
-        else:
-            self.shared = False
-        self.save_to_mongo()
+    def delete_on_elastic(self):
+        el = Elasticsearch(port=9200)
+        body = {
+            'query': {
+                'match': {
+                    'note_id': self._id
+                }
+            }
+        }
+        a = el.delete_by_query(index="notes", doc_type='note', body=body)
+        print(a)
+        del el
+        return True
 
     @classmethod
     def find_shared_notes(cls):
@@ -75,3 +84,19 @@ class Note(object):
     @classmethod
     def get_all(cls):
         return [cls(**elem) for elem in Database.find(NoteConstants.COLLECTION,{})]
+
+    def save_to_elastic(self):
+        el = Elasticsearch(port=9200)
+        doc = {
+            'title': self.title,
+            'content': self.content,
+            'author_nickname': self.author_nickname,
+            'note_id': self._id,
+            'share_only_with_users': self.share_only_with_users,
+            'shared': self.shared,
+            'created_date': self.created_date.strftime('%Y-%m-%d')
+        }
+        a = el.index(index="notes", doc_type='note', body=doc)
+        print(a)
+        del el
+        return True

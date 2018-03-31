@@ -109,7 +109,10 @@ def message(message_id, is_sended=False):
             reciver_nickname = User.find_by_id(message.reciver_id).nick_name
 
         if message.is_a_noteOBJ:
-            note = Note.find_by_id(message.content)
+            try:
+                note = Note.find_by_id(message.content)
+            except:
+                note = None
         else:
             note = None
 

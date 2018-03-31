@@ -1,8 +1,11 @@
+from datetime import timedelta
+
 from flask import Flask, render_template, session
 import random
 from models.notes.note import Note
 from models.messages.message import *
 import config as config
+from models.users.user import User
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -14,13 +17,15 @@ for i in range(100):
     app.secret_key = ''.join(str(random_int))
 
 
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=5)
+
+
 @app.before_first_request
 def init():
     Database.initialize()
-
-
-@app.before_first_request
-def init2():
     session['_id'] = None
     session['email'] = None
 
@@ -39,6 +44,13 @@ def get_notes(email):
 
 @app.route('/')
 def home():
+    try:
+        if session['_id'] is None or session['email'] is None:
+            pass
+    except:
+        session['_id'] = None
+        session['email'] = None
+
     max_items = config.MAX_ITEMS
     messages = []
     notes = []
@@ -48,6 +60,10 @@ def home():
         messages = get_unread_messages(session['_id'])
         if messages is None:
             messages = get_read_messages(session['_id'])
+
+        user = User.find_by_id(session['_id'])
+
+        return render_template('home.html', messages=messages[:max_items], notes=notes[:max_items], user=user)
 
     return render_template('home.html', messages=messages[:max_items], notes=notes[:max_items])
 
@@ -60,6 +76,11 @@ def home2():
 @app.route('/loading')
 def loading():
     return render_template('loading.html')
+
+
+@app.errorhandler(404)
+def http_error_404(e):
+    return render_template('error.html'), 404
 
 
 from models.users.views import user_blueprint
