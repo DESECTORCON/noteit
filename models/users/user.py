@@ -11,7 +11,6 @@ from config import ELASTIC_PORT as port
 
 
 class User(object):
-    __searchable__ = ['email', 'nick_name', '_id']
 
     def __init__(self, email, password, _id=None, nick_name=None, last_logined=datetime.datetime.now()):
         self.email = email

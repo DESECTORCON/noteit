@@ -156,7 +156,7 @@ def delete_note(note_id, redirect_to='.user_notes'):
         note = Note.find_by_id(note_id)
         note.delete_on_elastic()
         note.delete()
-        flash('Your note has successfully created.')
+        flash('Your note has successfully deleted.')
     except:
         error_msg = traceback.format_exc().split('\n')
 
@@ -266,6 +266,7 @@ def edit_note(note_id):
             note.content = content
             note.save_to_mongo()
             note.update_to_elastic()
+            flash('Your note has successfully saved.')
 
             return redirect(url_for('.note', note_id=note_id))
 
