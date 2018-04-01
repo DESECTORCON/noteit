@@ -1,5 +1,4 @@
 from datetime import timedelta
-
 from flask import Flask, render_template, session
 import random
 from models.notes.note import Note
@@ -20,7 +19,7 @@ for i in range(100):
 @app.before_request
 def make_session_permanent():
     session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=5)
+    app.permanent_session_lifetime = timedelta(minutes=10)
 
 
 @app.before_first_request

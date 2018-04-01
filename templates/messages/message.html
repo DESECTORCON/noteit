@@ -5,11 +5,11 @@
 
 {% block content %}
 
-    <div class="container card" style="background-color: #e8e8e8;">
+    <div class="container card">
 
         <div class="card-body">
 
-            {% if note == None %}
+            {% if note == None and is_a_note %}
 
                 <p class="text-center font-weight-light">message</p>
                     <h1 class="text-center font-weight-bold">{{ message.title }}</h1>
