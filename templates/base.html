@@ -9,6 +9,16 @@
 
     {% include 'html_dependencies.html' %}
 
+    <script>
+
+        var myVar = setInterval(myTimer, 1000);
+
+        function myTimer() {
+              $(document).ready(function(){
+  $('#close').trigger('click');
+});
+        }
+    </script>
 
 </head>
 <body>
@@ -78,7 +88,7 @@
     {% if messages %}
     {% for message in messages %}
     <div class="alert alert-success alert-dismissible">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <a href="#" class="close" data-dismiss="alert" aria-label="close" id="close" name="close">&times;</a>
         <i class="fas fa-info-circle"></i>  {{ message }}
     </div>
     {% endfor %}
