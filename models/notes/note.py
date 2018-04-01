@@ -1,7 +1,6 @@
 import uuid
-
+from config import ELASTIC_PORT as port
 from elasticsearch import Elasticsearch
-
 from common.database import Database
 import models.notes.constants as NoteConstants
 import datetime
@@ -53,7 +52,7 @@ class Note(object):
         Database.remove(NoteConstants.COLLECTION, {'_id': self._id})
 
     def delete_on_elastic(self):
-        el = Elasticsearch(port=9200)
+        el = Elasticsearch(port=port)
         body = {
             'query': {
                 'match': {
@@ -86,7 +85,7 @@ class Note(object):
         return [cls(**elem) for elem in Database.find(NoteConstants.COLLECTION,{})]
 
     def save_to_elastic(self):
-        el = Elasticsearch(port=9200)
+        el = Elasticsearch(port=port)
         doc = {
             'title': self.title,
             'content': self.content,
@@ -97,6 +96,29 @@ class Note(object):
             'created_date': self.created_date.strftime('%Y-%m-%d')
         }
         a = el.index(index="notes", doc_type='note', body=doc)
-        print(a)
+        del el
+        return True
+
+    def update_to_elastic(self):
+        el = Elasticsearch(port=port)
+        doc1 = {
+            "query": {
+                "match": {
+                    'note_id': self._id
+                }
+            }
+        }
+        doc2 = {
+            'title': self.title,
+            'content': self.content,
+            'author_nickname': self.author_nickname,
+            'note_id': self._id,
+            'share_only_with_users': self.share_only_with_users,
+            'shared': self.shared,
+            'created_date': self.created_date.strftime('%Y-%m-%d')
+        }
+
+        el.delete_by_query(index="notes", doc_type='note', body=doc1)
+        el.index(index="notes", doc_type='note', body=doc2)
         del el
         return True

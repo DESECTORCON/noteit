@@ -6,6 +6,7 @@ import models.users.decorators as user_decorators
 from models.users.user import User
 from models.error_logs.error_log import Error_
 import traceback
+from config import ELASTIC_PORT as port
 
 note_blueprint = Blueprint('notes', __name__)
 
@@ -22,7 +23,7 @@ def user_notes():
         if request.method == 'POST':
             form_ = request.form['Search_note']
 
-            el = Elasticsearch(port=9200)
+            el = Elasticsearch(port=port)
 
             if form_ is '':
                 data = el.search(index='notes', doc_type='note', body={
@@ -155,7 +156,7 @@ def delete_note(note_id, redirect_to='.user_notes'):
         note = Note.find_by_id(note_id)
         note.delete_on_elastic()
         note.delete()
-        flash('Your note has successfully created.')
+        flash('Your note has successfully deleted.')
     except:
         error_msg = traceback.format_exc().split('\n')
 
@@ -173,7 +174,7 @@ def notes():
         if request.method == 'POST':
             form_ = request.form['Search_note']
 
-            el = Elasticsearch(port=9200)
+            el = Elasticsearch(port=port)
 
             if form_ is '':
                 data = el.search(index='notes', doc_type='note', body={
@@ -203,7 +204,15 @@ def notes():
             notes = []
             try:
                 for note in data['hits']['hits']:
-                    notes.append(Note.find_by_id(note['_source']['note_id']))
+
+                    if note['_source']['shared'] is True:
+                        notes.append(Note.find_by_id(note['_source']['note_id']))
+                    else:
+                        if note['_source']['share_only_with_users'] is True and session['email'] is not None:
+                            notes.append(Note.find_by_id(note['_source']['note_id']))
+
+                        else:
+                            pass
             except:
                 pass
 
@@ -256,6 +265,8 @@ def edit_note(note_id):
             note.title = title
             note.content = content
             note.save_to_mongo()
+            note.update_to_elastic()
+            flash('Your note has successfully saved.')
 
             return redirect(url_for('.note', note_id=note_id))
 
