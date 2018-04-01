@@ -203,7 +203,15 @@ def notes():
             notes = []
             try:
                 for note in data['hits']['hits']:
-                    notes.append(Note.find_by_id(note['_source']['note_id']))
+
+                    if note['_source']['shared'] is True:
+                        notes.append(Note.find_by_id(note['_source']['note_id']))
+                    else:
+                        if note['_source']['share_only_with_users'] is True and session['email'] is not None:
+                            notes.append(Note.find_by_id(note['_source']['note_id']))
+
+                        else:
+                            pass
             except:
                 pass
 
@@ -256,6 +264,7 @@ def edit_note(note_id):
             note.title = title
             note.content = content
             note.save_to_mongo()
+            note.update_to_elastic()
 
             return redirect(url_for('.note', note_id=note_id))
 
