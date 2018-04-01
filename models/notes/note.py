@@ -1,7 +1,6 @@
 import uuid
-
+from config import ELASTIC_PORT as port
 from elasticsearch import Elasticsearch
-
 from common.database import Database
 import models.notes.constants as NoteConstants
 import datetime
@@ -53,7 +52,7 @@ class Note(object):
         Database.remove(NoteConstants.COLLECTION, {'_id': self._id})
 
     def delete_on_elastic(self):
-        el = Elasticsearch(port=9200)
+        el = Elasticsearch(port=port)
         body = {
             'query': {
                 'match': {
@@ -86,7 +85,7 @@ class Note(object):
         return [cls(**elem) for elem in Database.find(NoteConstants.COLLECTION,{})]
 
     def save_to_elastic(self):
-        el = Elasticsearch(port=9200)
+        el = Elasticsearch(port=port)
         doc = {
             'title': self.title,
             'content': self.content,
@@ -101,7 +100,7 @@ class Note(object):
         return True
 
     def update_to_elastic(self):
-        el = Elasticsearch(port=9200)
+        el = Elasticsearch(port=port)
         doc1 = {
             "query": {
                 "match": {

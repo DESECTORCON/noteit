@@ -9,6 +9,7 @@ from models.messages.message import Message
 from models.notes.note import Note
 from models.users.user import User
 import models.users.decorators as user_decorators
+from config import ELASTIC_PORT as port
 
 user_blueprint = Blueprint('users', __name__)
 
@@ -107,7 +108,7 @@ def users_page():
     try:
         if request.method == 'POST':
 
-            el = Elasticsearch(port=9200)
+            el = Elasticsearch(port=port)
             data = el.search(index='users', doc_type='user', body={
                                                     "query": {
                                                         "prefix": {"nick_name": request.form['Search_user']}

@@ -7,6 +7,7 @@ import models.users.constants as UserConstants
 from models.notes.note import Note
 from shortid import ShortId
 from elasticsearch import Elasticsearch
+from config import ELASTIC_PORT as port
 
 
 class User(object):
@@ -46,7 +47,7 @@ class User(object):
 
     @staticmethod
     def register_user(email, password, nick_name):
-        el = Elasticsearch(port=9200)
+        el = Elasticsearch(port=port)
         """
         This method registers a user using e-mail and password
         The password already comes hashed as sha-512
@@ -117,7 +118,7 @@ class User(object):
         return [cls(**elem) for elem in Database.find(UserConstants.COLLECTION, {"nick_name": nickname})]
 
     def delete(self):
-        el = Elasticsearch(port=9200)
+        el = Elasticsearch(port=port)
         el.delete_by_query(index='users', doc_type='user', body={'query': {'match': {"_id": self._id}}})
 
         Database.remove(UserConstants.COLLECTION, {'_id': self._id})

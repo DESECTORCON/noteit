@@ -7,6 +7,7 @@ import models.users.decorators as user_decorators
 from models.notes.note import Note
 from models.users.user import User
 import traceback
+from config import ELASTIC_PORT as port
 
 message_blueprint = Blueprint('message', __name__)
 

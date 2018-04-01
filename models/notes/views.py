@@ -6,6 +6,7 @@ import models.users.decorators as user_decorators
 from models.users.user import User
 from models.error_logs.error_log import Error_
 import traceback
+from config import ELASTIC_PORT as port
 
 note_blueprint = Blueprint('notes', __name__)
 
@@ -22,7 +23,7 @@ def user_notes():
         if request.method == 'POST':
             form_ = request.form['Search_note']
 
-            el = Elasticsearch(port=9200)
+            el = Elasticsearch(port=port)
 
             if form_ is '':
                 data = el.search(index='notes', doc_type='note', body={
@@ -173,7 +174,7 @@ def notes():
         if request.method == 'POST':
             form_ = request.form['Search_note']
 
-            el = Elasticsearch(port=9200)
+            el = Elasticsearch(port=port)
 
             if form_ is '':
                 data = el.search(index='notes', doc_type='note', body={
