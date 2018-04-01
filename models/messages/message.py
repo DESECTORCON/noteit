@@ -98,7 +98,7 @@ class Message(object):
         doc1 = {
             "query": {
                 "match": {
-                    'message_id': self._id
+                    "message_id": self._id
                 }
             }
         }
@@ -121,14 +121,13 @@ class Message(object):
     def delete_on_elastic(self):
         el = Elasticsearch(port=port)
         body = {
-            'query': {
+            "query": {
                 'match': {
                     'message_id': self._id
                 }
             }
         }
-        a = el.delete_by_query(index="messages", doc_type='message', body=body)
-        print(a)
+        el.delete_by_query(index="messages", doc_type='message', body=body)
         del el
         return True
 
