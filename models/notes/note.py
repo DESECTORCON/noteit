@@ -1,4 +1,7 @@
 import uuid
+
+from flask import session
+
 from config import ELASTIC_PORT as port
 from elasticsearch import Elasticsearch
 from common.database import Database
@@ -144,14 +147,6 @@ class Note(object):
                             },
                             {
                                 "term": {"content": form_data}
-                            }
-                        ],
-                        "must": [
-                            {
-                                "match": {"share_only_with_users": share_only_with_users}
-                            },
-                            {
-                                "match": {"shared": shared}
                             }
                         ]
                     }
