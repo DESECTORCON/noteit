@@ -109,21 +109,6 @@ def create_note():
         if request.method == 'POST':
             share = request.form['inputGroupSelect01']
 
-            # if share == '0':
-            #     return render_template('/notes/create_note.html',
-            #                            error_msg="You did not selected an Share label. Please select an Share label.")
-            #
-            # elif share == '1':
-            #     share = True
-            #     share_only_with_users = False
-            #
-            # elif share == '2':
-            #     share = False
-            #     share_only_with_users = True
-            #
-            # else:
-            #     share = False
-            #     share_only_with_users = False
             try:
                 share, share_only_with_users = share_bool_function(share)
             except ValueError:
