@@ -11,6 +11,23 @@ from config import ELASTIC_PORT as port
 note_blueprint = Blueprint('notes', __name__)
 
 
+def get_badge_value_dic(notes_list):
+    labels = {}
+    for note in notes_list:
+        note_ = Note.find_by_id(note._id)
+
+        if note_.shared is True:
+            append_data = 'Shared to all'
+        elif note_.share_only_with_users is True:
+            append_data = 'Shared only to note-it users'
+        else:
+            append_data = 'Not shared'
+
+        labels[note_._id] = append_data
+
+    return labels
+
+
 @note_blueprint.route('/my_notes/', methods=['POST', 'GET'])
 @user_decorators.require_login
 def user_notes():
@@ -23,43 +40,49 @@ def user_notes():
         if request.method == 'POST':
             form_ = request.form['Search_note']
 
-            el = Elasticsearch(port=port)
-
-            if form_ is '':
-                data = el.search(index='notes', doc_type='note', body={
-                    "query": {
-                        "match_all": {}
-                    }
-                })
-            else:
-                data = el.search(index='notes', doc_type='note', body={
-                    "query": {
-                        "bool": {
-                            "should": [
-                                {
-                                    "prefix": {"title": form_},
-                                },
-                                {
-                                    "term": {"content": form_}
-                                }
-                            ]
-                        }
-                    }
-                })
-
-            notes = []
-            try:
-                for note in data['hits']['hits']:
-                    notes.append(Note.find_by_id(note['_source']['note_id']))
-            except:
-                pass
+            # el = Elasticsearch(port=port)
+            #
+            # if form_ is '':
+            #     data = el.search(index='notes', doc_type='note', body={
+            #         "query": {
+            #             "match_all": {}
+            #         }
+            #     })
+            # else:
+            #     data = el.search(index='notes', doc_type='note', body={
+            #         "query": {
+            #             "bool": {
+            #                 "should": [
+            #                     {
+            #                         "prefix": {"title": form_},
+            #                     },
+            #                     {
+            #                         "term": {"content": form_}
+            #                     }
+            #                 ]
+            #             }
+            #         }
+            #     })
+            #
+            # notes = []
+            # try:
+            #     for note in data['hits']['hits']:
+            #         notes.append(Note.find_by_id(note['_source']['note_id']))
+            # except:
+            #     pass
             # print(users)
+            notes = Note.search_with_elastic(form_, False if session['email'] is None else True, False if session['email'] is None else True)
+
+            labels = get_badge_value_dic(notes)
+
             return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
-                                   form=form_)
+                                   form=form_, labels=labels)
 
         else:
 
-            return render_template('/notes/my_notes.html', user_name=user_name, user_notes=user_notes)
+            labels = get_badge_value_dic(user_notes)
+
+            return render_template('/notes/my_notes.html', user_name=user_name, user_notes=user_notes, labels=labels)
 
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -126,7 +149,7 @@ def create_note():
                 share_only_with_users = False
 
             title = request.form['title']
-            content = request.form['content']
+            content = request.form['content'].strip('\n').strip('\r')
             author_email = session['email']
             author_nickname = User.find_by_email(author_email).nick_name
 
@@ -249,13 +272,17 @@ def edit_note(note_id):
                 return render_template('/notes/create_note.html',
                                        error_msg="You did not selected an Share label. Please select an Share label.")
 
-            if share == '1':
+            elif share == '1':
                 share = True
                 share_only_with_users = False
 
-            else:
+            elif share == '2':
                 share = False
                 share_only_with_users = True
+
+            else:
+                share = False
+                share_only_with_users = False
 
             title = request.form['title']
             content = request.form['content']
@@ -271,7 +298,7 @@ def edit_note(note_id):
             return redirect(url_for('.note', note_id=note_id))
 
         else:
-            return render_template('/notes/edit_note.html', note=note)
+            return render_template('/notes/edit_note.html', note=note, content=note.content.strip('\n').strip('\r'))
 
     except:
         error_msg = traceback.format_exc().split('\n')
