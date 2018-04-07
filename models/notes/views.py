@@ -40,7 +40,6 @@ def share_bool_function(share):
     return share, share_only_with_users
 
 
-
 @note_blueprint.route('/my_notes/', methods=['POST', 'GET'])
 @user_decorators.require_login
 def user_notes():
@@ -52,7 +51,11 @@ def user_notes():
 
         if request.method == 'POST':
             form_ = request.form['Search_note']
-            notes = Note.search_with_elastic(form_, False if session['email'] is None else True, False if session['email'] is None else True)
+
+            if form_ is '':
+                notes = Note.search_with_elastic(form_)
+            else:
+                notes = Note.search_with_elastic(form_, False if session['email'] is None else True, True)
 
             return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
                                    form=form_)

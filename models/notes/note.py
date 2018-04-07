@@ -125,7 +125,7 @@ class Note(object):
         return True
 
     @staticmethod
-    def search_with_elastic(form_data, share_only_with_users, shared):
+    def search_with_elastic(form_data, share_only_with_users=None, shared=None):
         el = Elasticsearch(port=port)
 
         if form_data is '':
@@ -144,10 +144,9 @@ class Note(object):
                             },
                             {
                                 "term": {"content": form_data}
-                            },
-                            {
-                                "term": {"created_date": form_data}
-                            },
+                            }
+                        ],
+                        "must": [
                             {
                                 "match": {"share_only_with_users": share_only_with_users}
                             },
@@ -160,10 +159,10 @@ class Note(object):
             })
 
         notes = []
-        try:
-            for note in data['hits']['hits']:
+        for note in data['hits']['hits']:
+            try:
                 notes.append(Note.find_by_id(note['_source']['note_id']))
-        except:
-            pass
+            except KeyError:
+                notes.append(Note.find_by_id(note['_source']['query']['match']['note_id']))
 
         return notes
