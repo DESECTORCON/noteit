@@ -11,21 +11,15 @@ from config import ELASTIC_PORT as port
 note_blueprint = Blueprint('notes', __name__)
 
 
-def get_badge_value_dic(notes_list):
-    labels = {}
-    for note in notes_list:
-        note_ = Note.find_by_id(note._id)
+def is_shared_validator(shared, share_only_with_users):
+    if shared is True:
+        label = 'Shared to all'
+    elif share_only_with_users is True:
+        label = 'Shared only to note-it users'
+    else:
+        label = 'Not shared'
 
-        if note_.shared is True:
-            append_data = 'Shared to all'
-        elif note_.share_only_with_users is True:
-            append_data = 'Shared only to note-it users'
-        else:
-            append_data = 'Not shared'
-
-        labels[note_._id] = append_data
-
-    return labels
+    return label
 
 
 @note_blueprint.route('/my_notes/', methods=['POST', 'GET'])
@@ -73,16 +67,16 @@ def user_notes():
             # print(users)
             notes = Note.search_with_elastic(form_, False if session['email'] is None else True, False if session['email'] is None else True)
 
-            labels = get_badge_value_dic(notes)
+            # labels = get_badge_value_dic(notes)
 
             return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
-                                   form=form_, labels=labels)
+                                   form=form_)
 
         else:
 
-            labels = get_badge_value_dic(user_notes)
+            # labels = get_badge_value_dic(user_notes)
 
-            return render_template('/notes/my_notes.html', user_name=user_name, user_notes=user_notes, labels=labels)
+            return render_template('/notes/my_notes.html', user_name=user_name, user_notes=user_notes)
 
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -153,8 +147,11 @@ def create_note():
             author_email = session['email']
             author_nickname = User.find_by_email(author_email).nick_name
 
+            label = is_shared_validator(share, share_only_with_users)
+
             note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
-                                 author_nickname=author_nickname, share_only_with_users=share_only_with_users)
+                                 author_nickname=author_nickname, share_only_with_users=share_only_with_users,
+                                 share_label=label)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
 
@@ -291,6 +288,7 @@ def edit_note(note_id):
             note.share_only_with_users = share_only_with_users
             note.title = title
             note.content = content
+            note.label = is_shared_validator(share, share_only_with_users)
             note.save_to_mongo()
             note.update_to_elastic()
             flash('Your note has successfully saved.')

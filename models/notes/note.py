@@ -9,7 +9,7 @@ import datetime
 class Note(object):
 
     def __init__(self, title, content, author_email, author_nickname, created_date=None, _id=None, shared=False,
-                 share_only_with_users=False):
+                 share_only_with_users=False, share_label=''):
         self.title = "No title" if title is None else title
         self.content = "No content" if content is None else content
         self.created_date = datetime.datetime.now() if created_date is None else created_date
@@ -18,6 +18,7 @@ class Note(object):
         self.shared = shared
         self.author_nickname = author_nickname
         self.share_only_with_users = share_only_with_users
+        self.share_label = share_label
 
     def __repr__(self):
         return "<Note {} with author {} and created date {}>".format(self.title, self.author_email, self.created_date)
@@ -31,7 +32,8 @@ class Note(object):
             "created_date": self.created_date,
             "author_nickname": self.author_nickname,
             "shared": self.shared,
-            "share_only_with_users": self.share_only_with_users
+            "share_only_with_users": self.share_only_with_users,
+            "share_label": self.share_label
         }
 
     def save_to_db(self):
@@ -114,7 +116,7 @@ class Note(object):
             'note_id': self._id,
             'share_only_with_users': self.share_only_with_users,
             'shared': self.shared,
-            'created_date': self.created_date.strftime('%Y-%m-%d')
+            'created_date': self.created_date.strftime('%Y-%m-%d'),
         }
 
         el.delete_by_query(index="notes", doc_type='note', body=doc1)
