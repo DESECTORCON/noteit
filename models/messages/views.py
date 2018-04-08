@@ -92,9 +92,9 @@ def send_message():
             content = request.form['content']
 
             if request.form.getlist("user") in [None, [], ""]:
-                return render_template('messages/send_note.html',
+                return render_template('messages/send_message.html',
                                        e="You hadn't selected an reciver. Please select at least ONE reciver.",
-                                       all_users=all_users, title=title, )
+                                       all_users=all_users, title=title, content=content)
 
             else:
 

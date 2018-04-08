@@ -191,7 +191,7 @@ class Message(object):
         el = Elasticsearch(port=port)
 
         if form is '':
-            data = el.search(index='messages', doc_type='message', body={
+            body1 = {
                 "query": {
                     "bool": {
                         "should": [
@@ -203,27 +203,21 @@ class Message(object):
                             },
                             {
                                 "match": {"reciver_id": user_id}
-                            },
-                            {
-                                "match": {"sender_id": user_id}
                             }
                         ]
                     }
                 }
-            })
-        else:
-            data = el.search(index='messages', doc_type='message', body={
+            }
+
+            body2 = {
                 "query": {
                     "bool": {
                         "should": [
                             {
-                                "prefix": {"title": form}
+                                "prefix": {"title": ""}
                             },
                             {
-                                "term": {"content": form}
-                            },
-                            {
-                                "match": {"reciver_id": user_id}
+                                "term": {"content": ""}
                             },
                             {
                                 "match": {"sender_id": user_id}
@@ -231,15 +225,64 @@ class Message(object):
                         ]
                     }
                 }
-            })
+            }
 
-            messages = []
-            for message in data['hits']['hits']:
-                try:
-                    messages.append(Message.find_by_id(message['_source']['message_id']))
-                except KeyError:
-                    messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
+            data1 = el.search(index='messages', doc_type='message', body=body1)
+            data2 = el.search(index='messages', doc_type='message', body=body2)
 
-            return messages
+        else:
+            body1 = {
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "prefix": {"title": ""}
+                            },
+                            {
+                                "term": {"content": ""}
+                            },
+                            {
+                                "match": {"reciver_id": user_id}
+                            }
+                        ]
+                    }
+                }
+            }
+
+            body2 = {
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "prefix": {"title": ""}
+                            },
+                            {
+                                "term": {"content": ""}
+                            },
+                            {
+                                "match": {"sender_id": user_id}
+                            }
+                        ]
+                    }
+                }
+            }
+
+            data1 = el.search(index='messages', doc_type='message', body=body1)
+            data2 = el.search(index='messages', doc_type='message', body=body2)
+
+        messages = []
+        for message in data1['hits']['hits']:
+            try:
+                messages.append(Message.find_by_id(message['_source']['message_id']))
+            except KeyError:
+                messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
+
+        for message in data2['hits']['hits']:
+            try:
+                messages.append(Message.find_by_id(message['_source']['message_id']))
+            except KeyError:
+                messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
+
+        return messages
 
 
