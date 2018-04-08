@@ -1,7 +1,4 @@
 import uuid
-
-from flask import session
-
 from config import ELASTIC_PORT as port
 from elasticsearch import Elasticsearch
 from common.database import Database
@@ -143,7 +140,7 @@ class Note(object):
                                 "term": {"content": ""}
                             }
                         ],
-                        "must": [
+                        "filter": [
                             {
                                 "match": {"author_nickname": user_nickname}
                             }
@@ -163,7 +160,7 @@ class Note(object):
                                 "term": {"content": form_data}
                             }
                         ],
-                        "must": [
+                        "filter": [
                             {
                                 "match": {"author_nickname": user_nickname}
                             }
