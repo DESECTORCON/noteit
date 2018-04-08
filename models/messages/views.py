@@ -23,55 +23,7 @@ def my_recived_messages(user_id):
         if request.method == 'POST':
             form_ = request.form['Search_message']
 
-            el = Elasticsearch(port=port)
-
-            if form_ is '':
-                data = el.search(index='messages', doc_type='message', body={
-                    "query": {
-                        "bool": {
-                            "should": [
-                                {
-                                    "prefix": {"title": ""},
-                                },
-                                {
-                                    "term": {"content": ""}
-                                }
-                            ],
-                            "filter": [
-                                {
-                                    "match": {"reciver_id": user_id}
-                                }
-                            ]
-                        }
-                    }
-                })
-            else:
-                data = el.search(index='messages', doc_type='message', body={
-                    "query": {
-                        "bool": {
-                            "should": [
-                                {
-                                    "prefix": {"title": form_},
-                                },
-                                {
-                                    "term": {"content": form_}
-                                }
-                            ],
-                            "filter": [
-                                {
-                                    "match": {"reciver_id": user_id}
-                                }
-                            ]
-                        }
-                    }
-                })
-
-            messages = []
-            for message in data['hits']['hits']:
-                try:
-                    messages.append(Message.find_by_id(message['_source']['message_id']))
-                except KeyError:
-                    messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
+            messages = Message.search_on_elastic(form_, user_id)
 
             return render_template('messages/my_recived_messages.html',
                                    messages=messages, user_nickname=user_nickname, form=form_)

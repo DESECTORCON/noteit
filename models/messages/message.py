@@ -131,4 +131,59 @@ class Message(object):
         del el
         return True
 
+    @staticmethod
+    def search_on_elastic(form, user_id):
+
+        el = Elasticsearch(port=port)
+
+        if form is '':
+            data = el.search(index='messages', doc_type='message', body={
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "prefix": {"title": ""},
+                            },
+                            {
+                                "term": {"content": ""}
+                            }
+                        ],
+                        "filter": [
+                            {
+                                "match": {"reciver_id": user_id}
+                            }
+                        ]
+                    }
+                }
+            })
+        else:
+            data = el.search(index='messages', doc_type='message', body={
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "prefix": {"title": form},
+                            },
+                            {
+                                "term": {"content": form}
+                            }
+                        ],
+                        "filter": [
+                            {
+                                "match": {"reciver_id": user_id}
+                            }
+                        ]
+                    }
+                }
+            })
+
+            messages = []
+            for message in data['hits']['hits']:
+                try:
+                    messages.append(Message.find_by_id(message['_source']['message_id']))
+                except KeyError:
+                    messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
+
+            return messages
+
 
