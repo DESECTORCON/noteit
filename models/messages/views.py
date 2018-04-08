@@ -23,11 +23,11 @@ def all_messages(user_id):
         if request.method == 'POST':
             form_ = request.form['Search_message']
 
-            messages = Message.search_on_elastic(form_, user_id)
+            messages = Message.search_find_all(form_, user_id)
 
-            return render_template('messages/my_recived_messages.html',
+            return render_template('messages/messages.html',
                                    messages=messages, user_nickname=user_nickname, form=form_)
-        return render_template('messages/my_recived_messages.html',
+        return render_template('messages/messages.html',
                                messages=messages, user_nickname=user_nickname)
 
     except:

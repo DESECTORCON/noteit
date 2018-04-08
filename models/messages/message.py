@@ -196,13 +196,13 @@ class Message(object):
                     "bool": {
                         "should": [
                             {
-                                "prefix": {"title": ""},
+                                "prefix": {"title": ""}
                             },
                             {
                                 "term": {"content": ""}
                             },
                             {
-                                "match": {"reciver_id": user_id},
+                                "match": {"reciver_id": user_id}
                             },
                             {
                                 "match": {"sender_id": user_id}
@@ -217,7 +217,7 @@ class Message(object):
                     "bool": {
                         "should": [
                             {
-                                "prefix": {"title": form},
+                                "prefix": {"title": form}
                             },
                             {
                                 "term": {"content": form}
