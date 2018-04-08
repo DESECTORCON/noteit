@@ -4,3 +4,4 @@ ADMINS = frozenset([
 ])
 MAX_ITEMS = 4
 ELASTIC_PORT = '9200'
+APPLICATION_ROOT = '/'
