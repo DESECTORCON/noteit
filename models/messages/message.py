@@ -4,6 +4,7 @@ import models.messages.constants as MessageConstants
 import datetime
 from elasticsearch import Elasticsearch
 from config import ELASTIC_PORT as port
+from collections import OrderedDict
 
 
 class Message(object):
@@ -186,103 +187,86 @@ class Message(object):
 
             return messages
 
-    @staticmethod
-    def search_find_all(form, user_id):
-        el = Elasticsearch(port=port)
-
-        if form is '':
-            body1 = {
-                "query": {
-                    "bool": {
-                        "should": [
-                            {
-                                "prefix": {"title": ""}
-                            },
-                            {
-                                "term": {"content": ""}
-                            },
-                            {
-                                "match": {"reciver_id": user_id}
-                            }
-                        ]
-                    }
-                }
-            }
-
-            body2 = {
-                "query": {
-                    "bool": {
-                        "should": [
-                            {
-                                "prefix": {"title": ""}
-                            },
-                            {
-                                "term": {"content": ""}
-                            },
-                            {
-                                "match": {"sender_id": user_id}
-                            }
-                        ]
-                    }
-                }
-            }
-
-            data1 = el.search(index='messages', doc_type='message', body=body1)
-            data2 = el.search(index='messages', doc_type='message', body=body2)
-
-        else:
-            body1 = {
-                "query": {
-                    "bool": {
-                        "should": [
-                            {
-                                "prefix": {"title": ""}
-                            },
-                            {
-                                "term": {"content": ""}
-                            },
-                            {
-                                "match": {"reciver_id": user_id}
-                            }
-                        ]
-                    }
-                }
-            }
-
-            body2 = {
-                "query": {
-                    "bool": {
-                        "should": [
-                            {
-                                "prefix": {"title": ""}
-                            },
-                            {
-                                "term": {"content": ""}
-                            },
-                            {
-                                "match": {"sender_id": user_id}
-                            }
-                        ]
-                    }
-                }
-            }
-
-            data1 = el.search(index='messages', doc_type='message', body=body1)
-            data2 = el.search(index='messages', doc_type='message', body=body2)
-
-        messages = []
-        for message in data1['hits']['hits']:
-            try:
-                messages.append(Message.find_by_id(message['_source']['message_id']))
-            except KeyError:
-                messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
-
-        for message in data2['hits']['hits']:
-            try:
-                messages.append(Message.find_by_id(message['_source']['message_id']))
-            except KeyError:
-                messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
-
-        return messages
+    # @staticmethod
+    # def search_find_all(form, user_id):
+    #     el = Elasticsearch(port=port)
+    #
+    #     if form is '':
+    #         body1 = {
+    #             "query": {
+    #                 "bool": {
+    #                     "should": [
+    #                         {
+    #                             "prefix": {"title": ""}
+    #                         },
+    #                         {
+    #                             "term": {"content": ""}
+    #                         },
+    #                         {
+    #                             "match": {"reciver_id": user_id}
+    #                         }
+    #                     ]
+    #                 }
+    #             }
+    #         }
+    #
+    #         data1 = el.search(index='messages', doc_type='message', body=body1)
+    #
+    #     else:
+    #         body1 = {
+    #             "query": {
+    #                 "bool": {
+    #                     "should": [
+    #                         {
+    #                             "prefix": {"title": ""}
+    #                         },
+    #                         {
+    #                             "term": {"content": ""}
+    #                         },
+    #                         {
+    #                             "match": {"reciver_id": user_id}
+    #                         }
+    #                     ]
+    #                 }
+    #             }
+    #         }
+    #
+    #         body2 = {
+    #             "query": {
+    #                 "bool": {
+    #                     "should": [
+    #                         {
+    #                             "prefix": {"title": ""}
+    #                         },
+    #                         {
+    #                             "term": {"content": ""}
+    #                         },
+    #                         {
+    #                             "match": {"sender_id": user_id}
+    #                         }
+    #                     ]
+    #                 }
+    #             }
+    #         }
+    #
+    #         data1 = el.search(index='messages', doc_type='message', body=body1)
+    #         data2 = el.search(index='messages', doc_type='message', body=body2)
+    #
+    #     messages = []
+    #     for message in data1['hits']['hits']:
+    #         try:
+    #             messages.append(Message.find_by_id(message['_source']['message_id']))
+    #         except KeyError:
+    #             messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
+    #
+    #     for message in data2['hits']['hits']:
+    #         try:
+    #             messages.append(Message.find_by_id(message['_source']['message_id']))
+    #         except KeyError:
+    #             messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
+    #
+    #     seen = set()
+    #     seen_add = seen.add
+    #     return [x for x in messages if not (x in seen or seen_add(x))]
 
 
