@@ -1,0 +1,62 @@
+{% extends "base2.html" %}
+{% block title %}
+<title>Note-it™ | Sended Messages</title>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page">All messages
+                <small><a href="{{ url_for('.my_recived_messages', user_id=user_id) }}">sended messages</a> <a
+                    href="{{ url_for('.my_sended_messages', user_id=user_id) }}">received messages</a></small></li>
+        </ol>
+    </nav>
+
+    <h1><i class="fas fa-envelope"></i> All messages</h1>
+    <hr class="my-4">
+
+    <form class="form-row my-2 my-lg-0" method="POST">
+        <div class="col">
+            {% if form %}
+            <input class="form-control mr-sm-2" type="search" placeholder="Search Sender Name, Title and Content!" aria-label="Search" id="Search_message" name="Search_message" value="{{ form }}">
+            {% else %}
+            <input class="form-control mr-sm-2" type="search" placeholder="Search Sender Name, Title and Content!" aria-label="Search" id="Search_message" name="Search_message" value="{{ form }}">
+            {% endif %}
+
+        </div>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+
+    <br>
+
+    <div class="list-group">
+
+        {% if messages == [''] or messages == [] %}
+        <div class="alert alert-info" role="alert">
+            <i class="far fa-frown"></i> No Messages...
+        </div>
+        {% else %}
+
+        {% for message in messages %}
+
+        <a href="{{ url_for('.message', message_id=message._id, is_sended=True) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"><i class="fas fa-envelope-square"></i> {{ message.title }}</h5>
+                <small>Sended at: {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+            </div>
+        </a>
+
+        {% endfor %}
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</div>
+
+{% endblock %}
