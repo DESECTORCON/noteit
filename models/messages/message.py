@@ -122,7 +122,7 @@ class Message(object):
         el = Elasticsearch(port=port)
         body = {
             "query": {
-                'match': {
+                "match": {
                     'message_id': self._id
                 }
             }

@@ -25,37 +25,59 @@ def my_recived_messages(user_id):
 
             el = Elasticsearch(port=port)
 
-            body = {
-                "query": {
-                    "bool": {
-                        "should": [
-                            {
-                                "term": {"title": {"value": form_}}
-                            },
-                            {
-                                "term": {"title": {"value": form_}}
-                            }
-                        ],
-                        "must": [
-                            {
-                                "match": {"reciver_id": user_id}
-                            }
-                        ]
+            if form_ is '':
+                data = el.search(index='messages', doc_type='message', body={
+                    "query": {
+                        "bool": {
+                            "should": [
+                                {
+                                    "prefix": {"title": ""},
+                                },
+                                {
+                                    "term": {"content": ""}
+                                }
+                            ],
+                            "filter": [
+                                {
+                                    "match": {"reciver_id": user_id}
+                                }
+                            ]
+                        }
                     }
-
-                }
-            }
-
-            data = el.search(index='notes', doc_type='note', body=body)
+                })
+            else:
+                data = el.search(index='messages', doc_type='message', body={
+                    "query": {
+                        "bool": {
+                            "should": [
+                                {
+                                    "prefix": {"title": form_},
+                                },
+                                {
+                                    "term": {"content": form_}
+                                }
+                            ],
+                            "filter": [
+                                {
+                                    "match": {"reciver_id": user_id}
+                                }
+                            ]
+                        }
+                    }
+                })
 
             messages = []
-            try:
-                for message in data['hits']['hits']:
-                    messages.append(Message.find_by_id(message['_source']['note_id']))
-            except:
-                pass
+            for message in data['hits']['hits']:
+                try:
+                    messages.append(Message.find_by_id(message['_source']['message_id']))
+                except KeyError:
+                    messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
 
-        return render_template('messages/my_recived_messages.html', messages=messages, user_nickname=user_nickname)
+            return render_template('messages/my_recived_messages.html',
+                                   messages=messages, user_nickname=user_nickname, form=form_)
+        return render_template('messages/my_recived_messages.html',
+                               messages=messages, user_nickname=user_nickname)
+
     except:
         error_msg = traceback.format_exc().split('\n')
 
