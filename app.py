@@ -1,10 +1,7 @@
-import time
 from datetime import timedelta
 from flask import Flask, render_template, session, url_for, flash
 import random
-
 from werkzeug.utils import redirect
-
 from models.notes.note import Note
 from models.messages.message import *
 import config as config
