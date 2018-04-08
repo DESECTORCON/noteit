@@ -1,6 +1,10 @@
+import time
 from datetime import timedelta
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, url_for, flash
 import random
+
+from werkzeug.utils import redirect
+
 from models.notes.note import Note
 from models.messages.message import *
 import config as config
@@ -14,6 +18,28 @@ random_int = []
 for i in range(100):
     random_int.append(random.randint(1, 10000))
     app.secret_key = ''.join(str(random_int))
+
+
+@app.before_request
+def before_request():
+
+    now = datetime.datetime.now()
+    try:
+        last_active = session['last_active']
+        delta = now - last_active
+        if delta.seconds > 600:
+            session['last_active'] = now
+            session['email'] = None
+            session['_id'] = None
+            flash('Your session has expired. Please re-login.')
+            return redirect(url_for('users.login'))
+    except:
+        pass
+
+    try:
+        session['last_active'] = now
+    except:
+        pass
 
 
 @app.before_request
