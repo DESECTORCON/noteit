@@ -1,7 +1,7 @@
 from datetime import timedelta
-
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, url_for, flash
 import random
+from werkzeug.utils import redirect
 from models.notes.note import Note
 from models.messages.message import *
 import config as config
@@ -18,9 +18,31 @@ for i in range(100):
 
 
 @app.before_request
+def before_request():
+
+    now = datetime.datetime.now()
+    try:
+        last_active = session['last_active']
+        delta = now - last_active
+        if delta.seconds > 600:
+            session['last_active'] = now
+            session['email'] = None
+            session['_id'] = None
+            flash('Your session has expired. Please re-login.')
+            return redirect(url_for('users.login'))
+    except:
+        pass
+
+    try:
+        session['last_active'] = now
+    except:
+        pass
+
+
+@app.before_request
 def make_session_permanent():
     session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=5)
+    app.permanent_session_lifetime = timedelta(minutes=10)
 
 
 @app.before_first_request

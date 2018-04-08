@@ -11,6 +11,35 @@ from config import ELASTIC_PORT as port
 note_blueprint = Blueprint('notes', __name__)
 
 
+def is_shared_validator(shared, share_only_with_users):
+    if shared is True:
+        label = 'Shared to all'
+    elif share_only_with_users is True:
+        label = 'Shared only to note-it users'
+    else:
+        label = 'Not shared'
+
+    return label
+
+
+def share_bool_function(share):
+    if share == '0':
+        raise ValueError()
+    elif share == '1':
+        share = True
+        share_only_with_users = False
+
+    elif share == '2':
+        share = False
+        share_only_with_users = True
+
+    else:
+        share = False
+        share_only_with_users = False
+
+    return share, share_only_with_users
+
+
 @note_blueprint.route('/my_notes/', methods=['POST', 'GET'])
 @user_decorators.require_login
 def user_notes():
@@ -22,38 +51,8 @@ def user_notes():
 
         if request.method == 'POST':
             form_ = request.form['Search_note']
+            notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
 
-            el = Elasticsearch(port=port)
-
-            if form_ is '':
-                data = el.search(index='notes', doc_type='note', body={
-                    "query": {
-                        "match_all": {}
-                    }
-                })
-            else:
-                data = el.search(index='notes', doc_type='note', body={
-                    "query": {
-                        "bool": {
-                            "should": [
-                                {
-                                    "prefix": {"title": form_},
-                                },
-                                {
-                                    "term": {"content": form_}
-                                }
-                            ]
-                        }
-                    }
-                })
-
-            notes = []
-            try:
-                for note in data['hits']['hits']:
-                    notes.append(Note.find_by_id(note['_source']['note_id']))
-            except:
-                pass
-            # print(users)
             return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
                                    form=form_)
 
@@ -109,29 +108,22 @@ def create_note():
         if request.method == 'POST':
             share = request.form['inputGroupSelect01']
 
-            if share == '0':
+            try:
+                share, share_only_with_users = share_bool_function(share)
+            except ValueError:
                 return render_template('/notes/create_note.html',
                                        error_msg="You did not selected an Share label. Please select an Share label.")
 
-            elif share == '1':
-                share = True
-                share_only_with_users = False
-
-            elif share == '2':
-                share = False
-                share_only_with_users = True
-
-            else:
-                share = False
-                share_only_with_users = False
-
             title = request.form['title']
-            content = request.form['content']
+            content = request.form['content'].strip('\n').strip('\r')
             author_email = session['email']
             author_nickname = User.find_by_email(author_email).nick_name
 
+            label = is_shared_validator(share, share_only_with_users)
+
             note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
-                                 author_nickname=author_nickname, share_only_with_users=share_only_with_users)
+                                 author_nickname=author_nickname, share_only_with_users=share_only_with_users,
+                                 share_label=label)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
 
@@ -245,17 +237,11 @@ def edit_note(note_id):
 
             share = request.form['inputGroupSelect01']
 
-            if share == '0':
+            try:
+                share, share_only_with_users = share_bool_function(share)
+            except ValueError:
                 return render_template('/notes/create_note.html',
                                        error_msg="You did not selected an Share label. Please select an Share label.")
-
-            if share == '1':
-                share = True
-                share_only_with_users = False
-
-            else:
-                share = False
-                share_only_with_users = True
 
             title = request.form['title']
             content = request.form['content']
@@ -264,6 +250,7 @@ def edit_note(note_id):
             note.share_only_with_users = share_only_with_users
             note.title = title
             note.content = content
+            note.label = is_shared_validator(share, share_only_with_users)
             note.save_to_mongo()
             note.update_to_elastic()
             flash('Your note has successfully saved.')
@@ -271,7 +258,7 @@ def edit_note(note_id):
             return redirect(url_for('.note', note_id=note_id))
 
         else:
-            return render_template('/notes/edit_note.html', note=note)
+            return render_template('/notes/edit_note.html', note=note, content=note.content.strip('\n').strip('\r'))
 
     except:
         error_msg = traceback.format_exc().split('\n')

@@ -2,11 +2,13 @@ import uuid
 from common.database import Database
 import models.messages.constants as MessageConstants
 import datetime
+from elasticsearch import Elasticsearch
+from config import ELASTIC_PORT as port
 
 
 class Message(object):
 
-    def __init__(self, title, content, reciver_id, sender_id, sended_date=None, readed_date=None ,_id=None, readed_by_reciver=False, is_a_noteOBJ=False, message_viewers=[]):
+    def __init__(self, title, content, reciver_id, sender_id, sended_date=None, readed_date=None ,_id=None, readed_by_reciver=False, is_a_noteOBJ=False):
         self._id = uuid.uuid4().hex if _id is None else _id
         self.title = title
         self.content = content
@@ -16,7 +18,6 @@ class Message(object):
         self.sended_date = datetime.datetime.now() if sended_date is None else sended_date
         self.readed_by_reciver = readed_by_reciver
         self.is_a_noteOBJ = is_a_noteOBJ
-        self.message_viewers = message_viewers
 
     def __repr__(self):
         return "<Message title:{} with sender {} and reciver {}>".format(self.title, self.sender_id, self.reciver_id)
@@ -31,7 +32,7 @@ class Message(object):
             "sended_date": self.sended_date,
             "readed_by_reciver": self.readed_by_reciver,
             "is_a_noteOBJ": self.is_a_noteOBJ,
-            "message_viewers": self.message_viewers
+            "_id": self._id
         }
 
     def save_to_db(self):
@@ -69,9 +70,65 @@ class Message(object):
 
     @classmethod
     def find_by_recivers_not_readed(cls, reciver_id):
-        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {'reciver_id': reciver_id, "readed_by_reciver":False})]
+        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION,
+                                                      {'reciver_id': reciver_id, "readed_by_reciver":False})]
 
     @classmethod
     def find_by_viewers_id(cls, viewer_id):
-        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {"message_viewers": [viewer_id]})]
+        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {"reciver_id": [viewer_id]})]
+
+    def save_to_elastic(self):
+        el = Elasticsearch(port=port)
+        doc = {
+            "title": self.title,
+            "content": self.content,
+            "reciver_id": self.reciver_id,
+            "sender_id": self.sender_id,
+            "sended_date": self.sended_date.strftime('%Y-%m-%d'),
+            "readed_by_reciver": self.readed_by_reciver,
+            "is_a_noteOBJ": self.is_a_noteOBJ,
+            "message_id": self._id
+        }
+        el.index(index="messages", doc_type='message', body=doc)
+        del el
+        return True
+
+    def update_to_elastic(self):
+        el = Elasticsearch(port=port)
+        doc1 = {
+            "query": {
+                "match": {
+                    "message_id": self._id
+                }
+            }
+        }
+        doc2 = {
+            "title": self.title,
+            "content": self.content,
+            "reciver_id": self.reciver_id,
+            "sender_id": self.sender_id,
+            "sended_date": self.sended_date.strftime('%Y-%m-%d'),
+            "readed_by_reciver": self.readed_by_reciver,
+            "is_a_noteOBJ": self.is_a_noteOBJ,
+            "message_id": self._id
+        }
+
+        el.delete_by_query(index="messages", doc_type='message', body=doc1)
+        el.index(index="messages", doc_type='message', body=doc2)
+        del el
+        return True
+
+    def delete_on_elastic(self):
+        el = Elasticsearch(port=port)
+        body = {
+            "query": {
+                'match': {
+                    'message_id': self._id
+                }
+            }
+        }
+        el.delete_by_query(index="messages", doc_type='message', body=body)
+        del el
+        return True
+
 

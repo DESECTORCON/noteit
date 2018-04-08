@@ -2,9 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon2.ico') }}">
     {% block title %}
 
     {% endblock %}
+
+    <script>
+
+        var myVar = setInterval(myTimer, 1000);
+
+        function myTimer() {
+              $(document).ready(function(){
+  $('#close').trigger('click');
+});
+        }
+    </script>
 
     {% include 'html_dependencies.html' %}
 </head>
@@ -69,6 +81,16 @@
     <br>
 
     <div class="content container">
+        {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close" id="close" name="close">&times;</a>
+        <i class="fas fa-info-circle"></i>  {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
         {% block content %}
 
         {% endblock %}

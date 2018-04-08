@@ -1,66 +1,66 @@
 {% extends "base2.html" %}
 {% block title %}
-    <title>Note-it™ | Send Message</title>
+<title>Note-it™ | Send Message</title>
 {% endblock %}
 
 {% block content %}
 
-    <div class="jumbotron form-sizer">
+<div class="jumbotron form-sizer">
 
-        <h1><i class="fas fa-external-link-square-alt"></i> Send a Message</h1>
+    <h1><i class="fas fa-external-link-square-alt"></i> Send a Message</h1>
 
-        <p>Fill in the blanks, and send!</p>
+    <p>Fill in the blanks, and send!</p>
 
-    </div>
+</div>
 
-    <br>
+<br>
 
-    <div class="form-size jumbotron">
+<div class="form-size jumbotron">
 
-        <form method="POST">
+    <form method="POST">
 
-            <div class="form-group">
-                <label for="title">Title</label>
-                <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="titleBlock" value="{{ title }}">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="titleBlock" value="{{ title }}">
 
-                <small id="titleBlock" class="form-text text-muted">Your message's title</small>
+            <small id="titleBlock" class="form-text text-muted">Your message's title</small>
+        </div>
+
+        <div class="input-group">
+
+            <div class="input-group-prepend">
+                <label for="content" class="input-group-text">Content</label>
             </div>
 
-            <div class="input-group">
+            <textarea class="form-control text_box_big" name="content" id="content" placeholder="Example content" aria-describedby="contentBlock">{{ content }}</textarea>
 
-                <div class="input-group-prepend">
-                    <label for="content" class="input-group-text">Content</label>
-                </div>
+        </div>
 
-                <textarea class="form-control text_box_big" name="content" id="content" placeholder="Example content" aria-describedby="contentBlock">{{ content }}</textarea>
+        <div class="form-group">
 
-            </div>
-
-            <div class="form-group">
-
-                {% if e %}
-                <br>
-
-                <div class="alert alert-danger" role="alert">
-                    <i class="fas fa-exclamation"></i>  {{ e }}
-                </div>
-
-
-                {% endif %}
-            </div>
-
+            {% if e %}
             <br>
 
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation"></i>  {{ e }}
+            </div>
 
 
-                  <hr class="my-4">
+            {% endif %}
+        </div>
 
-             {% if all_users == None %}
+        <br>
+
+
+
+        <hr class="my-4">
+
+        {% if all_users == None %}
         <h1>No users are available. Please contact us <a>(010-2901-5627)</a></h1>
-    {% else %}
-    <div class="list-group">
-        <h1 class="heading">Users <small class="text-muted">select</small></h1>
-        {% for user in all_users %}
+        {% else %}
+        <div class="list-group">
+            <h1 class="heading">Users <small class="text-muted">select</small></h1>
+            {% for user in all_users %}
 
             <label class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
@@ -70,20 +70,21 @@
                 </div>
             </label>
 
-        {% endfor %}
+            {% endfor %}
 
-    </div>
-    {% endif %}
+        </div>
+        {% endif %}
 
-    <br>
-    <button type="submit" class="btn btn-primary">Send Message</button>
+        <br>
+        <button type="submit" class="btn btn-primary">Send Message</button>
 
 
-    <div class="jumbotron container">
+        <div class="jumbotron container">
 
-        <h3 class="font-weight-light">Click here if you want to send a note</h3>  <a href="{{ url_for('.send_note') }}" role="button" class="btn btn-outline-primary">Send Note</a>
+            <h3 class="font-weight-light">Click here if you want to send a note</h3>  <a href="{{ url_for('.send_note') }}" role="button" class="btn btn-outline-primary">Send Note</a>
 
-    </div>
-</form></div>
+        </div>
+    </form>
+</div>
 
 {% endblock %}

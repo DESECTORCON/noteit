@@ -9,7 +9,7 @@ import datetime
 class Note(object):
 
     def __init__(self, title, content, author_email, author_nickname, created_date=None, _id=None, shared=False,
-                 share_only_with_users=False):
+                 share_only_with_users=False, share_label=''):
         self.title = "No title" if title is None else title
         self.content = "No content" if content is None else content
         self.created_date = datetime.datetime.now() if created_date is None else created_date
@@ -18,6 +18,7 @@ class Note(object):
         self.shared = shared
         self.author_nickname = author_nickname
         self.share_only_with_users = share_only_with_users
+        self.share_label = share_label
 
     def __repr__(self):
         return "<Note {} with author {} and created date {}>".format(self.title, self.author_email, self.created_date)
@@ -31,7 +32,8 @@ class Note(object):
             "created_date": self.created_date,
             "author_nickname": self.author_nickname,
             "shared": self.shared,
-            "share_only_with_users": self.share_only_with_users
+            "share_only_with_users": self.share_only_with_users,
+            "share_label": self.share_label
         }
 
     def save_to_db(self):
@@ -54,14 +56,13 @@ class Note(object):
     def delete_on_elastic(self):
         el = Elasticsearch(port=port)
         body = {
-            'query': {
-                'match': {
-                    'note_id': self._id
+            "query": {
+                "match": {
+                    "note_id": self._id
                 }
             }
         }
-        a = el.delete_by_query(index="notes", doc_type='note', body=body)
-        print(a)
+        a = el.delete_by_query(index="notes", doc_type="note", body=body)
         del el
         return True
 
@@ -95,7 +96,7 @@ class Note(object):
             'shared': self.shared,
             'created_date': self.created_date.strftime('%Y-%m-%d')
         }
-        a = el.index(index="notes", doc_type='note', body=doc)
+        el.index(index="notes", doc_type='note', body=doc)
         del el
         return True
 
@@ -115,10 +116,64 @@ class Note(object):
             'note_id': self._id,
             'share_only_with_users': self.share_only_with_users,
             'shared': self.shared,
-            'created_date': self.created_date.strftime('%Y-%m-%d')
+            'created_date': self.created_date.strftime('%Y-%m-%d'),
         }
 
         el.delete_by_query(index="notes", doc_type='note', body=doc1)
         el.index(index="notes", doc_type='note', body=doc2)
         del el
         return True
+
+    @staticmethod
+    def search_with_elastic(form_data, user_nickname=None):
+        el = Elasticsearch(port=port)
+
+        if form_data is '':
+            data = el.search(index='notes', doc_type='note', body={
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "prefix": {"title": ""},
+                            },
+                            {
+                                "term": {"content": ""}
+                            }
+                        ],
+                        "filter": [
+                            {
+                                "match": {"author_nickname": user_nickname}
+                            }
+                        ]
+                    }
+                }
+            })
+        else:
+            data = el.search(index='notes', doc_type='note', body={
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "prefix": {"title": form_data},
+                            },
+                            {
+                                "term": {"content": form_data}
+                            }
+                        ],
+                        "filter": [
+                            {
+                                "match": {"author_nickname": user_nickname}
+                            }
+                        ]
+                    }
+                }
+            })
+
+        notes = []
+        for note in data['hits']['hits']:
+            try:
+                notes.append(Note.find_by_id(note['_source']['note_id']))
+            except KeyError:
+                notes.append(Note.find_by_id(note['_source']['query']['match']['note_id']))
+
+        return notes

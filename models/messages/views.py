@@ -7,17 +7,53 @@ import models.users.decorators as user_decorators
 from models.notes.note import Note
 from models.users.user import User
 import traceback
+from elasticsearch import Elasticsearch
 from config import ELASTIC_PORT as port
 
 message_blueprint = Blueprint('message', __name__)
 
 
-@message_blueprint.route('/recived_messages/<string:user_id>')
+@message_blueprint.route('/recived_messages/<string:user_id>', methods=['GET', 'POST'])
 @user_decorators.require_login
 def my_recived_messages(user_id):
     try:
         messages = Message.find_by_reciver_id(user_id)
         user_nickname = User.find_by_id(session['_id']).nick_name
+
+        if request.method == 'POST':
+            form_ = request.form['Search_message']
+
+            el = Elasticsearch(port=port)
+
+            body = {
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "term": {"title": {"value": form_}}
+                            },
+                            {
+                                "term": {"title": {"value": form_}}
+                            }
+                        ],
+                        "must": [
+                            {
+                                "match": {"reciver_id": user_id}
+                            }
+                        ]
+                    }
+
+                }
+            }
+
+            data = el.search(index='notes', doc_type='note', body=body)
+
+            messages = []
+            try:
+                for message in data['hits']['hits']:
+                    messages.append(Message.find_by_id(message['_source']['note_id']))
+            except:
+                pass
 
         return render_template('messages/my_recived_messages.html', messages=messages, user_nickname=user_nickname)
     except:
@@ -68,9 +104,9 @@ def send_message():
             sender_id = User.find_by_email(session['email'])._id
 
             message = Message(title=title, content=content,
-                              reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False,
-                              message_viewers=[recivers, sender_id])
+                              reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False,)
             message.save_to_mongo()
+            message.save_to_elastic()
 
             return redirect(url_for('.my_sended_messages', user_id=sender_id))
 
@@ -93,12 +129,13 @@ def message(message_id, is_sended=False):
         message = Message.find_by_id(message_id)
 
         if message is None:
-            return 'There was an server error. Please try again a another time!'
+            pass
 
         if message.readed_by_reciver is False and is_sended is False and session['_id'] in message.reciver_id and message.readed_date is None:
             message.readed_by_reciver = True
             message.readed_date = datetime.datetime.now()
             message.save_to_mongo()
+            message.update_to_elastic()
 
         sender_nickname = User.find_by_id(message.sender_id).nick_name
         if type(message.reciver_id) is list:
@@ -150,6 +187,7 @@ def all_messages():
 def delete_message(message_id):
     try:
         message = Message.find_by_id(message_id)
+        message.delete_on_elastic()
         message.delete()
 
         return redirect(url_for('.my_recived_messages', user_id=session['_id']))
@@ -196,6 +234,7 @@ def send_note():
 
         message = Message(title=message_title, content=note._id, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True)
         message.save_to_mongo()
+        message.save_to_elastic()
 
         return redirect(url_for('.my_sended_messages', user_id=sender_id))
 
@@ -238,6 +277,7 @@ def send_note_radio(note_id):
 
         message = Message(title=message_title, content=note._id, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True)
         message.save_to_mongo()
+        message.save_to_elastic()
 
         return redirect(url_for('.my_sended_messages', user_id=sender_id))
 

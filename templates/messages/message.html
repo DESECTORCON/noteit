@@ -1,135 +1,162 @@
 {% extends "base2.html" %}
 {% block title %}
-    <title>Note-it™ | Message {{ message.title }}</title>
+<title>Note-it™ | Message {{ message.title }}</title>
 {% endblock %}
 
 {% block content %}
 
-    <div class="container card" style="background-color: #e8e8e8;">
+<div class="container card">
 
-        <div class="card-body">
+    <div class="card-body">
 
-            {% if note == None %}
+        {% if note == None and is_a_note %}
 
-                <p class="text-center font-weight-light">message</p>
-                    <h1 class="text-center font-weight-bold">{{ message.title }}</h1>
+        <p class="text-center font-weight-light">message</p>
+        <h1 class="text-center font-weight-bold">{{ message.title }}</h1>
 
-                    <p class="font-weight-normal font-italic text-right text-center">From: {{ sender_nickname }}</p>
-                    {% if reciver_nickname.__class__.__name__ in ('list') %}
-                        <p class="font-weight-normal font-italic text-right text-center">To: {{ ' / '.join(reciver_nickname) }}</p>
+        <p class="font-weight-normal font-italic text-right text-center">From: {{ sender_nickname }}</p>
+        {% if reciver_nickname.__class__.__name__ in ('list') %}
+        <p class="font-weight-normal font-italic text-right text-center">To: {{ ' / '.join(reciver_nickname) }}</p>
 
-                    {% else %}
+        {% else %}
 
-                        <p class="font-weight-normal font-italic text-right text-center">To:</p>
+        <p class="font-weight-normal font-italic text-right text-center">To:</p>
 
-                    {% endif %}
+        {% endif %}
 
-                    <p class="font-weight-normal font-italic text-right">Sended At: {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</p>
-                    {% if message.readed_by_reciver != False %}
-                        <p class="font-weight-normal font-italic text-right">Readed At: {{ message.readed_date.strftime("%Y-%m-%d at %H:%M") }}</p>
-                    {% else %}
-                        <p class="font-weight-normal font-italic text-right">Readed At:                                                        </p>
-                    {% endif %}
+        <p class="font-weight-normal font-italic text-right">Sended At: {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</p>
+        {% if message.readed_by_reciver != False %}
+        <p class="font-weight-normal font-italic text-right">Readed At: {{ message.readed_date.strftime("%Y-%m-%d at %H:%M") }}</p>
+        {% else %}
+        <p class="font-weight-normal font-italic text-right">Readed At:                                                        </p>
+        {% endif %}
 
-                    <hr class="my-4">
+        <hr class="my-4">
 
-                    <h5>Content</h5>
-                    <br>
+        <h5>Content</h5>
+        <br>
 
-                    <div class="container jumbotron" style="background-color:#fffd89; width:500px; margin:10px;">
-                        <h3><i class="far fa-times-circle"></i>  Sorry, this message is deleted</h3>
-                        <hr class="my-4">
-                        <p class="font-weight-light"><i class="far fa-times-circle"></i></p>
+        <div class="container jumbotron" style="background-color:#fffd89; width:500px; margin:10px;">
+            <h3><i class="far fa-times-circle"></i>  Sorry, this message is deleted</h3>
+            <hr class="my-4">
+            <p class="font-weight-light"><i class="far fa-times-circle"></i></p>
 
-                        <p class="text-muted text-right">Created At: <i class="far fa-times-circle"></i></p>
+            <p class="text-muted text-right">Created At: <i class="far fa-times-circle"></i></p>
 
-                        <a href="" class="text-muted"><i class="far fa-times-circle"></i> Go see this note</a>
-                    </div>
-
-            {% else %}
-                {% if is_a_note %}
-
-                    <p class="text-center font-weight-light">message</p>
-                    <h1 class="text-center font-weight-bold">{{ message.title }}</h1>
-
-                    <p class="font-weight-normal font-italic text-right text-center">From: {{ sender_nickname }}</p>
-                    {% if reciver_nickname.__class__.__name__ in ('list') %}
-                        <p class="font-weight-normal font-italic text-right text-center">To: {{ ' / '.join(reciver_nickname) }}</p>
-
-                    {% else %}
-
-                        <p class="font-weight-normal font-italic text-right text-center">To:</p>
-
-                    {% endif %}
-
-                    <p class="font-weight-normal font-italic text-right">Sended At: {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</p>
-                    {% if message.readed_by_reciver != False %}
-                        <p class="font-weight-normal font-italic text-right">Readed At: {{ message.readed_date.strftime("%Y-%m-%d at %H:%M") }}</p>
-                    {% else %}
-                        <p class="font-weight-normal font-italic text-right">Readed At:                                                        </p>
-                    {% endif %}
-
-                    <hr class="my-4">
-
-                    <h5>Content</h5>
-                    <br>
-
-                    <div class="container jumbotron" style="background-color:#fffd89; width:500px; margin:10px;">
-                        <h3>{{ note.title }}</h3>
-                        <hr class="my-4">
-                        <p class="font-weight-light">{{ note.content }}</p>
-
-                        <p class="text-muted text-right">Created At: {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</p>
-
-                        <a href="{{ url_for('notes.note', note_id=note._id) }}" class="text-muted">Go see this note</a>
-                    </div>
-
-                {% else %}
-
-                    <p class="text-center font-weight-light">message</p>
-                    <h1 class="text-center font-weight-bold">{{ message.title }}</h1>
-
-
-                    <p class="font-weight-normal font-italic text-right text-center">From: {{ sender_nickname }}</p>
-                    {% if reciver_nickname.__class__.__name__ in ('list') %}
-                        <p class="font-weight-normal font-italic text-right text-center">To: {{ ' / '.join(reciver_nickname) }}</p>
-
-                    {% else %}
-
-                        <p class="font-weight-normal font-italic text-right text-center">To:</p>
-
-                    {% endif %}
-
-                    <p class="font-weight-normal font-italic text-right">Sended At: {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</p>
-                    {% if message.readed_by_reciver != False %}
-                        <p class="font-weight-normal font-italic text-right">Readed At: {{ message.readed_date.strftime("%Y-%m-%d at %H:%M") }}</p>
-                    {% else %}
-                        <p class="font-weight-normal font-italic text-right">Readed At:                                                        </p>
-                    {% endif %}
-
-                    <hr class="my-4">
-
-                    <h5>Content</h5>
-                    <br>
-                    <p class="font-italic">{{ message.content }}</p>
-                {% endif %}
-
-            {% endif %}
+            <a href="" class="text-muted"><i class="far fa-times-circle"></i> Go see this note</a>
         </div>
+
+        {% else %}
+        {% if is_a_note %}
+
+        <p class="text-center font-weight-light">message</p>
+        <h1 class="text-center font-weight-bold">{{ message.title }}</h1>
+
+        <p class="font-weight-normal font-italic text-right text-center">From: {{ sender_nickname }}</p>
+        {% if reciver_nickname.__class__.__name__ in ('list') %}
+        <p class="font-weight-normal font-italic text-right text-center">To: {{ ' / '.join(reciver_nickname) }}</p>
+
+        {% else %}
+
+        <p class="font-weight-normal font-italic text-right text-center">To:</p>
+
+        {% endif %}
+
+        <p class="font-weight-normal font-italic text-right">Sended At: {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</p>
+        {% if message.readed_by_reciver != False %}
+        <p class="font-weight-normal font-italic text-right">Readed At: {{ message.readed_date.strftime("%Y-%m-%d at %H:%M") }}</p>
+        {% else %}
+        <p class="font-weight-normal font-italic text-right">Readed At:                                                        </p>
+        {% endif %}
+
+        <hr class="my-4">
+
+        <h5>Content</h5>
+        <br>
+
+        <div class="container jumbotron" style="background-color:#fffd89; width:500px; margin:10px;">
+            <h3>{{ note.title }}</h3>
+            <hr class="my-4">
+            <p class="font-weight-light">{{ note.content }}</p>
+
+            <p class="text-muted text-right">Created At: {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</p>
+
+            <a href="{{ url_for('notes.note', note_id=note._id) }}" class="text-muted">Go see this note</a>
+        </div>
+
+        {% else %}
+
+        <p class="text-center font-weight-light">message</p>
+        <h1 class="text-center font-weight-bold">{{ message.title }}</h1>
+
+
+        <p class="font-weight-normal font-italic text-right text-center">From: {{ sender_nickname }}</p>
+        {% if reciver_nickname.__class__.__name__ in ('list') %}
+        <p class="font-weight-normal font-italic text-right text-center">To: {{ ' / '.join(reciver_nickname) }}</p>
+
+        {% else %}
+
+        <p class="font-weight-normal font-italic text-right text-center">To:</p>
+
+        {% endif %}
+
+        <p class="font-weight-normal font-italic text-right">Sended At: {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</p>
+        {% if message.readed_by_reciver != False %}
+        <p class="font-weight-normal font-italic text-right">Readed At: {{ message.readed_date.strftime("%Y-%m-%d at %H:%M") }}</p>
+        {% else %}
+        <p class="font-weight-normal font-italic text-right">Readed At:                                                        </p>
+        {% endif %}
+
+        <hr class="my-4">
+
+        <h5>Content</h5>
+        <br>
+        <p class="font-italic">{{ message.content }}</p>
+        {% endif %}
+
+        {% endif %}
+    </div>
+
+</div>
+
+<hr class="my-4">
+
+<div class="card container">
+
+    <div class="card-body">
+
+        <a class="btn btn-outline-primary" href="#">Re-Send</a>
+        <a class="btn btn-outline-warning" href="" data-toggle="modal" data-target="#exampleModal">Delete</a>
 
     </div>
 
-    <hr class="my-4">
+</div>
 
-    <div class="card container">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-trash-alt"></i>  Delete messageaa</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
 
-        <div class="card-body">
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i>
+                    Do you really want to delete this message?
+                    <p>If you delete this note, it would be permanently deleted!</p>
+                </div>
 
-            <a class="btn btn-outline-primary" href="#">Re-Send</a>
-            <a class="btn btn-outline-warning" href="{{ url_for('message.delete_message', message_id=message._id) }}">Delete</a>
-
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                <a href="{{ url_for('message.delete_message', message_id=message._id) }}" class="btn btn-outline-danger" role="button">Permanently Delete</a>
+            </div>
         </div>
-
     </div>
+</div>
+
+</div>
 
 {% endblock %}
