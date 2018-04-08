@@ -53,9 +53,10 @@ def user_notes():
             form_ = request.form['Search_note']
 
             if form_ is '':
-                notes = Note.search_with_elastic(form_)
+                notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
             else:
-                notes = Note.search_with_elastic(form_, False if session['email'] is None else True, True)
+                notes = Note.search_with_elastic(form_, False if session['email'] is None else True, True
+                                                 , user_nickname=user.nick_name)
 
             return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
                                    form=form_)

@@ -128,13 +128,27 @@ class Note(object):
         return True
 
     @staticmethod
-    def search_with_elastic(form_data, share_only_with_users=None, shared=None):
+    def search_with_elastic(form_data, user_nickname=None):
         el = Elasticsearch(port=port)
 
         if form_data is '':
             data = el.search(index='notes', doc_type='note', body={
                 "query": {
-                    "match_all": {}
+                    "bool": {
+                        "should": [
+                            {
+                                "prefix": {"title": ""},
+                            },
+                            {
+                                "term": {"content": ""}
+                            }
+                        ],
+                        "must": [
+                            {
+                                "match": {"author_nickname": user_nickname}
+                            }
+                        ]
+                    }
                 }
             })
         else:
@@ -147,6 +161,11 @@ class Note(object):
                             },
                             {
                                 "term": {"content": form_data}
+                            }
+                        ],
+                        "must": [
+                            {
+                                "match": {"author_nickname": user_nickname}
                             }
                         ]
                     }
