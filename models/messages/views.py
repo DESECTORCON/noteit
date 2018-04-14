@@ -15,9 +15,11 @@ def label_maker(messages, user_id):
     labels = []
     for message in messages:
         if message.sender_id == user_id:
-            labels.append({"message_id": message._id, "label": "received"})
-        else:
             labels.append({"message_id": message._id, "label": "sended"})
+        elif user_id in message.reciver_id:
+            labels.append({"message_id": message._id, "label": "recived"})
+        # else:
+        #     raise Exception(message.sender_id + ' ' + user_id + ' ' + str(message.reciver_id))
 
     return labels
 
