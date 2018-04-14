@@ -24,7 +24,7 @@ def before_request():
     try:
         last_active = session['last_active']
         delta = now - last_active
-        if delta.seconds > 600:
+        if delta.seconds > 3600:
             session['last_active'] = now
             session['email'] = None
             session['_id'] = None
@@ -42,7 +42,7 @@ def before_request():
 @app.before_request
 def make_session_permanent():
     session.permanent = True
-    app.permanent_session_lifetime = timedelta(minutes=10)
+    app.permanent_session_lifetime = timedelta(minutes=60)
 
 
 @app.before_first_request

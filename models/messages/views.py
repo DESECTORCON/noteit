@@ -1,61 +1,85 @@
 import datetime
 from models.error_logs.error_log import Error_
-from flask import Blueprint, request, session, url_for, render_template
+from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
 from models.messages.message import Message
 import models.users.decorators as user_decorators
 from models.notes.note import Note
 from models.users.user import User
 import traceback
-from elasticsearch import Elasticsearch
-from config import ELASTIC_PORT as port
 
 message_blueprint = Blueprint('message', __name__)
+
+
+def label_maker(messages, user_id):
+    labels = []
+    for message in messages:
+        if message.sender_id == user_id:
+            labels.append({"message_id": message._id, "label": "sended"})
+        elif user_id in message.reciver_id:
+            labels.append({"message_id": message._id, "label": "recived"})
+        # else:
+        #     raise Exception(message.sender_id + ' ' + user_id + ' ' + str(message.reciver_id))
+
+    return labels
+
+
+@message_blueprint.route('/all_messages/<string:user_id>', methods=['GET', 'POST'])
+@user_decorators.require_login
+def all_messages(user_id):
+    try:
+        user_nickname = User.find_by_id(session['_id']).nick_name
+
+        if request.method == 'POST':
+            form_ = request.form['Search_message']
+
+            messages = Message.search_find_all(form_, user_id)
+
+            labels = label_maker(messages, user_id)
+
+            return render_template('messages/messages.html',
+                                   messages=messages, user_nickname=user_nickname, form=form_, labels=labels)
+        messages = Message.search_find_all('', user_id)
+        labels = label_maker(messages, user_id)
+
+        return render_template('messages/messages.html',
+                               messages=messages, user_nickname=user_nickname, labels=labels)
+
+    except:
+        error_msg = traceback.format_exc().split('\n')
+
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='my_recived_messages-during message finding')
+        Error_obj.save_to_mongo()
+        return render_template('error_page.html', error_msgr='Crashed during reading your messages')
 
 
 @message_blueprint.route('/recived_messages/<string:user_id>', methods=['GET', 'POST'])
 @user_decorators.require_login
 def my_recived_messages(user_id):
     try:
-        messages = Message.find_by_reciver_id(user_id)
+        messages_by_db = Message.find_by_reciver_id(user_id)
         user_nickname = User.find_by_id(session['_id']).nick_name
 
         if request.method == 'POST':
             form_ = request.form['Search_message']
 
-            el = Elasticsearch(port=port)
+            messages = Message.search_on_elastic(form_, user_id)
 
-            body = {
-                "query": {
-                    "bool": {
-                        "should": [
-                            {
-                                "term": {"title": {"value": form_}}
-                            },
-                            {
-                                "term": {"title": {"value": form_}}
-                            }
-                        ],
-                        "must": [
-                            {
-                                "match": {"reciver_id": user_id}
-                            }
-                        ]
-                    }
-
-                }
-            }
-
-            data = el.search(index='notes', doc_type='note', body=body)
-
-            messages = []
             try:
-                for message in data['hits']['hits']:
-                    messages.append(Message.find_by_id(message['_source']['note_id']))
-            except:
+                for message in messages:
+                    if type(message) is 'NoneType':
+                        messages.remove(message)
+            except TypeError:
                 pass
 
-        return render_template('messages/my_recived_messages.html', messages=messages, user_nickname=user_nickname)
+            if messages is None:
+                messages = []
+
+            return render_template('messages/my_recived_messages.html',
+                                   messages=messages, user_nickname=user_nickname, form=form_)
+        return render_template('messages/my_recived_messages.html',
+                               messages=messages_by_db, user_nickname=user_nickname)
+
     except:
         error_msg = traceback.format_exc().split('\n')
 
@@ -93,9 +117,9 @@ def send_message():
             content = request.form['content']
 
             if request.form.getlist("user") in [None, [], ""]:
-                return render_template('messages/send_note.html',
+                return render_template('messages/send_message.html',
                                        e="You hadn't selected an reciver. Please select at least ONE reciver.",
-                                       all_users=all_users, title=title, )
+                                       all_users=all_users, title=title, content=content)
 
             else:
 
@@ -166,22 +190,6 @@ def message(message_id, is_sended=False):
         return render_template('error_page.html', error_msgr='Crashed during reading message...')
 
 
-@message_blueprint.route('/all_messages/')
-@user_decorators.require_login
-def all_messages():
-    try:
-        all_messagess = Message.find_all()
-
-        return render_template('messages/all_messages.html', all_messagess=all_messagess)
-
-    except:
-        error_msg = traceback.format_exc().split('\n')
-
-        Error_obj = Error_(error_msg=''.join(error_msg), error_location='message reading')
-        Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading your messages...')
-
-
 @message_blueprint.route('/delete_message/<string:message_id>')
 @user_decorators.require_login
 def delete_message(message_id):
@@ -189,6 +197,8 @@ def delete_message(message_id):
         message = Message.find_by_id(message_id)
         message.delete_on_elastic()
         message.delete()
+
+        flash('Your message has successfully deleted.')
 
         return redirect(url_for('.my_recived_messages', user_id=session['_id']))
 
@@ -203,84 +213,106 @@ def delete_message(message_id):
 @message_blueprint.route('/send_note', methods=['GET', 'POST'])
 @user_decorators.require_login
 def send_note():
-    all_notes = Note.get_all()
-    all_users = User.get_all()
+    try:
+        all_notes = Note.get_all()
+        all_users = User.get_all()
 
-    if request.method == 'POST':
+        if request.method == 'POST':
 
-        try:
-            note = Note.find_by_id(request.form['note'])
-        except:
+            try:
+                note = Note.find_by_id(request.form['note'])
+            except:
 
-            error_msg = traceback.format_exc().split('\n')
+                error_msg = traceback.format_exc().split('\n')
 
-            Error_obj = Error_(error_msg=''.join(error_msg), error_location='send_note note finding/reading')
-            Error_obj.save_to_mongo()
+                Error_obj = Error_(error_msg=''.join(error_msg), error_location='send_note note finding/reading')
+                Error_obj.save_to_mongo()
 
-            return render_template('error_page.html', error_msgr='Crashed during preparing page...')
+                return render_template('error_page.html', error_msgr='Crashed during preparing page...')
 
-        message_title = request.form['title']
+            message_title = request.form['title']
 
-        if request.form.getlist("user") in [None, [], ""]:
-            return render_template('messages/send_note.html',
-                                   e="You hadn't selected an reciver. Please select at least ONE reciver.",
-                                   all_users=all_users, title=message_title,)
+            if request.form.getlist("user") in [None, [], ""]:
+                return render_template('messages/send_note.html',
+                                       e="You hadn't selected an reciver. Please select at least ONE reciver.",
+                                       all_users=all_users, title=message_title,)
 
-        else:
+            else:
 
-            recivers = request.form.getlist("user")
+                recivers = request.form.getlist("user")
 
-        sender_id = User.find_by_email(session['email'])._id
+            sender_id = User.find_by_email(session['email'])._id
 
-        message = Message(title=message_title, content=note._id, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True)
-        message.save_to_mongo()
-        message.save_to_elastic()
+            message = Message(title=message_title, content=note._id, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True)
+            message.save_to_mongo()
+            message.save_to_elastic()
 
-        return redirect(url_for('.my_sended_messages', user_id=sender_id))
+            flash('Your message has been successfully sended.')
 
-    return render_template('messages/send_note.html',
-                           all_notes=all_notes, all_users=all_users)
+            return redirect(url_for('.my_sended_messages', user_id=sender_id))
+
+        return render_template('messages/send_note.html',
+                               all_notes=all_notes, all_users=all_users)
+
+    except:
+        error_msg = traceback.format_exc().split('\n')
+
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='message message sending')
+        Error_obj.save_to_mongo()
+
+        return render_template('error_page.html', error_msgr='Crashed during sending message...')
 
 
 @message_blueprint.route('/send_note_<string:note_id>', methods=['GET', 'POST'])
 @user_decorators.require_login
 def send_note_radio(note_id):
-    note = Note.find_by_id(note_id)
-    all_notes = Note.get_all()
-    all_users = User.get_all()
+    try:
+        note = Note.find_by_id(note_id)
+        all_notes = Note.get_all()
+        all_users = User.get_all()
 
-    if request.method == 'POST':
+        if request.method == 'POST':
 
-        try:
-            note = Note.find_by_id(request.form['note'])
-        except:
+            try:
+                note = Note.find_by_id(request.form['note'])
+            except:
 
-            error_msg = traceback.format_exc().split('\n')
+                error_msg = traceback.format_exc().split('\n')
 
-            Error_obj = Error_(error_msg=''.join(error_msg), error_location='send_note note finding/reading')
-            Error_obj.save_to_mongo()
+                Error_obj = Error_(error_msg=''.join(error_msg), error_location='send_note note finding/reading')
+                Error_obj.save_to_mongo()
 
-            return render_template('error_page.html', error_msgr='Crashed during preparing page...')
+                return render_template('error_page.html', error_msgr='Crashed during preparing page...')
 
-        message_title = request.form['title']
+            message_title = request.form['title']
 
-        if request.form.getlist("user") in [None, [], ""]:
-            return render_template('messages/send_note.html',
-                                   e="You hadn't selected an reciver. Please select at least ONE reciver.",
-                                   all_users=all_users, title=message_title,)
+            if request.form.getlist("user") in [None, [], ""]:
+                return render_template('messages/send_note.html',
+                                       e="You hadn't selected an reciver. Please select at least ONE reciver.",
+                                       all_users=all_users, title=message_title,)
 
-        else:
+            else:
 
-            recivers = request.form.getlist("user")
+                recivers = request.form.getlist("user")
 
-        sender_id = User.find_by_email(session['email'])._id
+            sender_id = User.find_by_email(session['email'])._id
 
-        message = Message(title=message_title, content=note._id, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True)
-        message.save_to_mongo()
-        message.save_to_elastic()
+            message = Message(title=message_title, content=note._id, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True)
+            message.save_to_mongo()
+            message.save_to_elastic()
 
-        return redirect(url_for('.my_sended_messages', user_id=sender_id))
+            flash('Your message has been successfully sended.')
 
-    return render_template('messages/send_note.html',
-                           all_notes=all_notes, all_users=all_users, note_=note)
+            return redirect(url_for('.my_sended_messages', user_id=sender_id))
+
+        return render_template('messages/send_note.html',
+                               all_notes=all_notes, all_users=all_users, note_=note)
+
+    except:
+        error_msg = traceback.format_exc().split('\n')
+
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='message message sending')
+        Error_obj.save_to_mongo()
+
+        return render_template('error_page.html', error_msgr='Crashed during sending message...')
 
