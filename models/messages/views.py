@@ -42,7 +42,7 @@ message_blueprint = Blueprint('message', __name__)
 @user_decorators.require_login
 def my_recived_messages(user_id):
     try:
-        messages = Message.find_by_reciver_id(user_id)
+        messages_by_db = Message.find_by_reciver_id(user_id)
         user_nickname = User.find_by_id(session['_id']).nick_name
 
         if request.method == 'POST':
@@ -50,10 +50,20 @@ def my_recived_messages(user_id):
 
             messages = Message.search_on_elastic(form_, user_id)
 
+            try:
+                for message in messages:
+                    if type(message) is 'NoneType':
+                        messages.remove(message)
+            except TypeError:
+                pass
+
+            if messages is None:
+                messages = []
+
             return render_template('messages/my_recived_messages.html',
                                    messages=messages, user_nickname=user_nickname, form=form_)
         return render_template('messages/my_recived_messages.html',
-                               messages=messages, user_nickname=user_nickname)
+                               messages=messages_by_db, user_nickname=user_nickname)
 
     except:
         error_msg = traceback.format_exc().split('\n')

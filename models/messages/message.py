@@ -124,7 +124,8 @@ class Message(object):
         body = {
             "query": {
                 "match": {
-                    'message_id': self._id
+                    'message_id': self._id,
+                    "sender_id": self.sender_id
                 }
             }
         }
@@ -139,24 +140,24 @@ class Message(object):
 
         if form is '':
             data = el.search(index='messages', doc_type='message', body={
-                "query": {
-                    "bool": {
-                        "should": [
-                            {
-                                "prefix": {"title": ""},
-                            },
-                            {
-                                "term": {"content": ""}
-                            }
-                        ],
-                        "filter": [
-                            {
-                                "match": {"reciver_id": user_id},
-                            }
-                        ]
-                    }
-                }
-            })
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "prefix": {"title": ""}
+        },
+        {
+          "term": {"content": ""}
+        }
+      ],
+      "filter": [
+        {
+          "match": {"reciver_id": user_id}
+        }
+      ]
+   }
+  }
+})
         else:
             data = el.search(index='messages', doc_type='message', body={
                 "query": {
@@ -178,14 +179,14 @@ class Message(object):
                 }
             })
 
-            messages = []
-            for message in data['hits']['hits']:
-                try:
-                    messages.append(Message.find_by_id(message['_source']['message_id']))
-                except KeyError:
-                    messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
+        messages = []
+        for message in data['hits']['hits']:
+            try:
+                messages.append(Message.find_by_id(message['_source']['message_id']))
+            except KeyError:
+                messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
 
-            return messages
+        return messages
 
     # @staticmethod
     # def search_find_all(form, user_id):
