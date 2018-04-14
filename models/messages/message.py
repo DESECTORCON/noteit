@@ -140,24 +140,24 @@ class Message(object):
 
         if form is '':
             data = el.search(index='messages', doc_type='message', body={
-  "query": {
-    "bool": {
-      "should": [
-        {
-          "prefix": {"title": ""}
-        },
-        {
-          "term": {"content": ""}
-        }
-      ],
-      "filter": [
-        {
-          "match": {"reciver_id": user_id}
-        }
-      ]
-   }
-  }
-})
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "prefix": {"title": ""}
+                            },
+                            {
+                                "term": {"content": ""}
+                            }
+                        ],
+                        "filter": [
+                            {
+                                "match": {"reciver_id": user_id}
+                            }
+                        ]
+                    }
+                }
+            })
         else:
             data = el.search(index='messages', doc_type='message', body={
                 "query": {
@@ -188,86 +188,63 @@ class Message(object):
 
         return messages
 
-    # @staticmethod
-    # def search_find_all(form, user_id):
-    #     el = Elasticsearch(port=port)
-    #
-    #     if form is '':
-    #         body1 = {
-    #             "query": {
-    #                 "bool": {
-    #                     "should": [
-    #                         {
-    #                             "prefix": {"title": ""}
-    #                         },
-    #                         {
-    #                             "term": {"content": ""}
-    #                         },
-    #                         {
-    #                             "match": {"reciver_id": user_id}
-    #                         }
-    #                     ]
-    #                 }
-    #             }
-    #         }
-    #
-    #         data1 = el.search(index='messages', doc_type='message', body=body1)
-    #
-    #     else:
-    #         body1 = {
-    #             "query": {
-    #                 "bool": {
-    #                     "should": [
-    #                         {
-    #                             "prefix": {"title": ""}
-    #                         },
-    #                         {
-    #                             "term": {"content": ""}
-    #                         },
-    #                         {
-    #                             "match": {"reciver_id": user_id}
-    #                         }
-    #                     ]
-    #                 }
-    #             }
-    #         }
-    #
-    #         body2 = {
-    #             "query": {
-    #                 "bool": {
-    #                     "should": [
-    #                         {
-    #                             "prefix": {"title": ""}
-    #                         },
-    #                         {
-    #                             "term": {"content": ""}
-    #                         },
-    #                         {
-    #                             "match": {"sender_id": user_id}
-    #                         }
-    #                     ]
-    #                 }
-    #             }
-    #         }
-    #
-    #         data1 = el.search(index='messages', doc_type='message', body=body1)
-    #         data2 = el.search(index='messages', doc_type='message', body=body2)
-    #
-    #     messages = []
-    #     for message in data1['hits']['hits']:
-    #         try:
-    #             messages.append(Message.find_by_id(message['_source']['message_id']))
-    #         except KeyError:
-    #             messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
-    #
-    #     for message in data2['hits']['hits']:
-    #         try:
-    #             messages.append(Message.find_by_id(message['_source']['message_id']))
-    #         except KeyError:
-    #             messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
-    #
-    #     seen = set()
-    #     seen_add = seen.add
-    #     return [x for x in messages if not (x in seen or seen_add(x))]
+    @staticmethod
+    def search_find_all(form, user_id):
+        el = Elasticsearch(port=port)
+
+        if form is '':
+            body1 = {
+  "query": {
+    "bool": {
+      "should": [
+        {"prefix": {"title": ""}},
+        {"term": {"content": ""}}
+      ],
+
+      "filter": {
+        "bool": {
+          "should": [
+            {"match": {"reciver_id": user_id}},
+            {"match": {"sender_id": user_id}}
+          ]
+        }
+      }
+    }
+  }
+}
+
+            data1 = el.search(index='messages', doc_type='message', body=body1)
+
+        else:
+            body1 = {
+  "query": {
+    "bool": {
+      "should": [
+        {"prefix": {"title": form}},
+        {"term": {"content": form}}
+      ],
+
+      "filter": {
+        "bool": {
+          "should": [
+            {"match": {"reciver_id": user_id}},
+            {"match": {"sender_id": user_id}}
+          ]
+        }
+      }
+    }
+  }
+}
+
+            data1 = el.search(index='messages', doc_type='message', body=body1)
+
+        messages = []
+        for message in data1['hits']['hits']:
+            try:
+                messages.append(Message.find_by_id(message['_source']['message_id']))
+            except KeyError:
+                messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
+
+        return messages
 
 
