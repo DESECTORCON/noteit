@@ -10,8 +10,8 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page">All messages
-                <small><a href="{{ url_for('.my_recived_messages', user_id=session['_id']) }}">sended messages</a> <a
-                    href="{{ url_for('.my_sended_messages', user_id=session['_id']) }}">received messages</a></small></li>
+                <small><a href="{{ url_for('.my_sended_messages', user_id=session['_id']) }}">sended messages</a> <a
+                    href="{{ url_for('.my_recived_messages', user_id=session['_id']) }}">received messages</a></small></li>
         </ol>
     </nav>
 

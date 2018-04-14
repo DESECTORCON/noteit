@@ -124,8 +124,7 @@ class Message(object):
         body = {
             "query": {
                 "match": {
-                    'message_id': self._id,
-                    "sender_id": self.sender_id
+                    "message_id": self._id
                 }
             }
         }

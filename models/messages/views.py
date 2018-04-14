@@ -11,11 +11,21 @@ import traceback
 message_blueprint = Blueprint('message', __name__)
 
 
+def label_maker(messages, user_id):
+    labels = []
+    for message in messages:
+        if message.sender_id == user_id:
+            labels.append({"message_id": message._id, "label": "received"})
+        else:
+            labels.append({"message_id": message._id, "label": "sended"})
+
+    return labels
+
+
 @message_blueprint.route('/all_messages/<string:user_id>', methods=['GET', 'POST'])
 @user_decorators.require_login
 def all_messages(user_id):
     try:
-        messages = Message.search_find_all('', user_id)
         user_nickname = User.find_by_id(session['_id']).nick_name
 
         if request.method == 'POST':
@@ -23,22 +33,13 @@ def all_messages(user_id):
 
             messages = Message.search_find_all(form_, user_id)
 
-            labels = []
-            for message in messages:
-                if message.sender_id == user_id:
-                    labels.append({"message_id": message._id, "label": "received"})
-                else:
-                    labels.append({"message_id": message._id, "label": "sended"})
+            labels = label_maker(messages, user_id)
 
             return render_template('messages/messages.html',
                                    messages=messages, user_nickname=user_nickname, form=form_, labels=labels)
+        messages = Message.search_find_all('', user_id)
+        labels = label_maker(messages, user_id)
 
-        labels = []
-        for message in messages:
-            if message.sender_id == user_id:
-                labels.append({"message_id": message._id, "label": "received"})
-            else:
-                labels.append({"message_id": message._id, "label": "sended"})
         return render_template('messages/messages.html',
                                messages=messages, user_nickname=user_nickname, labels=labels)
 
