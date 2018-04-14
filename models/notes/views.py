@@ -7,8 +7,15 @@ from models.users.user import User
 from models.error_logs.error_log import Error_
 import traceback
 from config import ELASTIC_PORT as port
+from werkzeug.utils import secure_filename
+from config import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
 
 note_blueprint = Blueprint('notes', __name__)
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def is_shared_validator(shared, share_only_with_users):
