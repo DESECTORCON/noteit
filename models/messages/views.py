@@ -15,7 +15,7 @@ message_blueprint = Blueprint('message', __name__)
 @user_decorators.require_login
 def all_messages(user_id):
     try:
-        messages = Message.find_by_reciver_id(user_id)
+        messages = Message.search_find_all('', user_id)
         user_nickname = User.find_by_id(session['_id']).nick_name
 
         if request.method == 'POST':
@@ -23,10 +23,24 @@ def all_messages(user_id):
 
             messages = Message.search_find_all(form_, user_id)
 
+            labels = []
+            for message in messages:
+                if message.sender_id == user_id:
+                    labels.append({"message_id": message._id, "label": "received"})
+                else:
+                    labels.append({"message_id": message._id, "label": "sended"})
+
             return render_template('messages/messages.html',
-                                   messages=messages, user_nickname=user_nickname, form=form_)
+                                   messages=messages, user_nickname=user_nickname, form=form_, labels=labels)
+
+        labels = []
+        for message in messages:
+            if message.sender_id == user_id:
+                labels.append({"message_id": message._id, "label": "received"})
+            else:
+                labels.append({"message_id": message._id, "label": "sended"})
         return render_template('messages/messages.html',
-                               messages=messages, user_nickname=user_nickname)
+                               messages=messages, user_nickname=user_nickname, labels=labels)
 
     except:
         error_msg = traceback.format_exc().split('\n')
