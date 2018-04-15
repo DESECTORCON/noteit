@@ -1,3 +1,5 @@
+import os
+
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
@@ -45,6 +47,35 @@ def share_bool_function(share):
         share_only_with_users = False
 
     return share, share_only_with_users
+
+
+# @note_blueprint.route('/', methods=['GET', 'POST'])
+# def upload_file():
+#     if request.method == 'POST':
+#         # check if the post request has the file part
+#         if 'file' not in request.files:
+#             flash('No file part')
+#             return redirect(request.url)
+#         file = request.files['file']
+#         # if user does not select file, browser also
+#         # submit a empty part without filename
+#         if file.filename == '':
+#             flash('No selected file')
+#             return redirect(request.url)
+#         if file and allowed_file(file.filename):
+#             filename = secure_filename(file.filename)
+#             file.save(os.path.join(UPLOAD_FOLDER, filename))
+#             return redirect(url_for('uploaded_file',
+#                                     filename=filename))
+#     return '''
+#     <!doctype html>
+#     <title>Upload new File</title>
+#     <h1>Upload new File</h1>
+#     <form method=post enctype=multipart/form-data>
+#       <p><input type=file name=file>
+#          <input type=submit value=Upload>
+#     </form>
+#     '''
 
 
 @note_blueprint.route('/my_notes/', methods=['POST', 'GET'])
@@ -124,13 +155,14 @@ def create_note():
             title = request.form['title']
             content = request.form['content'].strip('\n').strip('\r')
             author_email = session['email']
+            file = request.files['img_'] if request.files['img_'] is not None else None
             author_nickname = User.find_by_email(author_email).nick_name
 
             label = is_shared_validator(share, share_only_with_users)
 
             note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
-                                 share_label=label)
+                                 share_label=label, file_name=file.filename)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
 

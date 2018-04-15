@@ -1,5 +1,9 @@
+import os
 import uuid
-from config import ELASTIC_PORT as port
+
+from werkzeug.utils import secure_filename
+
+from config import ELASTIC_PORT as port, ALLOWED_EXTENSIONS, UPLOAD_FOLDER
 from elasticsearch import Elasticsearch
 from common.database import Database
 import models.notes.constants as NoteConstants
@@ -9,7 +13,7 @@ import datetime
 class Note(object):
 
     def __init__(self, title, content, author_email, author_nickname, created_date=None, _id=None, shared=False,
-                 share_only_with_users=False, share_label=''):
+                 share_only_with_users=False, share_label='', file_name=None):
         self.title = "No title" if title is None else title
         self.content = "No content" if content is None else content
         self.created_date = datetime.datetime.now() if created_date is None else created_date
@@ -19,6 +23,7 @@ class Note(object):
         self.author_nickname = author_nickname
         self.share_only_with_users = share_only_with_users
         self.share_label = share_label
+        self.file_name = file_name
 
     def __repr__(self):
         return "<Note {} with author {} and created date {}>".format(self.title, self.author_email, self.created_date)
@@ -33,7 +38,8 @@ class Note(object):
             "author_nickname": self.author_nickname,
             "shared": self.shared,
             "share_only_with_users": self.share_only_with_users,
-            "share_label": self.share_label
+            "share_label": self.share_label,
+            "file_name": self.file_name
         }
 
     def save_to_db(self):
@@ -177,3 +183,12 @@ class Note(object):
                 notes.append(Note.find_by_id(note['_source']['query']['match']['note_id']))
         del el
         return notes
+
+    def allowed_file(self):
+        return '.' in self.file_name and \
+               self.file_name.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+    def save_img_file(self, file):
+        if file and self.allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
