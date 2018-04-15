@@ -334,5 +334,8 @@ def send_note_radio(note_id):
 #         return redirect(url_for('.send_note', user_ids=recivers))
 #
 #     return render_template('messages/user_select.html', all_users=all_users)
-
+@message_blueprint.route('/choose/')
+@user_decorators.require_login
+def choose():
+    return render_template('messages/choose_message_type.html')
 

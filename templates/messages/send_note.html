@@ -1,94 +1,94 @@
 {% extends "base2.html" %}
 {% block title %}
-    <title>Note-it™ | Send Note</title>
+<title>Note-it™ | Send Note</title>
 {% endblock %}
 
 {% block content %}
 
-    <div class="jumbotron form-sizer">
+<div class="jumbotron form-sizer">
 
-        <h1><i class="fas fa-external-link-square-alt"></i> Send a Note</h1>
+    <h1><i class="fas fa-external-link-square-alt"></i> Send a Note</h1>
 
-        <p>Select an note, than submit!</p>
+    <p>Select an note, than submit!</p>
 
-    </div>
+</div>
 
-    <br>
+<br>
 
-    <div class="form-size jumbotron">
+<div class="form-size jumbotron">
 
-        <form method="POST">
-
-
-
-            <div class="form-group">
-
-                {% if e %}
-                <br>
-
-                <div class="alert alert-danger" role="alert">
-                    <i class="fas fa-exclamation"></i>  {{ e }}
-                </div>
+    <form method="POST">
 
 
-                {% endif %}
-                <label for="title"><b>Title</b></label>
-                <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="reciver_emailBlock" value="">
 
+        <div class="form-group">
+
+            {% if e %}
+            <br>
+
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation"></i>  {{ e }}
             </div>
-                    <hr class="my-4">
-
-            <div class="list-group">
-
-                {% if note_ %}
-                    <h1 class="heading">Notes <small class="text-muted">select a note you want to send</small></h1>
-                    {% for note in all_notes %}
-
-                        <b class="list-group-item list-group-item-action flex-column align-items-start">
-                            <div class="d-flex w-100 justify-content-between">
-                                {% if note_._id == note._id %}
-                                    <input type="radio" value="{{ note._id }}" name="note" checked="checked" />
-                                {% else %}
-
-                                    <input type="radio" value="{{ note._id }}" name="note">
-
-                                {% endif %}
-
-                                <h5 class="mb-1">{{ note.title }}</h5>
-                                <small class="text-muted">Made date {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
-                            </div>
-                        </b>
-                    {% endfor %}
-
-                {% else %}
-
-                    <h1 class="heading">Notes <small class="text-muted">select a note you want to send</small></h1>
-                    {% for note in all_notes %}
-
-                        <label class="list-group-item list-group-item-action flex-column align-items-start">
-                            <div class="d-flex w-100 justify-content-between">
-                                <input type="radio" value="{{ note._id }}" name="note" />
-                                <h5 class="mb-1">{{ note.title }}</h5>
-                                <small class="text-muted">Made date {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
-                            </div>
-                        </label>
-
-                    {% endfor %}
-
-                {% endif %}
 
 
+            {% endif %}
+            <label for="title"><b>Title</b></label>
+            <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="reciver_emailBlock" value="">
 
-    </div>
+        </div>
+        <hr class="my-4">
 
-                    <hr class="my-4">
+        <div class="list-group">
 
-             {% if all_users == None %}
+            {% if note_ %}
+            <h1 class="heading">Notes <small class="text-muted">select a note you want to send</small></h1>
+            {% for note in all_notes %}
+
+            <b class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    {% if note_._id == note._id %}
+                    <input type="radio" value="{{ note._id }}" name="note" checked="checked" />
+                    {% else %}
+
+                    <input type="radio" value="{{ note._id }}" name="note">
+
+                    {% endif %}
+
+                    <h5 class="mb-1">{{ note.title }}</h5>
+                    <small class="text-muted">Made date {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                </div>
+            </b>
+            {% endfor %}
+
+            {% else %}
+
+            <h1 class="heading">Notes <small class="text-muted">select a note you want to send</small></h1>
+            {% for note in all_notes %}
+
+            <label class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <input type="radio" value="{{ note._id }}" name="note" />
+                    <h5 class="mb-1">{{ note.title }}</h5>
+                    <small class="text-muted">Made date {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                </div>
+            </label>
+
+            {% endfor %}
+
+            {% endif %}
+
+
+
+        </div>
+
+        <hr class="my-4">
+
+        {% if all_users == None %}
         <h1>No users are available. Please contact us <a>(010-2901-5627)</a></h1>
-    {% else %}
-    <div class="list-group">
-        <h1 class="heading">Users <small class="text-muted">select</small></h1>
-        {% for user in all_users %}
+        {% else %}
+        <div class="list-group">
+            <h1 class="heading">Users <small class="text-muted">select</small></h1>
+            {% for user in all_users %}
 
             <label class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
@@ -98,17 +98,17 @@
                 </div>
             </label>
 
-        {% endfor %}
+            {% endfor %}
 
-    </div>
-    {% endif %}
+        </div>
+        {% endif %}
 
-    <br>
-    <button type="submit" class="btn btn-primary">Send Message</button>
+        <br>
+        <button type="submit" class="btn btn-primary">Send Message</button>
 
 
-        </form>
+    </form>
 
-    </div>
+</div>
 
 {% endblock %}
