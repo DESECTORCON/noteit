@@ -67,7 +67,7 @@ def register_user():
                                             and share it with other users! Or you can
                                             just keep the note to your selves.
                                             You can send messages to other users too! Check out this website!!""",
-                                      reciver_id=user_id,
+                                      reciver_id=list(user_id),
                                       sender_id=User.find_by_email('SE@SENOREPLAY.COM')._id)
                     message.save_to_mongo()
                     return redirect(url_for("home"))
