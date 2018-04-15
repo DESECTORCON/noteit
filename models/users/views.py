@@ -85,9 +85,9 @@ def register_user():
         return render_template('error_page.html', error_msgr='Crashed during registering you...')
 
 
-#@user_blueprint.route('/alerts')
-#@user_decorators.require_login
-#def user_notes():
+# @user_blueprint.route('/alerts')
+# @user_decorators.require_login
+# def user_notes():
 #    user = User.find_by_email(session['email'])
 #    alerts = user.get_alerts()
 #    user_name = user.email
@@ -124,6 +124,7 @@ def users_page():
             except:
                 pass
             # print(users)
+            del el
             return render_template('/users/users_page.html', users=users, form=request.form['Search_user'])
 
         else:

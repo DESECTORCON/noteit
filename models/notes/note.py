@@ -62,7 +62,7 @@ class Note(object):
                 }
             }
         }
-        a = el.delete_by_query(index="notes", doc_type="note", body=body)
+        el.delete_by_query(index="notes", doc_type="note", body=body)
         del el
         return True
 
@@ -175,5 +175,5 @@ class Note(object):
                 notes.append(Note.find_by_id(note['_source']['note_id']))
             except KeyError:
                 notes.append(Note.find_by_id(note['_source']['query']['match']['note_id']))
-
+        del el
         return notes

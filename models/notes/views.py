@@ -215,6 +215,7 @@ def notes():
             except:
                 pass
 
+            del el
             return render_template('/notes/pub_notes.html', notes=notes, form=form_)
 
         try:
