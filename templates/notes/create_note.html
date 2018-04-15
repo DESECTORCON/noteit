@@ -21,7 +21,7 @@
     <br>
 
     <div class="form-size jumbotron">
-        <form method="post">
+        <form method="post" enctype=multipart/form-data>
 
             <div class="form-group">
 
@@ -54,6 +54,14 @@
                         <label class="input-group-text" for="inputGroupSelect01">Content</label>
                 </div>
                 <textarea class="form-control text_box_big" name="content" id="content" placeholder="Example content" aria-describedby="contentBlock"></textarea>
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Image attach</label>
+                </div>
+                <input type="file" name="file" id="file" value="Image here!">
+
             </div>
 
             <br>

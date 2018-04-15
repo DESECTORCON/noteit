@@ -155,8 +155,14 @@ def create_note():
             title = request.form['title']
             content = request.form['content'].strip('\n').strip('\r')
             author_email = session['email']
-            file = request.files['img_'] if request.files['img_'] is not None else None
+            file = request.files['file'] if request.files['file'] is not None else None
             author_nickname = User.find_by_email(author_email).nick_name
+
+            if file and Note.allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(UPLOAD_FOLDER, filename))
+            else:
+                file = None
 
             label = is_shared_validator(share, share_only_with_users)
 
