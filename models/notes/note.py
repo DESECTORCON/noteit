@@ -193,3 +193,7 @@ class Note(object):
         if file and self.allowed_file(file.name):
             filename = secure_filename(file.name)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
+
+    def delete_img(self):
+        os.chdir('/static/')
+        os.remove(self.file_name)
