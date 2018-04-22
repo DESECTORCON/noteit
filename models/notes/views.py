@@ -10,7 +10,7 @@ from models.error_logs.error_log import Error_
 import traceback
 from config import ELASTIC_PORT as port
 from werkzeug.utils import secure_filename
-from config import ALLOWED_EXTENSIONS, UPLOAD_FOLDER
+from config import ALLOWED_EXTENSIONS
 
 note_blueprint = Blueprint('notes', __name__)
 
@@ -47,35 +47,6 @@ def share_bool_function(share):
         share_only_with_users = False
 
     return share, share_only_with_users
-
-
-# @note_blueprint.route('/', methods=['GET', 'POST'])
-# def upload_file():
-#     if request.method == 'POST':
-#         # check if the post request has the file part
-#         if 'file' not in request.files:
-#             flash('No file part')
-#             return redirect(request.url)
-#         file = request.files['file']
-#         # if user does not select file, browser also
-#         # submit a empty part without filename
-#         if file.filename == '':
-#             flash('No selected file')
-#             return redirect(request.url)
-#         if file and allowed_file(file.filename):
-#             filename = secure_filename(file.filename)
-#             file.save(os.path.join(UPLOAD_FOLDER, filename))
-#             return redirect(url_for('uploaded_file',
-#                                     filename=filename))
-#     return '''
-#     <!doctype html>
-#     <title>Upload new File</title>
-#     <h1>Upload new File</h1>
-#     <form method=post enctype=multipart/form-data>
-#       <p><input type=file name=file>
-#          <input type=submit value=Upload>
-#     </form>
-#     '''
 
 
 @note_blueprint.route('/my_notes/', methods=['POST', 'GET'])
