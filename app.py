@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 from flask import Flask, render_template, session, url_for, flash
 import random
@@ -15,6 +16,8 @@ random_int = []
 for i in range(100):
     random_int.append(random.randint(1, 10000))
     app.secret_key = ''.join(str(random_int))
+
+os.chdir('static')
 
 
 @app.before_request

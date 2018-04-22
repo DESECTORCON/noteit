@@ -1,8 +1,6 @@
 import os
 import uuid
-
 from werkzeug.utils import secure_filename
-
 from config import ELASTIC_PORT as port, ALLOWED_EXTENSIONS, UPLOAD_FOLDER
 from elasticsearch import Elasticsearch
 from common.database import Database
@@ -195,5 +193,4 @@ class Note(object):
             file.save(os.path.join(UPLOAD_FOLDER, filename))
 
     def delete_img(self):
-        os.chdir('/static/')
-        os.remove(self.file_name)
+            os.remove(self.file_name)

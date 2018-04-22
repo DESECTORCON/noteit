@@ -144,7 +144,7 @@ def create_note():
                 sid = shortid.ShortId()
                 filename = secure_filename(sid.generate()) + ".png"
                 # os.chdir("static/img/file/")
-                file.save(os.path.join("static/", filename))
+                file.save(os.path.join(filename))
 
             elif file is not None:
                 flash("Sorry; only img files are supported.")
@@ -184,14 +184,14 @@ def delete_note(note_id, redirect_to='.user_notes'):
         note.delete_img()
         note.delete()
         flash('Your note has successfully deleted.')
+        return redirect(url_for(redirect_to))
+
     except:
         error_msg = traceback.format_exc().split('\n')
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes deleting note')
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during deleting your note...')
-    finally:
-        return redirect(url_for(redirect_to))
 
 
 @note_blueprint.route('/pub_notes/', methods=['GET', 'POST'])
