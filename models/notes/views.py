@@ -10,14 +10,14 @@ from models.error_logs.error_log import Error_
 import traceback
 from config import ELASTIC_PORT as port
 from werkzeug.utils import secure_filename
-from config import ALLOWED_EXTENSIONS
+# from config import ALLOWED_EXTENSIONS
 
 note_blueprint = Blueprint('notes', __name__)
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+#
+#
+# def allowed_file(filename):
+#     return '.' in filename and \
+#            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def is_shared_validator(shared, share_only_with_users):
@@ -82,6 +82,7 @@ def note(note_id):
     try:
         note = Note.find_by_id(note_id)
         user = User.find_by_email(note.author_email)
+        filename = note.file_name
 
         try:
             if note.author_email == session['email']:
@@ -95,14 +96,15 @@ def note(note_id):
         finally:
 
             return render_template('/notes/note.html', note=note,
-                                   author_email_is_session=author_email_is_session, msg_=False, user=user)
+                                   author_email_is_session=author_email_is_session, msg_=False, user=user
+                                   , url=url_for('static', filename=filename))
 
     except:
         error_msg = traceback.format_exc().split('\n')
 
         try:
 
-            Error_obj = Error_(error_msg=''.join(error_msg), error_location='note reading NOTE:' + note._id)
+            Error_obj = Error_(error_msg=''.join(error_msg), error_location='note reading')
         except:
             Error_obj = Error_(error_msg=''.join(error_msg), error_location='note reading NOTE:NONE')
 
@@ -135,9 +137,9 @@ def create_note():
 
             if file and Note.allowed_file(file):
                 sid = shortid.ShortId()
-                filename = secure_filename(sid.generate())
+                filename = secure_filename(sid.generate()) + ".png"
                 # os.chdir("static/img/file/")
-                file.save(os.path.join("static/img/file/", filename + ".png"))
+                file.save(os.path.join("static/", filename))
 
             elif file is not None:
                 flash("Sorry; only img files are supported.")
