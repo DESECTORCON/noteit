@@ -165,8 +165,8 @@ def create_note():
             if file and Note.allowed_file(file):
                 sid = shortid.ShortId()
                 filename = secure_filename(sid.generate())
-                os.chdir("static/img/file/")
-                file.save(os.path.join(filename + ".png"), name=filename)
+                # os.chdir("static/img/file/")
+                file.save(os.path.join("static/img/file/", filename + ".png"))
 
             elif file is not None:
                 flash("Sorry; only img files are supported.")
@@ -179,7 +179,7 @@ def create_note():
 
             note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
-                                 share_label=label, file_name=file.name)
+                                 share_label=label, file_name=filename)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
 
