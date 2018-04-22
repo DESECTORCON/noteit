@@ -173,7 +173,7 @@ def create_note():
                 return render_template('/notes/create_note.html'
                                        , title=title, content=content, share=share)
             else:
-                file = None
+                filename = None
 
             label = is_shared_validator(share, share_only_with_users)
 
