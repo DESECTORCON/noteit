@@ -26,9 +26,14 @@
     <br>
     <hr class="my-4">
 
-    <h5>Image:</h5>
+    {% if url == None %}
 
-    <img src="{{ url }}" alt="" class="rounded mx-auto d-block"  height="600" width="900">
+    {% else %}
+        <h5>Image:</h5>
+
+        <img src="{{ url }}" alt="" class="rounded mx-auto d-block"  height="600" width="900">
+
+    {% endif %}
 
 </div>
 
