@@ -1,5 +1,5 @@
 import os
-
+import shortid
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
@@ -155,12 +155,18 @@ def create_note():
             title = request.form['title']
             content = request.form['content'].strip('\n').strip('\r')
             author_email = session['email']
-            file = request.files['file'] if request.files['file'] is not None else None
+            try:
+                file = request.files['file']
+            except:
+                file = None
+
             author_nickname = User.find_by_email(author_email).nick_name
 
-            if file and Note.allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(UPLOAD_FOLDER, filename))
+            if file and Note.allowed_file(file):
+                sid = shortid.ShortId()
+                filename = secure_filename(sid.generate())
+                os.chdir("static/img/file/")
+                file.save(os.path.join(filename + ".png"), name=filename)
             else:
                 file = None
 
@@ -168,7 +174,7 @@ def create_note():
 
             note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
-                                 share_label=label, file_name=file.filename)
+                                 share_label=label, file_name=file.name)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
 

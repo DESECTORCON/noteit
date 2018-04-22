@@ -184,11 +184,12 @@ class Note(object):
         del el
         return notes
 
-    def allowed_file(self):
-        return '.' in self.file_name and \
-               self.file_name.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    @staticmethod
+    def allowed_file(file):
+        return '.' in file.filename and \
+               file.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
     def save_img_file(self, file):
-        if file and self.allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+        if file and self.allowed_file(file.name):
+            filename = secure_filename(file.name)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
