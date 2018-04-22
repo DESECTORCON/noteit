@@ -167,6 +167,11 @@ def create_note():
                 filename = secure_filename(sid.generate())
                 os.chdir("static/img/file/")
                 file.save(os.path.join(filename + ".png"), name=filename)
+
+            elif file is not None:
+                flash("Sorry; only img files are supported.")
+                return render_template('/notes/create_note.html'
+                                       , title=title, content=content, share=share)
             else:
                 file = None
 
