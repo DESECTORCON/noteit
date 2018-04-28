@@ -87,7 +87,7 @@
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     {% for message in messages %}
-    <div class="alert alert-success alert-dismissible">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
         <a href="#" class="close" data-dismiss="alert" aria-label="close" id="close" name="close">&times;</a>
         <i class="fas fa-info-circle"></i>  {{ message }}
     </div>

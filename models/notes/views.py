@@ -314,14 +314,29 @@ def edit_note(note_id):
 @note_blueprint.route('/delete_multiple/', methods=['GET', 'POST'])
 @user_decorators.require_login
 def delete_multiple():
-    user = User.find_by_email(session['email'])
-    user_notes = User.get_notes(user)
-    user_name = user.email
+    try:
+        user = User.find_by_email(session['email'])
+        user_notes = User.get_notes(user)
+        user_name = user.email
 
-    if request.method == 'POST':
-        pass
+        if request.method == 'POST':
+            notes_id = request.form.getlist('delete')
 
-    return render_template("/notes/delete_multiple.html", user_notes=user_notes, user_name=user_name)
+            for note_id in notes_id:
+                note = Note.find_by_id(note_id)
+                note.delete_on_elastic()
+                note.delete_img()
+                note.delete()
+                flash('Your note has successfully deleted.')
+
+        return render_template("/notes/delete_multiple.html", user_notes=user_notes, user_name=user_name)
+
+    except:
+        error_msg = traceback.format_exc().split('\n')
+
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes public note reading')
+        Error_obj.save_to_mongo()
+        return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
 
 
 @note_blueprint.route('/search_notes/', methods=['POST'])
