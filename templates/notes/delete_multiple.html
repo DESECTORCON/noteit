@@ -12,7 +12,7 @@
 
 <hr class="my-4">
 
-<form class="form-inline my-2 my-lg-0" method="POST" action="{{ url_for() }}">
+<form class="form-inline my-2 my-lg-0" method="POST" action="{{ url_for('notes.search_notes') }}">
     {% if form %}
     <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
     {% else %}

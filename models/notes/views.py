@@ -59,11 +59,11 @@ def user_notes():
         user_name = user.email
 
         if request.method == 'POST':
-            form_ = request.form['Search_note']
-            notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
+                form_ = request.form['Search_note']
+                notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
 
-            return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
-                                   form=form_)
+                return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
+                                       form=form_)
 
         else:
 
@@ -322,3 +322,15 @@ def delete_multiple():
         pass
 
     return render_template("/notes/delete_multiple.html", user_notes=user_notes, user_name=user_name)
+
+
+@note_blueprint.route('/search_notes/', methods=['POST'])
+@user_decorators.require_login
+def search_notes():
+    user = User.find_by_email(session['email'])
+    user_name = user.email
+    form_ = request.form['Search_note']
+    notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
+
+    return render_template('/notes/delete_multiple.html', user_notes=notes, user_name=user_name,
+                           form=form_)
