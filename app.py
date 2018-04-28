@@ -7,7 +7,11 @@ from models.notes.note import Note
 from models.messages.message import *
 import config as config
 from models.users.user import User
-os.chdir('static')
+
+try:
+    os.chdir('static')
+except FileNotFoundError:
+    pass
 app = Flask(__name__)
 app.config.from_object('config')
 app.secret_key = ''

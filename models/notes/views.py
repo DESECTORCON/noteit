@@ -314,7 +314,11 @@ def edit_note(note_id):
 @note_blueprint.route('/delete_note_multiple/')
 @user_decorators.require_login
 def delete_note_multiple():
-    return render_template('/notes/delete_multiple.html')
+    user = User.find_by_email(session['email'])
+    user_notes = User.get_notes(user)
+    user_name = user.email
+
+    return render_template("/notes/delete_multiple.html", user_notes=user_notes, user_name=user_name)
 
 
 @note_blueprint.route('/delete_multiple/', methods=['POST'])
@@ -326,16 +330,16 @@ def delete_multiple():
         user_name = user.email
 
         if request.method == 'POST':
-            notes_id = request.form.getlist('delete[]')
+            notes_id = request.form.getlist('delete')
 
             for note_id in notes_id:
                 note = Note.find_by_id(note_id)
                 note.delete_on_elastic()
                 note.delete_img()
                 note.delete()
-                flash('Your note has successfully deleted.')
 
-                return redirect(url_for('.user_notes'))
+            flash('Your notes has successfully deleted.')
+            return redirect(url_for('.user_notes'))
 
         return render_template("/notes/delete_multiple.html", user_notes=user_notes, user_name=user_name)
 
