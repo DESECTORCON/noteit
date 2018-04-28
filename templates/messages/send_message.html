@@ -82,8 +82,11 @@
 
             <label class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
-                    {% if  %}
-                    <input type="checkbox" value="{{ user._id }}" name="user" />
+                    {% if user_to_send == user._id %}
+                        <input type="checkbox" value="{{ user._id }}" name="user" checked>
+                    {% else %}
+                        <input type="checkbox" value="{{ user._id }}" name="user" />
+                    {% endif %}
                     <h5 class="mb-1">{{ user.nick_name }}</h5>
                     <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
                 </div>
