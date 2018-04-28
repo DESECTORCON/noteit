@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Note-it™ | My Notes</title>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+
+    <h1><i class="fas fa-archive"></i> <strong>{{ user_name.split('@')[0] }}</strong>'s Notes - Select and Delete</h1>
+
+</div>
+
+<hr class="my-4">
+
+<form class="form-inline my-2 my-lg-0" method="POST" action="{{ url_for() }}">
+    {% if form %}
+    <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
+    {% else %}
+    <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
+    {% endif %}
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+
+<form method="POST">
+    <div class="list-group">
+
+        {% if user_notes == [] or user_notes == None %}
+
+        <div class="alert alert-primary" role="alert"><i class="fas fa-info-circle"></i>
+            There are no notes!You can make a note by clicking the button below.
+        </div>
+
+        {% endif %}
+        <br>
+        {% for note in user_notes %}
+
+        <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+
+            <div class="d-flex w-100 justify-content-between">
+                <input type="checkbox" name="delete" id="note._id">
+                <h4 class="mb-1"><i class="far fa-sticky-note"></i>
+                    {{ note.title }}</h4>
+
+                <p class="list-group-item-text">Created date <strong>{{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</strong></p>
+
+            </div>
+            <p class="mb-1"><span class="badge badge-pill badge-secondary">{{ note.share_label }}</span></p>
+
+        </a>
+
+        {% endfor %}
+    </div>
+
+    <br>
+    <button type="submit" class="btn btn-primary" style="">Delete</button>
+</form>
+
+{% endblock %}

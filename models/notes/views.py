@@ -313,5 +313,12 @@ def edit_note(note_id):
 
 @note_blueprint.route('/delete_multiple/', methods=['GET', 'POST'])
 @user_decorators.require_login
-def delete_mutiple():
-    pass
+def delete_multiple():
+    user = User.find_by_email(session['email'])
+    user_notes = User.get_notes(user)
+    user_name = user.email
+
+    if request.method == 'POST':
+        pass
+
+    return render_template("/notes/delete_multiple.html", user_notes=user_notes, user_name=user_name)
