@@ -311,7 +311,13 @@ def edit_note(note_id):
         return render_template('error_page.html', error_msgr='Crashed during saving your note...')
 
 
-@note_blueprint.route('/delete_multiple/', methods=['GET', 'POST'])
+@note_blueprint.route('/delete_note_multiple/')
+@user_decorators.require_login
+def delete_note_multiple():
+    return render_template('/notes/delete_multiple.html')
+
+
+@note_blueprint.route('/delete_multiple/', methods=['POST'])
 @user_decorators.require_login
 def delete_multiple():
     try:
@@ -320,7 +326,7 @@ def delete_multiple():
         user_name = user.email
 
         if request.method == 'POST':
-            notes_id = request.form.getlist('delete')
+            notes_id = request.form.getlist('delete[]')
 
             for note_id in notes_id:
                 note = Note.find_by_id(note_id)
@@ -328,6 +334,8 @@ def delete_multiple():
                 note.delete_img()
                 note.delete()
                 flash('Your note has successfully deleted.')
+
+                return redirect(url_for('.user_notes'))
 
         return render_template("/notes/delete_multiple.html", user_notes=user_notes, user_name=user_name)
 
