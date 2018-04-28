@@ -107,7 +107,7 @@ def my_sended_messages(user_id):
 
 @message_blueprint.route('/send_message', methods=['GET', 'POST'])
 @user_decorators.require_login
-def send_message():
+def send_message(user_to_send=None):
 
     try:
         all_users = User.get_all()
@@ -134,7 +134,10 @@ def send_message():
 
             return redirect(url_for('.my_sended_messages', user_id=sender_id))
 
-        return render_template('messages/send_message.html', all_users=all_users)
+        if user_to_send is not None:
+            return render_template('messages/send_message.html', all_users=all_users, user_to_send=user_to_send)
+        else:
+            return render_template('messages/send_message.html', all_users=all_users)
 
     except:
         error_msg = traceback.format_exc().split('\n')

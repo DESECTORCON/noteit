@@ -4,7 +4,6 @@ import models.messages.constants as MessageConstants
 import datetime
 from elasticsearch import Elasticsearch
 from config import ELASTIC_PORT as port
-from collections import OrderedDict
 
 
 class Message(object):
