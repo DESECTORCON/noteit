@@ -155,6 +155,12 @@ def create_note():
 
             label = is_shared_validator(share, share_only_with_users)
 
+            user_notes = Note.get_user_notes(session['email'])
+
+            if len(user_notes) > 30:
+                flash("You have the maximum amount of notes. Please delete your notes")
+                return redirect(url_for(".user_notes"))
+
             note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
                                  share_label=label, file_name=filename)
@@ -303,3 +309,9 @@ def edit_note(note_id):
                            error_location='edit_note saveing and getting input from html file')
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during saving your note...')
+
+
+@note_blueprint.route('/delete_multiple/', methods=['GET', 'POST'])
+@user_decorators.require_login
+def delete_mutiple():
+    pass

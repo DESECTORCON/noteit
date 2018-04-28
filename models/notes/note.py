@@ -89,6 +89,10 @@ class Note(object):
     def get_all(cls):
         return [cls(**elem) for elem in Database.find(NoteConstants.COLLECTION,{})]
 
+    @classmethod
+    def get_user_notes(cls, user_email):
+        return [cls(**elem) for elem in Database.find(NoteConstants.COLLECTION, {"author_email": user_email})]
+
     def save_to_elastic(self):
         el = Elasticsearch(port=port)
         doc = {
