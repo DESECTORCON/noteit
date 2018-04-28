@@ -193,4 +193,7 @@ class Note(object):
             file.save(os.path.join(UPLOAD_FOLDER, filename))
 
     def delete_img(self):
-            os.remove(self.file_name)
+            try:
+                os.remove(self.file_name)
+            finally:
+                return
