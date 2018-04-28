@@ -7,7 +7,7 @@ from models.notes.note import Note
 from models.messages.message import *
 import config as config
 from models.users.user import User
-
+os.chdir('static')
 app = Flask(__name__)
 app.config.from_object('config')
 app.secret_key = ''
@@ -17,12 +17,9 @@ for i in range(100):
     random_int.append(random.randint(1, 10000))
     app.secret_key = ''.join(str(random_int))
 
-os.chdir('static')
-
 
 @app.before_request
 def before_request():
-
     now = datetime.datetime.now()
     try:
         last_active = session['last_active']
