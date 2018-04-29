@@ -84,17 +84,19 @@ def note(note_id):
     try:
         note = Note.find_by_id(note_id)
         user = User.find_by_email(note.author_email)
-        filename = note.file_name
+        filenames = note.file_name
 
-        if filename is None:
-            url = None
+        urls = []
+        if filenames is [] or filenames is None:
+            pass
         else:
-            url = url_for('static', filename=filename)
+            for filename in filenames:
+                urls.append(url_for('static', filename=filename))
 
-        if filename.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
-            is_video = True
-        else:
-            is_video = False
+                # if filename.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
+                #     is_video = True
+                # else:
+                #     is_video = False
 
         try:
             if note.author_email == session['email']:
@@ -109,7 +111,7 @@ def note(note_id):
 
             return render_template('/notes/note.html', note=note,
                                    author_email_is_session=author_email_is_session, msg_=False, user=user
-                                   , url=url, is_video=is_video)
+                                   , url=urls)
 
     except:
         error_msg = traceback.format_exc().split('\n')
