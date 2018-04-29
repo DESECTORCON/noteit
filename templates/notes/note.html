@@ -29,9 +29,20 @@
     {% if url == None %}
 
     {% else %}
-        <h5>Image:</h5>
+        {% if is_video %}
+            <h5>Video: </h5>
+            <br>
 
-        <img src="{{ url }}" alt="" class="rounded mx-auto d-block"  height="600" width="900">
+            <video width="1050" controls>
+              <source src="{{ url }}" type="video/mp4">
+              <source src="{{ url }}" type="video/mp4">
+            Your browser does not support the video tag. Please use Chrome or Firefox
+            </video>
+        {% else %}
+            <h5>Image:</h5>
+
+            <img src="{{ url }}" alt="" class="rounded mx-auto d-block"  height="600" width="900">
+        {% endif %}
 
     {% endif %}
 

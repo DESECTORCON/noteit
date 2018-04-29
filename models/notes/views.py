@@ -89,6 +89,11 @@ def note(note_id):
         else:
             url = url_for('static', filename=filename)
 
+        if filename.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
+            is_video = True
+        else:
+            is_video = False
+
         try:
             if note.author_email == session['email']:
                 author_email_is_session = True
@@ -102,7 +107,7 @@ def note(note_id):
 
             return render_template('/notes/note.html', note=note,
                                    author_email_is_session=author_email_is_session, msg_=False, user=user
-                                   , url=url)
+                                   , url=url, is_video=is_video)
 
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -142,7 +147,7 @@ def create_note():
 
             if file and Note.allowed_file(file):
                 sid = shortid.ShortId()
-                filename = secure_filename(sid.generate()) + ".png"
+                filename = secure_filename(sid.generate()) + '.' + file.filename.split('.')[1]
                 # os.chdir("static/img/file/")
                 file.save(os.path.join(filename))
 
