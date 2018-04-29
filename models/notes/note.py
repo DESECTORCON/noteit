@@ -198,6 +198,7 @@ class Note(object):
 
     def delete_img(self):
             try:
-                os.remove(self.file_name)
+                for file in self.file_name:
+                    os.remove(file)
             finally:
                 return
