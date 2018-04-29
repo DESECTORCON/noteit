@@ -29,18 +29,21 @@
     {% if url == None %}
 
     {% else %}
+        <h5>Media files: </h5>
         {% for url_ in url %}
-            <h5>Video: </h5>
-            <br>
+            {% if url_['is_video'] %}
+                <br>
 
-            <video width="1050" controls>
-              <source src="{{ url_ }}" type="video/mp4">
-              <source src="{{ url_ }}" type="video/mp4">
-            Your browser does not support the video tag. Please use Chrome or Firefox
-            </video>
-            <h5>Image:</h5>
+                <video width="1050" controls>
+                  <source src="{{ url_['url'] }}" type="video/mp4">
+                  <source src="{{ url_['url'] }}" type="video/mp4">
+                Your browser does not support the video tag. Please use Chrome or Firefox
+                </video>
+            {% else %}
 
-            <img src="{{ url_ }}" alt="" class="rounded mx-auto d-block"  height="600" width="900">
+                <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block"  height="600" width="900">
+
+            {% endif %}
 
         {% endfor %}
 

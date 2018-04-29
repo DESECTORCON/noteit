@@ -90,13 +90,21 @@ def note(note_id):
         if filenames is [] or filenames is None:
             pass
         else:
-            for filename in filenames:
-                urls.append(url_for('static', filename=filename))
+            try:
+                for filename in filenames:
+                    if filename.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
+                        is_video = True
+                    else:
+                        is_video = False
 
-                # if filename.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
-                #     is_video = True
-                # else:
-                #     is_video = False
+                    urls.append({'url': url_for('static', filename=filename), 'is_video':is_video})
+            except:
+                if filenames.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
+                    is_video = True
+                else:
+                    is_video = False
+
+                urls.append({'url': url_for('static', filename=filenames), 'is_video': is_video})
 
         try:
             if note.author_email == session['email']:
