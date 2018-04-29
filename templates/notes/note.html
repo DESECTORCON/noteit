@@ -29,20 +29,20 @@
     {% if url == None %}
 
     {% else %}
-        {% if is_video %}
+        {% for url_ in url %}
             <h5>Video: </h5>
             <br>
 
             <video width="1050" controls>
-              <source src="{{ url }}" type="video/mp4">
-              <source src="{{ url }}" type="video/mp4">
+              <source src="{{ url_ }}" type="video/mp4">
+              <source src="{{ url_ }}" type="video/mp4">
             Your browser does not support the video tag. Please use Chrome or Firefox
             </video>
-        {% else %}
             <h5>Image:</h5>
 
-            <img src="{{ url }}" alt="" class="rounded mx-auto d-block"  height="600" width="900">
-        {% endif %}
+            <img src="{{ url_ }}" alt="" class="rounded mx-auto d-block"  height="600" width="900">
+
+        {% endfor %}
 
     {% endif %}
 
