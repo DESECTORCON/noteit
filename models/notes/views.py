@@ -143,23 +143,25 @@ def create_note():
             try:
                 files = request.files.getlist('file')
 
+                filenames = []
                 for file in files:
                     if files and Note.allowed_file(file):
                         sid = shortid.ShortId()
                         filename = secure_filename(sid.generate()) + '.' + file.filename.split('.')[1]
                         # os.chdir("static/img/file/")
                         file.save(os.path.join(filename))
+                        filenames.append(filename)
 
                     elif file is not None:
                         flash("Sorry; only img files are supported.")
                         return render_template('/notes/create_note.html'
                                                , title=title, content=content, share=share)
                     else:
-                        filename = None
+                        filenames = []
 
             except:
                 # file = None
-                filename = []
+                filenames = []
 
             author_nickname = User.find_by_email(author_email).nick_name
 
@@ -173,7 +175,7 @@ def create_note():
 
             note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
-                                 share_label=label, file_name=filename)
+                                 share_label=label, file_name=filenames)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
 
