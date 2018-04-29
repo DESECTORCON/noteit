@@ -141,24 +141,27 @@ def create_note():
             content = request.form['content'].strip('\n').strip('\r')
             author_email = session['email']
             try:
-                file = request.files['file']
+                files = request.files.getlist('file')
+
+                for file in files:
+                    if files and Note.allowed_file(file):
+                        sid = shortid.ShortId()
+                        filename = secure_filename(sid.generate()) + '.' + file.filename.split('.')[1]
+                        # os.chdir("static/img/file/")
+                        file.save(os.path.join(filename))
+
+                    elif file is not None:
+                        flash("Sorry; only img files are supported.")
+                        return render_template('/notes/create_note.html'
+                                               , title=title, content=content, share=share)
+                    else:
+                        filename = None
+
             except:
-                file = None
+                # file = None
+                filename = []
 
             author_nickname = User.find_by_email(author_email).nick_name
-
-            if file and Note.allowed_file(file):
-                sid = shortid.ShortId()
-                filename = secure_filename(sid.generate()) + '.' + file.filename.split('.')[1]
-                # os.chdir("static/img/file/")
-                file.save(os.path.join(filename))
-
-            elif file is not None:
-                flash("Sorry; only img files are supported.")
-                return render_template('/notes/create_note.html'
-                                       , title=title, content=content, share=share)
-            else:
-                filename = None
 
             label = is_shared_validator(share, share_only_with_users)
 
