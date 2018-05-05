@@ -4,7 +4,6 @@ import models.messages.constants as MessageConstants
 import datetime
 from elasticsearch import Elasticsearch
 from config import ELASTIC_PORT as port
-from collections import OrderedDict
 
 
 class Message(object):
@@ -185,6 +184,8 @@ class Message(object):
             except KeyError:
                 messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
 
+        del el
+
         return messages
 
     @staticmethod
@@ -244,6 +245,7 @@ class Message(object):
             except KeyError:
                 messages.append(Message.find_by_id(message['_source']['query']['match']['message_id']))
 
+        del el
         return messages
 
 

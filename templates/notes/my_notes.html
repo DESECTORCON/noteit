@@ -34,7 +34,7 @@
         <br>
         {% for note in user_notes %}
 
-             <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+             <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start card">
 
                  <div class="d-flex w-100 justify-content-between">
                         <h4 class="mb-1"><i class="far fa-sticky-note"></i>
@@ -53,5 +53,6 @@
     <br>
 
     <a href="{{ url_for('notes.create_note') }}" class="btn btn-outline-success" role="button">Make a new note</a>
+    <a href="{{ url_for('notes.delete_note_multiple') }}" class="btn btn-outline-warning" role="button">Delete notes</a>
 
 {% endblock %}

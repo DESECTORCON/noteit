@@ -1,3 +1,5 @@
+import os
+import shortid
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
@@ -7,8 +9,17 @@ from models.users.user import User
 from models.error_logs.error_log import Error_
 import traceback
 from config import ELASTIC_PORT as port
+from werkzeug.utils import secure_filename
+from flask_uploads import UploadSet, configure_uploads, All
+# from config import ALLOWED_EXTENSION
 
 note_blueprint = Blueprint('notes', __name__)
+
+#
+#
+# def allowed_file(filename):
+#     return '.' in filename and \
+#            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def is_shared_validator(shared, share_only_with_users):
@@ -50,11 +61,11 @@ def user_notes():
         user_name = user.email
 
         if request.method == 'POST':
-            form_ = request.form['Search_note']
-            notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
+                form_ = request.form['Search_note']
+                notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
 
-            return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
-                                   form=form_)
+                return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
+                                       form=form_)
 
         else:
 
@@ -73,6 +84,27 @@ def note(note_id):
     try:
         note = Note.find_by_id(note_id)
         user = User.find_by_email(note.author_email)
+        filenames = note.file_name
+
+        urls = []
+        if filenames is [] or filenames is None:
+            pass
+        else:
+            try:
+                for filename in filenames:
+                    if filename.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
+                        is_video = True
+                    else:
+                        is_video = False
+
+                    urls.append({'url': url_for('static', filename=filename), 'is_video':is_video})
+            except:
+                if filenames.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
+                    is_video = True
+                else:
+                    is_video = False
+
+                urls.append({'url': url_for('static', filename=filenames), 'is_video': is_video})
 
         try:
             if note.author_email == session['email']:
@@ -86,14 +118,15 @@ def note(note_id):
         finally:
 
             return render_template('/notes/note.html', note=note,
-                                   author_email_is_session=author_email_is_session, msg_=False, user=user)
+                                   author_email_is_session=author_email_is_session, msg_=False, user=user
+                                   , url=urls)
 
     except:
         error_msg = traceback.format_exc().split('\n')
 
         try:
 
-            Error_obj = Error_(error_msg=''.join(error_msg), error_location='note reading NOTE:' + note._id)
+            Error_obj = Error_(error_msg=''.join(error_msg), error_location='note reading')
         except:
             Error_obj = Error_(error_msg=''.join(error_msg), error_location='note reading NOTE:NONE')
 
@@ -117,13 +150,42 @@ def create_note():
             title = request.form['title']
             content = request.form['content'].strip('\n').strip('\r')
             author_email = session['email']
+            try:
+                files = request.files.getlist('file')
+
+                filenames = []
+                for file in files:
+                    if files and Note.allowed_file(file):
+                        sid = shortid.ShortId()
+                        filename = secure_filename(sid.generate()) + '.' + file.filename.split('.')[1]
+                        # os.chdir("static/img/file/")
+                        file.save(os.path.join(filename))
+                        filenames.append(filename)
+
+                    elif file is not None:
+                        flash("Sorry; only img files are supported.")
+                        return render_template('/notes/create_note.html'
+                                               , title=title, content=content, share=share)
+                    else:
+                        filenames = []
+
+            except:
+                # file = None
+                filenames = []
+
             author_nickname = User.find_by_email(author_email).nick_name
 
             label = is_shared_validator(share, share_only_with_users)
 
+            user_notes = Note.get_user_notes(session['email'])
+
+            if len(user_notes) > 30:
+                flash("You have the maximum amount of notes. Please delete your notes")
+                return redirect(url_for(".user_notes"))
+
             note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
-                                 share_label=label)
+                                 share_label=label, file_name=filenames)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
 
@@ -147,16 +209,17 @@ def delete_note(note_id, redirect_to='.user_notes'):
     try:
         note = Note.find_by_id(note_id)
         note.delete_on_elastic()
+        note.delete_img()
         note.delete()
         flash('Your note has successfully deleted.')
+        return redirect(url_for(redirect_to))
+
     except:
         error_msg = traceback.format_exc().split('\n')
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes deleting note')
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during deleting your note...')
-    finally:
-        return redirect(url_for(redirect_to))
 
 
 @note_blueprint.route('/pub_notes/', methods=['GET', 'POST'])
@@ -208,6 +271,7 @@ def notes():
             except:
                 pass
 
+            del el
             return render_template('/notes/pub_notes.html', notes=notes, form=form_)
 
         try:
@@ -267,3 +331,55 @@ def edit_note(note_id):
                            error_location='edit_note saveing and getting input from html file')
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during saving your note...')
+
+
+@note_blueprint.route('/delete_note_multiple/')
+@user_decorators.require_login
+def delete_note_multiple():
+    user = User.find_by_email(session['email'])
+    user_notes = User.get_notes(user)
+    user_name = user.email
+
+    return render_template("/notes/delete_multiple.html", user_notes=user_notes, user_name=user_name)
+
+
+@note_blueprint.route('/delete_multiple/', methods=['POST'])
+@user_decorators.require_login
+def delete_multiple():
+    try:
+        user = User.find_by_email(session['email'])
+        user_notes = User.get_notes(user)
+        user_name = user.email
+
+        if request.method == 'POST':
+            notes_id = request.form.getlist('delete')
+
+            for note_id in notes_id:
+                note = Note.find_by_id(note_id)
+                note.delete_on_elastic()
+                note.delete_img()
+                note.delete()
+
+            flash('Your notes has successfully deleted.')
+            return redirect(url_for('.user_notes'))
+
+        return render_template("/notes/delete_multiple.html", user_notes=user_notes, user_name=user_name)
+
+    except:
+        error_msg = traceback.format_exc().split('\n')
+
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes public note reading')
+        Error_obj.save_to_mongo()
+        return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
+
+
+@note_blueprint.route('/search_notes/', methods=['POST'])
+@user_decorators.require_login
+def search_notes():
+    user = User.find_by_email(session['email'])
+    user_name = user.email
+    form_ = request.form['Search_note']
+    notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
+
+    return render_template('/notes/delete_multiple.html', user_notes=notes, user_name=user_name,
+                           form=form_)

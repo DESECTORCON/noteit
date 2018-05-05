@@ -1,0 +1,36 @@
+<!--{% extends "base2.html" %}-->
+<!--{% block title %}-->
+<!--<title>Note-it™ | Search user</title>-->
+<!--{% endblock %}-->
+<!--{% block content %}-->
+
+<!--<div class="jumbotron">-->
+    <!--<form method="POST">-->
+        <!--<div class="custom-control custom-checkbox">-->
+
+            <!--{% if all_users == None %}-->
+            <!--<h1>No users are available. Please contact us <a>(010-2901-5627)</a></h1>-->
+            <!--{% else %}-->
+            <!--<div class="list-group">-->
+
+                <!--<h1 class="heading">Users <small class="text-muted">select</small></h1>-->
+                <!--{% for user in all_users %}-->
+
+                <!--<label class="list-group-item list-group-item-action flex-column align-items-start">-->
+                    <!--<div class="d-flex w-100 justify-content-between">-->
+                        <!--<input type="checkbox" value="{{ user._id }}" name="user" />-->
+                        <!--<h5 class="mb-1">{{ user.nick_name }}</h5>-->
+                        <!--<small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>-->
+                    <!--</div>-->
+                <!--</label>-->
+
+                <!--{% endfor %}-->
+
+            <!--</div>-->
+            <!--{% endif %}-->
+
+        <!--</div>-->
+    <!--</form>-->
+<!--</div>-->
+
+<!--{% endblock %}-->

@@ -23,6 +23,32 @@
         <p class="text-center font-weight-bold"><bold>{{ note.content }}</bold></p>
     </div>
 
+    <br>
+    <hr class="my-4">
+
+    {% if url == None %}
+
+    {% else %}
+        <h5>Media files: </h5>
+        {% for url_ in url %}
+            {% if url_['is_video'] %}
+                <br><br>
+
+                <video width="1050" controls about="asdf">
+                  <source src="{{ url_['url'] }}" type="video/mp4">
+                  <source src="{{ url_['url'] }}" type="video/mp4">
+                Your browser does not support the video tag. Please use Chrome or Firefox
+                </video>
+            {% else %}
+                <br><br><br>
+                <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block"  height="600" width="900">
+
+            {% endif %}
+
+        {% endfor %}
+
+    {% endif %}
+
 </div>
 
 <hr class="my-4">

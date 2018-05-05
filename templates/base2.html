@@ -7,16 +7,16 @@
 
     {% endblock %}
 
-    <script>
+    <!--<script>-->
 
-        var myVar = setInterval(myTimer, 1000);
+        <!--var myVar = setInterval(myTimer, 1000);-->
 
-        function myTimer() {
-              $(document).ready(function(){
-  $('#close').trigger('click');
-});
-        }
-    </script>
+        <!--function myTimer() {-->
+              <!--$(document).ready(function(){-->
+  <!--$('#close').trigger('click');-->
+<!--});-->
+        <!--}-->
+    <!--</script>-->
 
     {% include 'html_dependencies.html' %}
 </head>
@@ -44,7 +44,7 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right justify-content-end ">
-                <li class="nav-item active"><a href="{{ url_for('message.send_message') }}" class="nav-link"><i class="fas fa-external-link-square-alt"></i> Send Message</a></li>
+                <li class="nav-item active"><a href="{{ url_for('message.choose') }}" class="nav-link"><i class="fas fa-external-link-square-alt"></i> Send</a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right justify-content-end ">
@@ -80,7 +80,7 @@
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     {% for message in messages %}
-    <div class="alert alert-success alert-dismissible">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
         <a href="#" class="close" data-dismiss="alert" aria-label="close" id="close" name="close">&times;</a>
         <i class="fas fa-info-circle"></i>  {{ message }}
     </div>

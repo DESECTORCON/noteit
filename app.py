@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta
 from flask import Flask, render_template, session, url_for, flash
 import random
@@ -7,6 +8,10 @@ from models.messages.message import *
 import config as config
 from models.users.user import User
 
+try:
+    os.chdir('static')
+except FileNotFoundError:
+    pass
 app = Flask(__name__)
 app.config.from_object('config')
 app.secret_key = ''
@@ -15,11 +20,19 @@ random_int = []
 for i in range(100):
     random_int.append(random.randint(1, 10000))
     app.secret_key = ''.join(str(random_int))
+#
+#
+# @app.route('/upload', methods=['GET', 'POST'])
+# @require_login
+# def upload():
+#     if request.method == 'POST' and 'media' in request.files:
+#         filename = files.save(request.files['media'])
+#
+#     return redirect(url_for('user_notes'))
 
 
 @app.before_request
 def before_request():
-
     now = datetime.datetime.now()
     try:
         last_active = session['last_active']

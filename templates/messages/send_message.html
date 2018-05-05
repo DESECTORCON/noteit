@@ -1,6 +1,23 @@
 {% extends "base2.html" %}
 {% block title %}
 <title>Note-it™ | Send Message</title>
+
+<!--<script>-->
+<!--var elasticsearch = require('elasticsearch');-->
+<!--var client = new elasticsearch.Client({-->
+<!--host: 'localhost:9200',-->
+<!--log: 'trace'-->
+<!--});-->
+
+<!--$('#inputA).change(function(){-->
+<!--if($('#inputA').val() != '') {-->
+<!--alert("True");-->
+<!--}else{-->
+<!--alert("False");-->
+<!--}-->
+<!--})-->
+<!--</script>-->
+
 {% endblock %}
 
 {% block content %}
@@ -59,12 +76,17 @@
         <h1>No users are available. Please contact us <a>(010-2901-5627)</a></h1>
         {% else %}
         <div class="list-group">
+
             <h1 class="heading">Users <small class="text-muted">select</small></h1>
             {% for user in all_users %}
 
             <label class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
-                    <input type="checkbox" value="{{ user._id }}" name="user" />
+                    {% if user_to_send == user._id %}
+                        <input type="checkbox" value="{{ user._id }}" name="user" checked>
+                    {% else %}
+                        <input type="checkbox" value="{{ user._id }}" name="user" />
+                    {% endif %}
                     <h5 class="mb-1">{{ user.nick_name }}</h5>
                     <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
                 </div>
@@ -78,13 +100,12 @@
         <br>
         <button type="submit" class="btn btn-primary">Send Message</button>
 
-
-        <div class="jumbotron container">
-
-            <h3 class="font-weight-light">Click here if you want to send a note</h3>  <a href="{{ url_for('.send_note') }}" role="button" class="btn btn-outline-primary">Send Note</a>
-
-        </div>
     </form>
+
+</div>
+<br>
+<div class="jumbotron container">
+    <h3 class="font-weight-light">Click here if you want to send a note</h3>  <a href="{{ url_for('.send_note') }}" role="button" class="btn btn-outline-primary">Send Note</a>
 </div>
 
 {% endblock %}
