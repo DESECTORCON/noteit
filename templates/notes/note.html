@@ -32,18 +32,27 @@
         <h5>Media files: </h5>
         {% for url_ in url %}
             {% if url_['is_video'] %}
-                <br><br>
-
                 <video width="1050" controls>
                   <source src="{{ url_['url'] }}" type="video/mp4">
-                  <source src="{{ url_['url'] }}" type="video/mp4">
+                  <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
                 Your browser does not support the video tag. Please use Chrome or Firefox
                 </video>
-            {% else %}
-                <br><br><br>
+                <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
+                    <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
+                </div>
+                <hr class="my-4">
+
+            {% elif url_['is_pic'] %}
                 <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="600" width="900">
                 <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
-                    <a href="{{ url_['url'] }}" download="_.jpg" title=""><i class="fas fa-download"></i></a>
+                    <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
+                </div>
+                <hr class="my-4">
+
+            {% else %}
+
+                <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
+                    <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
                 </div>
                 <hr class="my-4">
 

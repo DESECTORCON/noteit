@@ -92,19 +92,35 @@ def note(note_id):
         else:
             try:
                 for filename in filenames:
-                    if filename.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
+                    file_extenstion = filename.split('.')[1]
+                    if file_extenstion in ['mp4', 'ogg', 'mov', 'wmv']:
                         is_video = True
                     else:
                         is_video = False
 
-                    urls.append({'url': url_for('static', filename=filename), 'is_video':is_video})
+                    if file_extenstion in ['jpg', 'gif', 'bmp', 'tiff', 'png']:
+                        is_pic = True
+                    else:
+                        is_pic = False
+
+                    urls.append({'url': url_for('static', filename=filename),
+                                 'is_video': is_video, 'filename': filename, 'is_pic': is_pic,
+                                 'extenstion': file_extenstion})
             except:
-                if filenames.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
+                file_extenstion = filenames.split('.')[1]
+                if file_extenstion in ['mp4', 'ogg', 'mov', 'wmv']:
                     is_video = True
                 else:
                     is_video = False
 
-                urls.append({'url': url_for('static', filename=filenames), 'is_video': is_video})
+                if file_extenstion in ['jpg', 'gif', 'bmp', 'tiff', 'png']:
+                    is_pic = True
+                else:
+                    is_pic = False
+
+                urls.append({'url': url_for('static', filename=filenames),
+                             'is_video': is_video, 'filename': filenames, 'is_pic': is_pic,
+                             'extenstion': file_extenstion})
 
         try:
             if note.author_email == session['email']:
