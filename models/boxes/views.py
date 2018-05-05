@@ -21,7 +21,7 @@ def box(box_id):
 @user_decorators.require_login
 def create_box():
     all_notes = Note.get_user_notes(session['email'])
-    if request.mehtod == 'POST':
+    if request.method == 'POST':
         pass
 
     return render_template('boxs/create_box.html', all_notes=all_notes)

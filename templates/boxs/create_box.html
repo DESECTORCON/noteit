@@ -48,17 +48,15 @@ $(document).ready(function() {
         </div>
 
         <div class="input-group mb-3">
-            <div class="input-group-prepend">
-                <label class="input-group-text" for="inputGroupSelect01">Share label</label>
-            </div>
+            <label for="inputGroupSelect01">
+                Notes to add
+            </label>
             {% for note in all_notes %}
                 <label class="list-group-item list-group-item-action flex-column align-items-start" id="inputGroupSelect01">
                     <div class="d-flex w-100 justify-content-between">
-
-                        <input type="checkbox" value="{{ user._id }}" name="user" />
-                        <h5 class="mb-1">{{ user.nick_name }}</h5>
-
-                        <!--<small class="text-muted"></small>-->
+                        <h5 class="mb-1">{{ note.title }}</h5>
+                        <small class="text-muted">{{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                        <input type="checkbox" value="{{ note._id }}" name="user" />
                     </div>
                 </label>
 
