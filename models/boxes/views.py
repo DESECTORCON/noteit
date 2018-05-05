@@ -15,9 +15,9 @@ box_blueprint = Blueprint('boxs', __name__)
 
 @box_blueprint.route('/boxs')
 def boxs():
-    all_boxs = Box
+    all_boxs = Box.get_user_boxes(session['_id'])
 
-    return render_template('boxs/boxs_page.html')
+    return render_template('boxs/boxs_page.html', all_boxs=all_boxs)
 
 
 @box_blueprint.route('/box/<string:box_id>')

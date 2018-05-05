@@ -44,7 +44,7 @@ class Box(object):
     @classmethod
     def get_user_boxes(cls, maker_id):
         return [cls(**elem) for elem in Database.find(BoxConstants.COLLECTION,
-                                                      {"user_id": maker_id})]
+                                                      {"maker_id": maker_id})]
 
     def delete_on_elastic(self):
         el = Elasticsearch(port=port)
