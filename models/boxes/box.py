@@ -52,3 +52,90 @@ class Box(object):
         del el
         return True
 
+    def save_to_elastic(self):
+        el = Elasticsearch(port=port)
+        doc = {
+            '_id': self._id,
+            'name': self.name,
+            'notes': self.notes,
+            'created_date': self.created_date.strftime('%Y-%m-%d')
+        }
+        el.index(index="boxs", doc_type='box', body=doc)
+        del el
+        return True
+
+    def update_to_elastic(self):
+        el = Elasticsearch(port=port)
+        doc1 = {
+            "query": {
+                "match": {
+                    'note_id': self._id
+                }
+            }
+        }
+        doc2 = {
+            '_id': self._id,
+            'name': self.name,
+            'notes': self.notes,
+            'created_date': self.created_date.strftime('%Y-%m-%d')
+        }
+
+        el.delete_by_query(index="boxs", doc_type='box', body=doc1)
+        el.index(index="boxs", doc_type='box', body=doc2)
+        del el
+        return True
+
+    @staticmethod
+    def search_with_elastic(form_data, user_nickname=None):
+        el = Elasticsearch(port=port)
+
+        if form_data is '':
+            data = el.search(index='notes', doc_type='note', body={
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "prefix": {"title": ""},
+                            },
+                            {
+                                "term": {"content": ""}
+                            }
+                        ],
+                        "filter": [
+                            {
+                                "match": {"author_nickname": user_nickname}
+                            }
+                        ]
+                    }
+                }
+            })
+        else:
+            data = el.search(index='notes', doc_type='note', body={
+                "query": {
+                    "bool": {
+                        "should": [
+                            {
+                                "prefix": {"title": form_data},
+                            },
+                            {
+                                "term": {"content": form_data}
+                            }
+                        ],
+                        "filter": [
+                            {
+                                "match": {"author_nickname": user_nickname}
+                            }
+                        ]
+                    }
+                }
+            })
+
+        notes = []
+        for note in data['hits']['hits']:
+            try:
+                notes.append(Note.find_by_id(note['_source']['note_id']))
+            except KeyError:
+                notes.append(Note.find_by_id(note['_source']['query']['match']['note_id']))
+        del el
+        return notes
+
