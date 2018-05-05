@@ -55,7 +55,7 @@ class Box(object):
     def save_to_elastic(self):
         el = Elasticsearch(port=port)
         doc = {
-            '_id': self._id,
+            'box_id': self._id,
             'name': self.name,
             'notes': self.notes,
             'created_date': self.created_date.strftime('%Y-%m-%d')
@@ -74,7 +74,7 @@ class Box(object):
             }
         }
         doc2 = {
-            '_id': self._id,
+            'box_id': self._id,
             'name': self.name,
             'notes': self.notes,
             'created_date': self.created_date.strftime('%Y-%m-%d')

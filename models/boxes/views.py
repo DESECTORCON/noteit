@@ -2,6 +2,8 @@ import shortid
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
+
+from models.boxes.box import Box
 from models.notes.note import Note
 import models.users.decorators as user_decorators
 from models.notes.note import Note
@@ -22,7 +24,12 @@ def box(box_id):
 def create_box():
     all_notes = Note.get_user_notes(session['email'])
     if request.method == 'POST':
-        pass
+        notes_selected = request.form.getlist('notes')
+        name = request.form['name']
+
+        box_for_save = Box(name=name, notes=notes_selected)
+        box_for_save.save_to_elastic()
+        box_for_save.save_to_mongo()
 
     return render_template('boxs/create_box.html', all_notes=all_notes)
 
