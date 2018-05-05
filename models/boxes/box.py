@@ -90,7 +90,7 @@ class Box(object):
         el = Elasticsearch(port=port)
 
         if form_data is '':
-            data = el.search(index='notes', doc_type='note', body={
+            data = el.search(index='boxs', doc_type='box', body={
                 "query": {
                     "bool": {
                         "should": [
@@ -110,7 +110,7 @@ class Box(object):
                 }
             })
         else:
-            data = el.search(index='notes', doc_type='note', body={
+            data = el.search(index='boxs', doc_type='box', body={
                 "query": {
                     "bool": {
                         "should": [
@@ -133,9 +133,9 @@ class Box(object):
         notes = []
         for note in data['hits']['hits']:
             try:
-                notes.append(Note.find_by_id(note['_source']['note_id']))
+                notes.append(Box.find_by_id(note['_source']['box_id']))
             except KeyError:
-                notes.append(Note.find_by_id(note['_source']['query']['match']['note_id']))
+                notes.append(Box.find_by_id(note['_source']['query']['match']['box_id']))
         del el
         return notes
 
