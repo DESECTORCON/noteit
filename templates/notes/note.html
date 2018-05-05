@@ -34,14 +34,18 @@
             {% if url_['is_video'] %}
                 <br><br>
 
-                <video width="1050" controls about="asdf">
+                <video width="1050" controls>
                   <source src="{{ url_['url'] }}" type="video/mp4">
                   <source src="{{ url_['url'] }}" type="video/mp4">
                 Your browser does not support the video tag. Please use Chrome or Firefox
                 </video>
             {% else %}
                 <br><br><br>
-                <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block"  height="600" width="900">
+                <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="600" width="900">
+                <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
+                    <a href="{{ url_['url'] }}" download="_.jpg" title=""><i class="fas fa-download"></i></a>
+                </div>
+                <hr class="my-4">
 
             {% endif %}
 
