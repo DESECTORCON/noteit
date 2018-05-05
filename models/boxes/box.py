@@ -8,11 +8,12 @@ from models.boxes import constants as BoxConstants
 
 class Box(object):
 
-    def __init__(self, name='Demo Box', notes=[], created_date=datetime.datetime.now(), _id=None):
+    def __init__(self, maker_id, name='Demo Box', notes=[], created_date=datetime.datetime.now(), _id=None):
         self.name = name
         self.notes = notes
         self.created_date = created_date
         self._id = uuid.uuid4().hex if _id is None else _id
+        self.maker_id = maker_id
 
     def __repr__(self):
         return "<box {} with notes {} and created date {} ID: {}>".format(self.name,
@@ -23,7 +24,8 @@ class Box(object):
             "_id": self._id,
             "name": self.name,
             "notes": self.notes,
-            "created_date": self.created_date
+            "created_date": self.created_date,
+            "maker_id": self.maker_id
         }
 
     def save_to_db(self):
@@ -38,6 +40,11 @@ class Box(object):
 
     def delete(self):
         Database.remove(BoxConstants.COLLECTION, {'_id': self._id})
+
+    @classmethod
+    def get_user_boxes(cls, maker_id):
+        return [cls(**elem) for elem in Database.find(BoxConstants.COLLECTION,
+                                                      {"user_id": maker_id})]
 
     def delete_on_elastic(self):
         el = Elasticsearch(port=port)
@@ -58,7 +65,8 @@ class Box(object):
             'box_id': self._id,
             'name': self.name,
             'notes': self.notes,
-            'created_date': self.created_date.strftime('%Y-%m-%d')
+            'created_date': self.created_date.strftime('%Y-%m-%d'),
+            'maker_id': self.maker_id
         }
         el.index(index="boxs", doc_type='box', body=doc)
         del el
@@ -77,7 +85,8 @@ class Box(object):
             'box_id': self._id,
             'name': self.name,
             'notes': self.notes,
-            'created_date': self.created_date.strftime('%Y-%m-%d')
+            'created_date': self.created_date.strftime('%Y-%m-%d'),
+            'maker_id': self.maker_id
         }
 
         el.delete_by_query(index="boxs", doc_type='box', body=doc1)
