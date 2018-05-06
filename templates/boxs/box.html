@@ -13,13 +13,13 @@
 
     <div class="list-group">
 
-        {% for box in box. %}
+        {% for note in notes %}
         <a href="{{ url_for('boxs.box', box_id=box._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1"><i class="fas fa-box"></i> {{ box.name }}</h5>
-                <small class="text-muted">Created at: {{ box.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                <h5 class="mb-1"><i class="fas fa-box"></i> {{ note.title }}</h5>
+                <small class="text-muted">Created at: {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
             </div>
-            <p class="mb-1">   Total notes: {{ box.notes|length }}</p>
+            <p class="mb-1"><p class="mb-1"><span class="badge badge-pill badge-secondary">{{ note.share_label }}</span></p></p>
         </a>
         {% endfor %}
 

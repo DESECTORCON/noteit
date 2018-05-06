@@ -5,6 +5,7 @@ import models.users.decorators as user_decorators
 from models.notes.note import Note
 from models.error_logs.error_log import Error_
 import traceback
+from models.notes.views import is_shared_validator
 
 box_blueprint = Blueprint('boxs', __name__)
 
@@ -39,7 +40,7 @@ def boxs():
 @user_decorators.require_login
 def box(box_id):
     box = Box.find_by_id(box_id)
-    notes = Box.get_box_notes(box_id)
+    notes = box.get_box_notes()
 
     return render_template('boxs/box.html', box=box, notes=notes)
 

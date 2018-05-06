@@ -42,10 +42,10 @@ class Box(object):
     def delete(self):
         Database.remove(BoxConstants.COLLECTION, {'_id': self._id})
 
-    def get_box_notes(self, box_id):
-        box_noteID = self.find_by_id(box_id)['notes']
+    def get_box_notes(self):
+        box_noteID = self.find_by_id(self._id)
         notes = []
-        for note_id in box_noteID:
+        for note_id in box_noteID.notes:
             notes.append(Note.find_by_id(note_id))
         
         return notes
