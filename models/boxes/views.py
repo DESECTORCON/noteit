@@ -39,7 +39,7 @@ def create_box():
             box_for_save.save_to_elastic()
             box_for_save.save_to_mongo()
 
-            redirect(url_for('.boxs'))
+            return redirect(url_for('boxs.boxs'))
 
         return render_template('boxs/create_box.html', all_notes=all_notes)
 

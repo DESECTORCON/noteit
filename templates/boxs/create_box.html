@@ -3,6 +3,21 @@
 <title>Note-it™ | Create Box</title>
 {% endblock %}
 {% block content %}
+<script type="text/javascript">
+
+    function myFunction() {
+        $('#MAINDIV').hide();
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+    }
+}
+$(document).ready(function() {
+   $('#myDIV').hide();
+});
+</script>
 
 {% if error_msg %}
 <div class="alert alert-danger" role="alert">
@@ -19,21 +34,6 @@
 </div>
 
 <br>
-<script type="text/javascript">
-
-    function myFunction() {
-        $('#MAINDIV').hide();
-        var x = document.getElementById("myDIV");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
-    }
-}
-$(document).ready(function() {
-   $('#myDIV').hide();
-});
-</script>
 
 <div class="form-size jumbotron" id="MAINDIV">
     <form method="POST" enctype=multipart/form-data>
@@ -54,7 +54,7 @@ $(document).ready(function() {
             {% for note in all_notes %}
                 <label class="list-group-item list-group-item-action flex-column align-items-start" id="inputGroupSelect01">
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ note.title }}</h5>
+                        <h5 class="mb-1"><a href="{{ url_for('notes.note', note_id=note._id) }}">{{ note.title }}</a></h5>
                         <small class="text-muted">{{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
                         <input type="checkbox" value="{{ note._id }}" name="notes" />
                     </div>
