@@ -165,13 +165,15 @@ def create_note():
                 for file in files:
                     if files and Note.allowed_file(file):
                         sid = shortid.ShortId()
-                        filename = secure_filename(sid.generate()) + '.' + file.filename.split('.')[1]
+                        file_path, file_extenstion = os.path.splitext(file.filename)
+                        filename = secure_filename(sid.generate()) + file_extenstion
+
                         # os.chdir("static/img/file/")
                         file.save(os.path.join(filename))
                         filenames.append(filename)
 
                     elif file is not None:
-                        flash("Sorry; only img files are supported.")
+                        flash("Sorry; your file's extension is supported.")
                         return render_template('/notes/create_note.html'
                                                , title=title, content=content, share=share)
                     else:
