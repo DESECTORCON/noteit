@@ -133,12 +133,12 @@ class Box(object):
                 }
             })
 
-        notes = []
-        for note in data['hits']['hits']:
+        boxes = []
+        for box in data['hits']['hits']:
             try:
-                notes.append(Box.find_by_id(note['_source']['box_id']))
+                boxes.append(Box.find_by_id(box['_source']['box_id']))
             except KeyError:
-                notes.append(Box.find_by_id(note['_source']['query']['match']['box_id']))
+                boxes.append(Box.find_by_id(box['_source']['query']['match']['box_id']))
         del el
-        return notes
+        return boxes
 

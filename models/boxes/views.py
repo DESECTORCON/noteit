@@ -17,7 +17,7 @@ def search_boxes(return_page):
         search_ = request.form['search']
         search_result = Box.search_with_elastic(search_, session['_id'])
 
-        return redirect(url_for(return_page, search_result=search_result))
+        return render_template(return_page, all_boxs=search_result, search_=search_)
 
     except:
         error_msg = traceback.format_exc().split('\n')

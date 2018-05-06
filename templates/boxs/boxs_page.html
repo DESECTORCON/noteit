@@ -13,11 +13,11 @@
 </div>
 <br>
 <div class="list-group">
-    <form class="form-inline" method="POST" action="{{ url_for('boxs.search_boxes', return_page='boxs.boxs') }}">
+    <form class="form-inline" method="POST" action="{{ url_for('boxs.search_boxes', return_page='boxs/boxs_page.html') }}">
         {% if form %}
-        <input class="form-control mr-sm-2" type="search" placeholder="Search Boxes" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search Boxes" aria-label="Search" id="search" name="search" value="{{ search_ }}">
         {% else %}
-        <input class="form-control mr-sm-2" type="search" placeholder="Search Boxes" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search Boxes" aria-label="Search" id="search" name="search" value="{{ search_ }}">
         {% endif %}
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
@@ -28,15 +28,14 @@
 <ul class="list-group">
 
     {% for box in all_boxs %}
-        <a href="{{ url_for('boxs.box', box_id=box._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1"><i class="fas fa-box"></i> {{ box.name }}</h5>
-                <small class="text-muted">Created at: {{ box.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
-            </div>
-            <p class="mb-1">   Total notes: {{ box.notes|length }}</p>
-        </a>
+    <a href="{{ url_for('boxs.box', box_id=box._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1"><i class="fas fa-box"></i> {{ box.name }}</h5>
+            <small class="text-muted">Created at: {{ box.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+        </div>
+        <p class="mb-1">   Total notes: {{ box.notes|length }}</p>
+    </a>
     {% endfor %}
-
 </ul>
 
 {% endblock %}
