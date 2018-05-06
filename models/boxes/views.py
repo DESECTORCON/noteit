@@ -70,7 +70,17 @@ def create_box():
         return render_template('error_page.html', error_msgr='Crashed during creating your box...')
 
 
-@box_blueprint.route('/box/delete')
+@box_blueprint.route('/delete/<string:box_id>')
 @user_decorators.require_login
-def delete_box():
-    pass
+def delete_box(box_id):
+    try:
+        box = Box.find_by_id(box_id)
+        box.delete_on_elastic()
+        box.delete()
+        return redirect(url_for('.boxs'))
+    except:
+        error_msg = traceback.format_exc().split('\n')
+
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='user box creating USER:' + session['email'])
+        Error_obj.save_to_mongo()
+        return render_template('error_page.html', error_msgr='Crashed during creating your box...')

@@ -150,4 +150,3 @@ class Box(object):
                 boxes.append(Box.find_by_id(box['_source']['query']['match']['box_id']))
         del el
         return boxes
-
