@@ -4,6 +4,7 @@ from config import ELASTIC_PORT as port
 from elasticsearch import Elasticsearch
 from common.database import Database
 from models.boxes import constants as BoxConstants
+from models.notes.note import Note
 
 
 class Box(object):
@@ -40,6 +41,14 @@ class Box(object):
 
     def delete(self):
         Database.remove(BoxConstants.COLLECTION, {'_id': self._id})
+
+    def get_box_notes(self, box_id):
+        box_noteID = self.find_by_id(box_id)['notes']
+        notes = []
+        for note_id in box_noteID:
+            notes.append(Note.find_by_id(note_id))
+        
+        return notes
 
     @classmethod
     def get_user_boxes(cls, maker_id):

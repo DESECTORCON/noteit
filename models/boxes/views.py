@@ -39,8 +39,9 @@ def boxs():
 @user_decorators.require_login
 def box(box_id):
     box = Box.find_by_id(box_id)
+    notes = Box.get_box_notes(box_id)
 
-    return render_template('boxs/box.html', box=box)
+    return render_template('boxs/box.html', box=box, notes=notes)
 
 
 @box_blueprint.route('/box/create', methods=['GET', 'POST'])
