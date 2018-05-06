@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-    <title>Note-it™ | Create Box</title>
+<title>Note-it™ | Create Box</title>
 {% endblock %}
 {% block content %}
 
@@ -23,7 +23,7 @@
     </form>
 </div>
 
-<hr class="my-1">
+<hr>
 <br>
 <ul class="list-group">
 
@@ -37,5 +37,12 @@
     </a>
     {% endfor %}
 </ul>
+<hr>
+<div class="btn-toolbar" role="toolbar">
+    <div class="btn-group" role="group" aria-label="First group">
+        <a class="btn btn-outline-success btn-lg" href="{{ url_for('boxs.create_box') }}" role="button">Create Box</a>
+        <a class="btn btn-outline-warning btn-lg" href="" role="button">Delete Box</a>
+    </div>
+</div>
 
 {% endblock %}
