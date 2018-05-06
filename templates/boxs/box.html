@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>Note-it™ | Box {{ box.name }}</title>
+{% endblock %}
+{% block content %}
+
+<div class="container">
+
+    <blockquote class="blockquote">
+        <p class="mb-0">{{ box.name }}</p>
+    </blockquote>
+
+</div>
+
+{% endblock %}

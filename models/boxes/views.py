@@ -38,7 +38,9 @@ def boxs():
 @box_blueprint.route('/box/<string:box_id>')
 @user_decorators.require_login
 def box(box_id):
-    pass
+    box = Box.find_by_id(box_id)
+
+    return render_template('boxs/box.html', box=box)
 
 
 @box_blueprint.route('/box/create', methods=['GET', 'POST'])
