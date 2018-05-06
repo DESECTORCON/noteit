@@ -9,15 +9,15 @@ import traceback
 box_blueprint = Blueprint('boxs', __name__)
 
 
-@box_blueprint.route('/boxs/search/<string:return_page>', methods=['POST'])
+@box_blueprint.route('/search_boxs', methods=['POST'])
 @user_decorators.require_login
-def search_boxes(return_page):
+def search_boxes():
     try:
 
         search_ = request.form['search']
         search_result = Box.search_with_elastic(search_, session['_id'])
 
-        return render_template(return_page, all_boxs=search_result, search_=search_)
+        return render_template('boxs/boxs_page.html', all_boxs=search_result, search_=search_)
 
     except:
         error_msg = traceback.format_exc().split('\n')

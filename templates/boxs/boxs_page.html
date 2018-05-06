@@ -13,7 +13,7 @@
 </div>
 <br>
 <div class="list-group">
-    <form class="form-inline" method="POST" action="{{ url_for('boxs.search_boxes', return_page='boxs/boxs_page.html') }}">
+    <form class="form-inline" method="POST" action="{{ url_for('.search_boxes') }}">
         {% if form %}
         <input class="form-control mr-sm-2" type="search" placeholder="Search Boxes" aria-label="Search" id="search" name="search" value="{{ search_ }}">
         {% else %}
