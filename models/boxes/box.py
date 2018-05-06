@@ -95,7 +95,7 @@ class Box(object):
         return True
 
     @staticmethod
-    def search_with_elastic(form_data, user_nickname=None):
+    def search_with_elastic(form_data, user_id):
         el = Elasticsearch(port=port)
 
         if form_data is '':
@@ -104,15 +104,12 @@ class Box(object):
                     "bool": {
                         "should": [
                             {
-                                "prefix": {"title": ""},
-                            },
-                            {
-                                "term": {"content": ""}
+                                "prefix": {"name": ""},
                             }
                         ],
                         "filter": [
                             {
-                                "match": {"author_nickname": user_nickname}
+                                "match": {"maker_id": user_id}
                             }
                         ]
                     }
@@ -124,15 +121,12 @@ class Box(object):
                     "bool": {
                         "should": [
                             {
-                                "prefix": {"title": form_data},
-                            },
-                            {
-                                "term": {"content": form_data}
+                                "prefix": {"name": form_data},
                             }
                         ],
                         "filter": [
                             {
-                                "match": {"author_nickname": user_nickname}
+                                "match": {"maker_id": user_id}
                             }
                         ]
                     }

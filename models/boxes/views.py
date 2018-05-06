@@ -13,6 +13,23 @@ from config import ELASTIC_PORT as port
 box_blueprint = Blueprint('boxs', __name__)
 
 
+@box_blueprint.route('/boxs/search/<string:return_page>', methods=['POST'])
+def search_boxes(return_page):
+    try:
+
+        search_ = request.form['search']
+        search_result = Box.search_with_elastic(search_, session['_id'])
+
+        return render_template(return_page, search_result=search_result)
+
+    except:
+        error_msg = traceback.format_exc().split('\n')
+
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='boxes box searching USER:' + session['email'])
+        Error_obj.save_to_mongo()
+        return render_template('error_page.html', error_msgr='Crashed during searching your boxes...')
+
+
 @box_blueprint.route('/boxs')
 def boxs():
     all_boxs = Box.get_user_boxes(session['_id'])
@@ -46,9 +63,9 @@ def create_box():
     except:
         error_msg = traceback.format_exc().split('\n')
 
-        Error_obj = Error_(error_msg=''.join(error_msg), error_location='user note reading USER:' + session['email'])
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='user box creating USER:' + session['email'])
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading your notes...')
+        return render_template('error_page.html', error_msgr='Crashed during creating your box...')
 
 
 @box_blueprint.route('/box/delete')
