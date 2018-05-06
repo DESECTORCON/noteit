@@ -161,6 +161,11 @@ def create_note():
             try:
                 files = request.files.getlist('file')
 
+                if len(files) > 5:
+                    flash("Too much files!")
+                    return render_template('/notes/create_note.html'
+                                           , title=title, content=content, share=share)
+
                 filenames = []
                 for file in files:
                     if files and Note.allowed_file(file):
@@ -189,7 +194,7 @@ def create_note():
 
             user_notes = Note.get_user_notes(session['email'])
 
-            if len(user_notes) > 30:
+            if len(user_notes) > 20:
                 flash("You have the maximum amount of notes. Please delete your notes")
                 return redirect(url_for(".user_notes"))
 
