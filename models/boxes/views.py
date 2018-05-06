@@ -5,7 +5,6 @@ import models.users.decorators as user_decorators
 from models.notes.note import Note
 from models.error_logs.error_log import Error_
 import traceback
-from models.notes.views import is_shared_validator
 
 box_blueprint = Blueprint('boxs', __name__)
 
