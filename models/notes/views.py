@@ -174,9 +174,6 @@ def create_note():
                         filename = secure_filename(sid.generate()) + file_extenstion
 
                         # os.chdir("static/img/file/")
-                        if filename.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
-                            import moviepy.editor as mp
-                            file = mp.VideoFileClip(file).resize(height=100, width=100)
                         file.save(os.path.join(filename))
                         filenames.append(filename)
 
