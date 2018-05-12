@@ -17,6 +17,20 @@
 
 <hr class="my-4">
 
+<script>
+    var canvas = document.createElement('canvas'),
+    video = document.createElement('video'),
+    ctx = canvas.getContext('2d');
+
+video.preload = 'auto';
+video.addEventListener('canplay', start, false);
+
+if (video.canPlayType('video/mp4')) {
+    video.src = 'videoUrl.mp4';
+
+}
+</script>
+
 <div class="jumbotron">
 
     <div class="container">
