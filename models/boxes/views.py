@@ -97,7 +97,7 @@ def delete_notes_inbox_(box_id):
                 del box.notes[box.notes.index(note)]
             box.save_to_mongo()
             box.save_to_elastic()
-            return redirect(url_for('boxs.box'), box_id=box_id)
+            return redirect(url_for('boxs.box', box_id=box_id))
         else:
             box = Box.find_by_id(box_id)
             box_notes = box.get_box_notes()
