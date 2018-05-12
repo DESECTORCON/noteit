@@ -1,16 +1,50 @@
 {% extends "base.html" %}
 {% block title %}
-    <title>Note-it™ | Delete Notes</title>
+    <title>Note-it™ | Delete notes</title>
 {% endblock %}
 {% block content %}
 
-    <div class="container">
+<div class="container">
 
-        <div class="page-header">
-            <h1>Delete Notes </h1>
-            <p class="text-muted">NOTE: This dosen't delete the notes.</p>
+    <div class="page-header">
+        <h1><i class="far fa-minus-square"></i> Delete Notes</h1>
+    </div>
+    <hr>
+
+    <form method="POST">
+        <div class="list-group">
+
+            {% if box_notes == [] or box_notes == None %}
+
+        <div class="alert alert-primary" role="alert"><i class="fas fa-info-circle"></i>
+            There are no notes to delete!
         </div>
 
-    </div>
+        {% endif %}
+        <br>
+        {% for note in box_notes %}
+
+        <label class="list-group-item list-group-item-action flex-column align-items-start">
+
+            <div class="d-flex w-100 justify-content-between">
+                <input type="checkbox" name="delete" id="{{note._id}}" value="{{ note._id }}">
+                <h4 class="mb-1"><a href="{{ url_for('notes.note', note_id=note._id) }}"><i class="far fa-sticky-note"></i>   {{ note.title }}</a>
+                    </h4>
+
+                <p class="list-group-item-text">Created date <strong>{{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</strong></p>
+
+            </div>
+            <p class="mb-1"><span class="badge badge-pill badge-secondary">{{ note.share_label }}</span></p>
+
+        </label>
+
+        {% endfor %}
+
+        </div>
+        <br>
+        <button type="submit" class="btn btn-outline-danger" style="">Delete Permanently</button>
+    </form>
+
+</div>
 
 {% endblock %}

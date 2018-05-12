@@ -91,11 +91,17 @@ def delete_box(box_id):
 def delete_notes_inbox_(box_id):
     try:
         if request.method == 'POST':
-            pass
+            notes_to_delete = request.form.getlist('delete')
+            box = Box.find_by_id(box_id)
+            for note in notes_to_delete:
+                del box.notes[box.notes.index(note)]
+            box.save_to_mongo()
+            box.save_to_elastic()
+            return redirect(url_for('boxs.box'), box_id=box_id)
         else:
             box = Box.find_by_id(box_id)
             box_notes = box.get_box_notes()
-            return render_template('delete_notes_inbox.html', box_notes=box_notes)
+            return render_template('boxs/delete_notes_inbox.html', box_notes=box_notes)
     except:
         error_msg = traceback.format_exc().split('\n')
 
