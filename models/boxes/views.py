@@ -84,3 +84,21 @@ def delete_box(box_id):
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='user box creating USER:' + session['email'])
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during creating your box...')
+
+
+@box_blueprint.route('/delete_notes_inbox/<string:box_id>', methods=['GET', 'POST'])
+@user_decorators.require_login
+def delete_notes_inbox(box_id):
+    try:
+        if request.method == 'POST':
+            pass
+        else:
+            box = Box.find_by_id(box_id)
+            box_notes = box.get_box_notes()
+            return render_template('delete_notes_inbox.html', box_notes=box_notes)
+    except:
+        error_msg = traceback.format_exc().split('\n')
+
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='user box creating USER:' + session['email'])
+        Error_obj.save_to_mongo()
+        return render_template('error_page.html', error_msgr='Crashed during creating your box...')

@@ -26,5 +26,6 @@
     </div>
     <hr>
     <a href="{{ url_for('.delete_box', box_id=box._id) }}" role="button" class="btn btn-outline-danger">Delete Box</a>
+    <a href="{{ url_for('.delete_notes_inbox', box_id=box._id) }}" role="button" class="btn btn-outline-warning">Delete Box</a>
 </div>
 {% endblock %}
