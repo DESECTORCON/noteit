@@ -86,9 +86,9 @@ def delete_box(box_id):
         return render_template('error_page.html', error_msgr='Crashed during creating your box...')
 
 
-@box_blueprint.route('/delete_notes_inbox/<string:box_id>', methods=['GET', 'POST'])
+@box_blueprint.route('/delete_notes_inbox_/<string:box_id>', methods=['GET', 'POST'])
 @user_decorators.require_login
-def delete_notes_inbox(box_id):
+def delete_notes_inbox_(box_id):
     try:
         if request.method == 'POST':
             pass
