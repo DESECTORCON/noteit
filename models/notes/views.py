@@ -3,6 +3,8 @@ import shortid
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
+
+from models.boxes.box import Box
 from models.notes.note import Note
 import models.users.decorators as user_decorators
 from models.users.user import User
@@ -43,11 +45,12 @@ def share_bool_function(share):
     return share, share_only_with_users
 
 
-@note_blueprint.route('/my_notes/', methods=['POST', 'GET'])
+@note_blueprint.route('/my_notes/', defaults={'box_id': None}, methods=['POST', 'GET'])
+@note_blueprint.route('/my_notes/<string:box_id>', methods=['POST', 'GET'])
 @user_decorators.require_login
-def user_notes():
+def user_notes(box_id):
     try:
-
+        user_boxs = Box.get_user_boxes(session['_id'])
         user = User.find_by_email(session['email'])
         user_notes = User.get_notes(user)
         user_name = user.email
@@ -57,7 +60,7 @@ def user_notes():
                 notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
 
                 return render_template('/notes/my_notes_sidebar.html', user_notes=notes, user_name=user_name,
-                                       form=form_)
+                                       form=form_, user_boxs=user_boxs)
 
         else:
 
