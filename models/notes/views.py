@@ -56,21 +56,25 @@ def user_notes(box_id=None):
 
         if box_id is None:
             user_notes = User.get_notes(user)
+            box_name = ''
+            search=True
+
         else:
             box = Box.find_by_id(box_id)
             user_notes = box.get_notes()
+            box_name = box.name
+            search = False
 
         if request.method == 'POST':
                 form_ = request.form['Search_note']
                 notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
 
                 return render_template('/notes/my_notes_sidebar.html', user_notes=notes, user_name=user_name,
-                                       form=form_, boxs=boxs)
+                                       form=form_, boxs=boxs, box_name=box_name, search=search)
 
         else:
-
             return render_template('/notes/my_notes_sidebar.html', user_name=user_name
-                                   , user_notes=user_notes, boxs=boxs)
+                               , user_notes=user_notes, boxs=boxs, box_name=box_name, search=search)
 
     except:
         error_msg = traceback.format_exc().split('\n')
