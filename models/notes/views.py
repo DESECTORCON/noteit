@@ -56,12 +56,12 @@ def user_notes():
                 form_ = request.form['Search_note']
                 notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
 
-                return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
+                return render_template('/notes/my_notes_sidebar.html', user_notes=notes, user_name=user_name,
                                        form=form_)
 
         else:
 
-            return render_template('/notes/my_notes.html', user_name=user_name, user_notes=user_notes)
+            return render_template('/notes/my_notes_sidebar.html', user_name=user_name, user_notes=user_notes)
 
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -156,7 +156,7 @@ def create_note():
                                        error_msg="You did not selected an Share label. Please select an Share label.")
 
             title = request.form['title']
-            content = request.form['content'].strip('\n').strip('\r')
+            content = request.form['content_'].strip('\n').strip('\r')
             author_email = session['email']
             try:
                 files = request.files.getlist('file')
