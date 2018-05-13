@@ -24,44 +24,44 @@ body {
 
 #wrapper {
   padding-left: 0;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
+  -webkit-transition: all 0.4s ease;
+  -moz-transition: all 0.4s ease;
+  -o-transition: all 0.4s ease;
+  transition: all 0.25s ease;
 }
 
 #wrapper.toggled {
-  padding-left: 250px;
+  padding-left: 0px;
 }
 
 #sidebar-wrapper {
   z-index: 1000;
   position: fixed;
-  left: 250px;
+  left: 150px;
   width: 0;
   height: 1000px;
-  margin-left: -250px;
+  margin-left: -150px;
   overflow-y: auto;
-  background: #000;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
+  background: #d3e2ff;
+  -webkit-transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -o-transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 #wrapper.toggled #sidebar-wrapper {
-  width: 250px;
+  width: 150px;
 }
 
 #page-content-wrapper {
   width: 100%;
   position: absolute;
-  padding: 15px;
+  padding: 0px;
 }
 
 #wrapper.toggled #page-content-wrapper {
   position: absolute;
-  margin-right: -250px;
+  margin-right: -100px;
 }
 
 
@@ -70,7 +70,7 @@ body {
 .sidebar-nav {
   position: absolute;
   top: 0;
-  width: 250px;
+  width: 200px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -84,13 +84,13 @@ body {
 .sidebar-nav li a {
   display: block;
   text-decoration: none;
-  color: #999999;
+  color: #eff4ff;
 }
 
 .sidebar-nav li a:hover {
   text-decoration: none;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  background: #d3e2ff;
 }
 
 .sidebar-nav li a:active, .sidebar-nav li a:focus {
@@ -104,11 +104,11 @@ body {
 }
 
 .sidebar-nav>.sidebar-brand a {
-  color: #999999;
+  color: #eff4ff;
 }
 
 .sidebar-nav>.sidebar-brand a:hover {
-  color: #fff;
+  color: #eff4ff;
   background: none;
 }
 
@@ -117,16 +117,16 @@ body {
     padding-left: 0;
   }
   #wrapper.toggled {
-    padding-left: 250px;
+    padding-left: 100px;
   }
   #sidebar-wrapper {
     width: 0;
   }
   #wrapper.toggled #sidebar-wrapper {
-    width: 250px;
+    width: 200px;
   }
   #page-content-wrapper {
-    padding: 20px;
+    padding: 10px;
     position: relative;
   }
   #wrapper.toggled #page-content-wrapper {
@@ -197,7 +197,7 @@ $(document).ready(function () {
         </ul>
     </div>
     <!-- /#page-content-wrapper -->
-    <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Toggle Menu</a>
+    <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle"><i class="fas fa-bars"></i></a>
 
     <!-- /#wrapper -->
 
@@ -215,16 +215,17 @@ $(document).ready(function () {
 
     <hr class="my-4">
 
+    <!--notes-->
     <div class="list-group">
 
         {% if user_notes == [] or user_notes == None %}
-
+        <!--if there are no notes-->
         <div class="alert alert-primary" role="alert"><i class="fas fa-info-circle"></i>
             There are no notes!You can make a note by clicking the button below.
         </div>
 
         {% endif %}
-
+        <!--search form-->
         <form class="form-inline my-2 my-lg-0" method="POST">
             {% if form %}
             <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
@@ -236,9 +237,9 @@ $(document).ready(function () {
 
         <br>
         {% for note in user_notes %}
-
+        <!--notes-->
         <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start card">
-
+            <!--note body-->
             <div class="d-flex w-100 justify-content-between">
                 <h4 class="mb-1"><i class="far fa-sticky-note"></i>
                     {{ note.title }}</h4>
@@ -255,9 +256,12 @@ $(document).ready(function () {
 
     <br>
     <!--{{ url_for('notes.create_note') }}-->
+    <!--toolbar-->
     <a href="#####" class="btn btn-outline-success" role="button"  data-toggle="modal" data-target="#exampleModal">Make a new note</a>
     <a href="{{ url_for('boxs.boxs') }}" class="btn btn-outline-success" role="button">Go to boxes page</a>
     <a href="{{ url_for('notes.delete_note_multiple') }}" class="btn btn-outline-warning" role="button">Delete notes</a>
+
+    <!--note create modal-->
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -269,6 +273,7 @@ $(document).ready(function () {
                     </button>
                 </div>
                 <div class="modal-body">
+                    <!--error msg -->
                     {% if error_msg %}
                     <div class="alert alert-danger" role="alert">
                         <i class="fas fa-exclamation-triangle"></i> {{ error_msg }}
@@ -276,7 +281,7 @@ $(document).ready(function () {
                     {% endif %}
 
                     <div class="jumbotron form-sizer">
-
+                        <!--title-->
                         <h1><i class="fas fa-plus-square"></i> Create a Note</h1>
 
                         <p>Fill in the blanks, and submit!</p>
@@ -285,7 +290,7 @@ $(document).ready(function () {
 
                     <br>
 
-
+                    <!--srcipt (when uploading)-->
                     <script type="text/javascript">
 
                     function myFunction() {
@@ -301,12 +306,12 @@ $(document).ready(function () {
                        $('#myDIV').hide();
                     });
                 </script>
-
+                    <!--upload form-->
                     <div class="form-size jumbotron" id="MAINDIV">
                         <form method="POST" enctype=multipart/form-data action="{{ url_for('notes.create_note') }}">
 
                             <div class="form-group">
-
+                                <!--title-->
                                 <label for="title">Title</label>
                                 <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="titleBlock" value="{{ title }}">
 
@@ -314,6 +319,7 @@ $(document).ready(function () {
 
                             </div>
 
+                            <!--share label-->
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="inputGroupSelect01">Share label</label>
@@ -345,7 +351,7 @@ $(document).ready(function () {
                             </div>
 
 
-
+                            <!--content-->
                             <div class="input-group mb-3">
 
                                 <div class="input-group-prepend">
@@ -355,7 +361,7 @@ $(document).ready(function () {
                     {{ content }}
                 </textarea>
                             </div>
-
+                            <!--file attach-->
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="inputGroupSelect01">file attach</label>
@@ -366,6 +372,8 @@ $(document).ready(function () {
 
                             <br>
                     </div>
+
+                    <!--processing page (when submitted)-->
                     <div class="hidden jumbotron container form-size" id="myDIV">
 
                         <h1><i class="fas fa-spinner fa-pulse"></i> Processing...</h1>
@@ -377,6 +385,8 @@ $(document).ready(function () {
                     </div>
 
                 </div>
+
+                <!--button toolbar-->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-outline-primary" style="" onclick="myFunction()">Save Note</button>
