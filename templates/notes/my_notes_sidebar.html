@@ -22,6 +22,8 @@
 
                 {% endfor %}
             </div>
+            <br>
+            <a href="{{ url_for('boxs.boxs') }}" class="btn btn-outline-success" role="button">Go to boxes page</a>
 
         </aside>
         <main class="col h-100">
@@ -78,7 +80,6 @@
                     <br>
                     <!--{{ url_for('notes.create_note') }}-->
                     <a href="#####" class="btn btn-outline-success" role="button"  data-toggle="modal" data-target="#exampleModal">Make a new note</a>
-                    <a href="{{ url_for('boxs.boxs') }}" class="btn btn-outline-success" role="button">Go to boxes page</a>
                     <a href="{{ url_for('notes.delete_note_multiple') }}" class="btn btn-outline-warning" role="button">Delete notes</a>
 
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
