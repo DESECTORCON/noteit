@@ -12,13 +12,14 @@ from config import ELASTIC_PORT as port
 
 class User(object):
 
-    def __init__(self, email, password, _id=None, nick_name=None, last_logined=datetime.datetime.now()):
+    def __init__(self, email, password, _id=None, nick_name=None, last_logined=datetime.datetime.now(), All_box_id=None):
         self.email = email
         self.password = password
         self._id = uuid.uuid4().hex if _id is None else _id
         sid = ShortId()
         self.nick_name = "User " + sid.generate() if nick_name is None else nick_name
         self.last_logined = last_logined
+        self.All_box_id=All_box_id
 
     def __repr__(self):
         return "<User {} with nick name {}>".format(self.email, self.nick_name)
@@ -94,7 +95,8 @@ class User(object):
             "email": self.email,
             "password": self.password,
             "nick_name": self.nick_name,
-            "last_logined": self.last_logined
+            "last_logined": self.last_logined,
+            "All_box_id": self.All_box_id
         }
 
     @classmethod

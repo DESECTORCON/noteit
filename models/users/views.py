@@ -74,6 +74,10 @@ def register_user():
                     box = Box(maker_id=session['_id'], name='All')
                     box.save_to_elastic()
                     box.save_to_mongo()
+                    user = User.find_by_id(session['_id'])
+                    user.All_box_id = box._id
+                    user.save_to_mongo()
+
                     return redirect(url_for("home"))
 
             except UserErrors.UserError as e:
