@@ -10,7 +10,7 @@ import datetime
 
 class Note(object):
 
-    def __init__(self, title, content, author_email, author_nickname, created_date=None, _id=None, shared=False,
+    def __init__(self, box_id, title, content, author_email, author_nickname, created_date=None, _id=None, shared=False,
                  share_only_with_users=False, share_label='', file_name=None):
         self.title = "No title" if title is None else title
         self.content = "No content" if content is None else content
@@ -22,6 +22,7 @@ class Note(object):
         self.share_only_with_users = share_only_with_users
         self.share_label = share_label
         self.file_name = file_name
+        self.box_id = box_id
 
     def __repr__(self):
         return "<Note {} with author {} and created date {}>".format(self.title, self.author_email, self.created_date)
@@ -37,7 +38,8 @@ class Note(object):
             "shared": self.shared,
             "share_only_with_users": self.share_only_with_users,
             "share_label": self.share_label,
-            "file_name": self.file_name
+            "file_name": self.file_name,
+            "box_id": self.box_id
         }
 
     def save_to_db(self):
@@ -102,7 +104,8 @@ class Note(object):
             'note_id': self._id,
             'share_only_with_users': self.share_only_with_users,
             'shared': self.shared,
-            'created_date': self.created_date.strftime('%Y-%m-%d')
+            'created_date': self.created_date.strftime('%Y-%m-%d'),
+            "box_id": self.box_id
         }
         el.index(index="notes", doc_type='note', body=doc)
         del el
@@ -125,6 +128,7 @@ class Note(object):
             'share_only_with_users': self.share_only_with_users,
             'shared': self.shared,
             'created_date': self.created_date.strftime('%Y-%m-%d'),
+            "box_id": self.box_id
         }
 
         el.delete_by_query(index="notes", doc_type='note', body=doc1)
@@ -133,7 +137,7 @@ class Note(object):
         return True
 
     @staticmethod
-    def search_with_elastic(form_data, user_nickname=None):
+    def search_with_elastic(form_data, box_id, user_nickname=None):
         el = Elasticsearch(port=port)
 
         if form_data is '':
@@ -142,7 +146,7 @@ class Note(object):
                     "bool": {
                         "should": [
                             {
-                                "prefix": {"title": ""},
+                                "prefix": {"title": ""}
                             },
                             {
                                 "term": {"content": ""}
@@ -162,7 +166,7 @@ class Note(object):
                     "bool": {
                         "should": [
                             {
-                                "prefix": {"title": form_data},
+                                "prefix": {"title": form_data}
                             },
                             {
                                 "term": {"content": form_data}

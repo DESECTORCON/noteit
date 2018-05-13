@@ -225,6 +225,7 @@ def create_note():
                 return redirect(url_for(".user_notes"))
             
             # saving note
+            all_box_id = Box.find_by_id()
             note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
                                  share_label=label, file_name=filenames)
