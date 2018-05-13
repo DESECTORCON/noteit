@@ -10,16 +10,8 @@ from models.error_logs.error_log import Error_
 import traceback
 from config import ELASTIC_PORT as port
 from werkzeug.utils import secure_filename
-from flask_uploads import UploadSet, configure_uploads, All
-# from config import ALLOWED_EXTENSION
 
 note_blueprint = Blueprint('notes', __name__)
-
-#
-#
-# def allowed_file(filename):
-#     return '.' in filename and \
-#            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def is_shared_validator(shared, share_only_with_users):
@@ -92,19 +84,35 @@ def note(note_id):
         else:
             try:
                 for filename in filenames:
-                    if filename.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
+                    file_extenstion = filename.split('.')[1]
+                    if file_extenstion in ['mp4', 'ogg', 'mov', 'wmv']:
                         is_video = True
                     else:
                         is_video = False
 
-                    urls.append({'url': url_for('static', filename=filename), 'is_video':is_video})
+                    if file_extenstion in ['jpg', 'gif', 'bmp', 'tiff', 'png']:
+                        is_pic = True
+                    else:
+                        is_pic = False
+
+                    urls.append({'url': url_for('static', filename=filename),
+                                 'is_video': is_video, 'filename': filename, 'is_pic': is_pic,
+                                 'extenstion': file_extenstion})
             except:
-                if filenames.split('.')[1] in ['mp4', 'ogg', 'mov', 'wmv']:
+                file_extenstion = filenames.split('.')[1]
+                if file_extenstion in ['mp4', 'ogg', 'mov', 'wmv']:
                     is_video = True
                 else:
                     is_video = False
 
-                urls.append({'url': url_for('static', filename=filenames), 'is_video': is_video})
+                if file_extenstion in ['jpg', 'gif', 'bmp', 'tiff', 'png']:
+                    is_pic = True
+                else:
+                    is_pic = False
+
+                urls.append({'url': url_for('static', filename=filenames),
+                             'is_video': is_video, 'filename': filenames, 'is_pic': is_pic,
+                             'extenstion': file_extenstion})
 
         try:
             if note.author_email == session['email']:
@@ -153,17 +161,24 @@ def create_note():
             try:
                 files = request.files.getlist('file')
 
+                if len(files) > 5:
+                    flash("Too much files!")
+                    return render_template('/notes/create_note.html'
+                                           , title=title, content=content, share=share)
+
                 filenames = []
                 for file in files:
                     if files and Note.allowed_file(file):
                         sid = shortid.ShortId()
-                        filename = secure_filename(sid.generate()) + '.' + file.filename.split('.')[1]
+                        file_path, file_extenstion = os.path.splitext(file.filename)
+                        filename = secure_filename(sid.generate()) + file_extenstion
+
                         # os.chdir("static/img/file/")
                         file.save(os.path.join(filename))
                         filenames.append(filename)
 
                     elif file is not None:
-                        flash("Sorry; only img files are supported.")
+                        flash("Sorry; your file's extension is supported.")
                         return render_template('/notes/create_note.html'
                                                , title=title, content=content, share=share)
                     else:
@@ -179,7 +194,7 @@ def create_note():
 
             user_notes = Note.get_user_notes(session['email'])
 
-            if len(user_notes) > 30:
+            if len(user_notes) > 20:
                 flash("You have the maximum amount of notes. Please delete your notes")
                 return redirect(url_for(".user_notes"))
 

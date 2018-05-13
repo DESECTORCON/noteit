@@ -121,7 +121,9 @@ def http_error_404(e):
 from models.users.views import user_blueprint
 from models.notes.views import note_blueprint
 from models.messages.views import message_blueprint
+from models.boxes.views import box_blueprint
 
 app.register_blueprint(user_blueprint, url_prefix="/users")
 app.register_blueprint(note_blueprint, url_prefix="/notes")
 app.register_blueprint(message_blueprint, url_prefix='/messages')
+app.register_blueprint(box_blueprint, url_prefix='/boxs')
