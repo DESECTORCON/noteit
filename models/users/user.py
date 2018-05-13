@@ -4,6 +4,8 @@ from common.utils import Utils
 from common.database import Database
 import models.users.errors as UserErrors
 import models.users.constants as UserConstants
+from models.boxes.box import Box
+from models.messages.message import Message
 from models.notes.note import Note
 from shortid import ShortId
 from elasticsearch import Elasticsearch
@@ -128,4 +130,20 @@ class User(object):
         notes = Note.find_by_user_email(self.email)
 
         for note in notes:
+            note.delete_on_elastic()
+            note.delete_img()
             note.delete()
+
+    def delete_user_messages(self):
+        messages = Message.find_by_sender_id(self._id)
+
+        for message in messages:
+            message.delete_on_elastic()
+            message.delete()
+
+    def delete_user_boxes(self):
+        boxes = Box.find_by_maker_id(self._id)
+
+        for box in boxes:
+            box.delete_on_elastic()
+            box.delete()

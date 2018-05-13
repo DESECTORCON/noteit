@@ -177,6 +177,8 @@ def delete_user(user_id):
         if request.method == 'POST':
             user = User.find_by_id(user_id)
             user.delete_user_notes()
+            user.delete_user_boxes()
+            user.delete_user_messages()
             user.delete()
             session['email'] = None
             session['_id'] = None
