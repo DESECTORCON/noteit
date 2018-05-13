@@ -72,7 +72,7 @@ $(document).ready(function() {
             </div>
             <div class="modal-body">
                 <div class="form-size jumbotron" id="MAINDIV">
-                    <form method="POST" enctype=multipart/form-data>
+                    <form method="POST" action="{{ url_for('boxs.create_box') }}" enctype=multipart/form-data>
 
                         <div class="form-group">
 
@@ -100,9 +100,6 @@ $(document).ready(function() {
                         </div>
 
                         <br>
-                        <button type="submit" class="btn btn-primary" style="" onclick="myFunction()">Save Box</button>
-
-                    </form>
                 </div>
 
                 <div class="hidden jumbotron container form-size" id="myDIV">
@@ -117,9 +114,10 @@ $(document).ready(function() {
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                <a href="" class="btn btn-outline-success" role="button">Create</a>
+                <button type="submit" class="btn btn-outline-success" style="" onclick="myFunction()">Save Box</button>
             </div>
         </div>
+        </form>
     </div>
 </div>
 

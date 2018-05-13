@@ -33,8 +33,9 @@ def search_boxes():
 @user_decorators.require_login
 def boxs():
     all_boxs = Box.get_user_boxes(session['_id'])
+    all_notes = Note.get_user_notes(session['email'])
 
-    return render_template('boxs/boxs_page.html', all_boxs=all_boxs)
+    return render_template('boxs/boxs_page.html', all_boxs=all_boxs ,all_notes=all_notes)
 
 
 @box_blueprint.route('/box/<string:box_id>')
