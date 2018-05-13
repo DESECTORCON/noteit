@@ -103,7 +103,7 @@ def delete_notes_inbox_(box_id):
         else:
             box = Box.find_by_id(box_id)
             box_notes = box.get_box_notes()
-            return render_template('boxs/delete_notes_inbox.html', box_notes=box_notes)
+            return render_template('boxs/delete_notes_inbox.html', box_notes=box_notes, box_id=box_id)
     except:
         error_msg = traceback.format_exc().split('\n')
 
