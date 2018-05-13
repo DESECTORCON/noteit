@@ -150,3 +150,10 @@ class Box(object):
                 boxes.append(Box.find_by_id(box['_source']['query']['match']['box_id']))
         del el
         return boxes
+
+    def get_notes(self):
+        notes = []
+        for note in self.notes:
+            notes.append(Note.find_by_id(note))
+
+        return notes

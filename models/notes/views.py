@@ -3,7 +3,6 @@ import shortid
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
-
 from models.boxes.box import Box
 from models.notes.note import Note
 import models.users.decorators as user_decorators
@@ -48,23 +47,30 @@ def share_bool_function(share):
 @note_blueprint.route('/my_notes/', defaults={'box_id': None}, methods=['POST', 'GET'])
 @note_blueprint.route('/my_notes/<string:box_id>', methods=['POST', 'GET'])
 @user_decorators.require_login
-def user_notes(box_id):
+def user_notes(box_id=None):
     try:
-        user_boxs = Box.get_user_boxes(session['_id'])
+
+        boxs = Box.get_user_boxes(session['_id'])
         user = User.find_by_email(session['email'])
-        user_notes = User.get_notes(user)
         user_name = user.email
+
+        if box_id is None:
+            user_notes = User.get_notes(user)
+        else:
+            box = Box.find_by_id(box_id)
+            user_notes = box.get_notes()
 
         if request.method == 'POST':
                 form_ = request.form['Search_note']
                 notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
 
                 return render_template('/notes/my_notes_sidebar.html', user_notes=notes, user_name=user_name,
-                                       form=form_, user_boxs=user_boxs)
+                                       form=form_, boxs=boxs)
 
         else:
 
-            return render_template('/notes/my_notes_sidebar.html', user_name=user_name, user_notes=user_notes)
+            return render_template('/notes/my_notes_sidebar.html', user_name=user_name
+                                   , user_notes=user_notes, boxs=boxs)
 
     except:
         error_msg = traceback.format_exc().split('\n')

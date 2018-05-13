@@ -17,7 +17,7 @@
             <div class="list-group w-100">
                 {% for box in boxs %}
 
-                    <a href="" class="list-group-item">{{ box.name }}</a>
+                    <a href="{{ url_for('notes.user_notes', box_id=box._id) }}" class="list-group-item">{{ box.name }}</a>
 
                 {% endfor %}
             </div>
