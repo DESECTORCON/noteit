@@ -160,36 +160,47 @@ def note(note_id):
 def create_note():
     try:
         if request.method == 'POST':
+            # getting forms
             share = request.form['inputGroupSelect01']
-
+            
+            # share label error handler
             try:
                 share, share_only_with_users = share_bool_function(share)
             except ValueError:
                 return render_template('/notes/create_note.html',
                                        error_msg="You did not selected an Share label. Please select an Share label.")
-
+            
+            # getting title content and email
             title = request.form['title']
             content = request.form['content_'].strip('\n').strip('\r')
             author_email = session['email']
+            
+            # getting files and saving
             try:
+                # getting files
                 files = request.files.getlist('file')
-
+                
+                # file length checker
                 if len(files) > 5:
                     flash("Too much files!")
                     return render_template('/notes/create_note.html'
                                            , title=title, content=content, share=share)
-
+                
                 filenames = []
                 for file in files:
                     if files and Note.allowed_file(file):
+                        # create name for file
                         sid = shortid.ShortId()
+                        # create path for file
                         file_path, file_extenstion = os.path.splitext(file.filename)
                         filename = secure_filename(sid.generate()) + file_extenstion
 
                         # os.chdir("static/img/file/")
+                        # save file and add file to filenames list
                         file.save(os.path.join(filename))
                         filenames.append(filename)
-
+                    
+                    # if extenstion is not supported
                     elif file is not None:
                         flash("Sorry; your file's extension is supported.")
                         return render_template('/notes/create_note.html'
@@ -200,23 +211,27 @@ def create_note():
             except:
                 # file = None
                 filenames = []
-
+            
+            # getting author nickname, label and user notes
             author_nickname = User.find_by_email(author_email).nick_name
 
             label = is_shared_validator(share, share_only_with_users)
 
             user_notes = Note.get_user_notes(session['email'])
-
+            
+            # if too much notes, then redirect
             if len(user_notes) > 20:
                 flash("You have the maximum amount of notes. Please delete your notes")
                 return redirect(url_for(".user_notes"))
-
+            
+            # saving note
             note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
                                  share_label=label, file_name=filenames)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
-
+            
+            # flash message and redirect
             flash('Your note has successfully created.')
 
             return redirect(url_for('.user_notes'))
