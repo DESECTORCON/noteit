@@ -429,22 +429,22 @@ def delete_multiple():
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
 
-
-@note_blueprint.route('/search_notes', defaults={'box_id': None}, methods=['POST'])
-@note_blueprint.route('/search_notes/<box_id>', methods=['POST'])
-@user_decorators.require_login
-def search_notes(box_id):
-    user = User.find_by_email(session['email'])
-    user_name = user.email
-    form_ = request.form['Search_note']
-    notes = Note.search_with_elastic(form_, user_nickname=user.nick_name, box_id=box_id)
-
-    redirect_to = request.args.get('variable')
-
-    if redirect_to is None:
-        return render_template('/notes/delete_multiple.html', user_notes=notes, user_name=user_name,
-                               form=form_)
-    else:
-
-        return redirect(url_for(redirect_to, user_notes=notes, user_name=user_name, box_id=box_id,
-                                form=form_))
+#
+# @note_blueprint.route('/search_notes', defaults={'box_id': None}, methods=['POST'])
+# @note_blueprint.route('/search_notes/<box_id>', methods=['POST'])
+# @user_decorators.require_login
+# def search_notes(box_id):
+#     user = User.find_by_email(session['email'])
+#     user_name = user.email
+#     form_ = request.form['Search_note']
+#     notes = Note.search_with_elastic(form_, user_nickname=user.nick_name, box_id=box_id)
+#
+#     redirect_to = request.args.get('variable')
+#
+#     if redirect_to is None:
+#         return render_template('/notes/delete_multiple.html', user_notes=notes, user_name=user_name,
+#                                form=form_)
+#     else:
+#
+#         return redirect(url_for(redirect_to, user_notes=notes, user_name=user_name, box_id=box_id,
+#                                 form=form_))
