@@ -59,7 +59,7 @@ def user_notes(box_id=None):
         if box_id is None:
             user_notes = User.get_notes(user)
             box_name = ''
-            search=True
+            search = True
 
         else:
             box = Box.find_by_id(box_id)
@@ -231,10 +231,7 @@ def create_note(box_id):
                 return redirect(url_for(".user_notes", box_id=box_id))
 
             # saving note
-            if box_id is None:
-                all_box_id = Box.find_by_id(User.find_by_id(session['_id']).All_box_id)._id
-            else:
-                all_box_id = box_id
+            all_box_id = box_id
             note_id = uuid.uuid4().hex
 
             note_for_save = Note(_id=note_id, title=title, content=content, author_email=author_email, shared=share,
@@ -242,11 +239,11 @@ def create_note(box_id):
                                  share_label=label, file_name=filenames, box_id=all_box_id)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
-
-            box_for_save = Box.find_by_id(all_box_id)
-            box_for_save.notes.append(note_id)
-            box_for_save.save_to_mongo()
-            box_for_save.update_to_elastic()
+            if box_id is not None:
+                box_for_save = Box.find_by_id(all_box_id)
+                box_for_save.notes.append(note_id)
+                box_for_save.save_to_mongo()
+                box_for_save.update_to_elastic()
 
             # flash message and redirect
             flash('Your note has successfully created.')

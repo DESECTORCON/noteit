@@ -4,9 +4,7 @@ from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
 import models.users.errors as UserErrors
-from models.boxes.box import Box
 from models.error_logs.error_log import Error_
-from models.messages.message import Message
 from models.notes.note import Note
 from models.users.user import User
 import models.users.decorators as user_decorators
@@ -63,14 +61,6 @@ def register_user():
                     user_id = User.find_by_email(email)._id
                     session['email'] = email
                     session['_id'] = user_id
-                    message = Message(title="Welcome to Note-it™!",
-                                      content="""Welcome to Note-it! You can make a note,
-                                            and share it with other users! Or you can
-                                            just keep the note to your selves.
-                                            You can send messages to other users too! Check out this website!!""",
-                                      reciver_id=list(user_id),
-                                      sender_id=User.find_by_email('SE@SENOREPLAY.COM')._id)
-                    message.save_to_mongo()
 
                     return redirect(url_for("home"))
 
