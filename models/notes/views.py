@@ -92,6 +92,7 @@ def user_notes(box_id=None):
 @note_blueprint.route('/note/<string:note_id>')
 def note(note_id):
     try:
+        all_boxs = Box.get_user_boxes(session['_id'])
         note = Note.find_by_id(note_id)
         user = User.find_by_email(note.author_email)
         filenames = note.file_name
@@ -145,7 +146,7 @@ def note(note_id):
 
             return render_template('/notes/note.html', note=note,
                                    author_email_is_session=author_email_is_session, msg_=False, user=user
-                                   , url=urls)
+                                   , url=urls,all_boxs=all_boxs)
 
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -282,7 +283,7 @@ def delete_note(note_id, redirect_to='.user_notes'):
 @note_blueprint.route('/pub_notes/', methods=['GET', 'POST'])
 def notes():
     try:
-
+        all_boxs = Box.get_user_boxes(session['_id'])
         if request.method == 'POST':
             form_ = request.form['Search_note']
 
@@ -442,3 +443,20 @@ def search_notes(box_id):
 
     return render_template('/notes/delete_multiple.html', user_notes=notes, user_name=user_name,
                                form=form_)
+
+
+@note_blueprint.route('/add_to_box/<string:note_id>', methods=['POST'])
+@user_decorators.require_login
+def add_to_box(note_id):
+    box_id = request.form['box']
+
+    note_for_save = Note.find_by_id(note_id)
+    box_for_save  = Box.find_by_id(box_id)
+
+    note_for_save.box_id = box_id
+    box_for_save.notes.append(note_id)
+    note_for_save.save_to_mongo()
+    note_for_save.update_to_elastic()
+    box_for_save.save_to_mongo()
+    box_for_save.update_to_elastic()
+    return redirect(url_for('.user_notes', box_id=box_id))

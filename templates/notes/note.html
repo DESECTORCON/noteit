@@ -43,36 +43,36 @@ if (video.canPlayType('video/mp4')) {
     {% if url == None %}
 
     {% else %}
-        <h5>Media files: </h5>
-        {% for url_ in url %}
-            {% if url_['is_video'] %}
-                <video width="1050" controls>
-                  <source src="{{ url_['url'] }}" type="video/mp4">
-                  <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
-                Your browser does not support the video tag. Please use Chrome or Firefox
-                </video>
-                <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
-                    <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
-                </div>
-                <hr class="my-4">
+    <h5>Media files: </h5>
+    {% for url_ in url %}
+    {% if url_['is_video'] %}
+    <video width="1050" controls>
+        <source src="{{ url_['url'] }}" type="video/mp4">
+        <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
+        Your browser does not support the video tag. Please use Chrome or Firefox
+    </video>
+    <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
+        <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
+    </div>
+    <hr class="my-4">
 
-            {% elif url_['is_pic'] %}
-                <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="600" width="900">
-                <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
-                    <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
-                </div>
-                <hr class="my-4">
+    {% elif url_['is_pic'] %}
+    <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="600" width="900">
+    <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
+        <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
+    </div>
+    <hr class="my-4">
 
-            {% else %}
+    {% else %}
 
-                <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
-                    <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
-                </div>
-                <hr class="my-4">
+    <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
+        <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
+    </div>
+    <hr class="my-4">
 
-            {% endif %}
+    {% endif %}
 
-        {% endfor %}
+    {% endfor %}
 
     {% endif %}
 
@@ -86,41 +86,99 @@ if (video.canPlayType('video/mp4')) {
 
         <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="btn btn-outline-secondary" role="button">View Author ({{ note.author_nickname }})</a>
 
-        <a href="{{ url_for('message.send_note_radio', note_id=note._id) }}" class="btn btn-outline-info" role="button">Send Note</a>
-
         {% if author_email_is_session %}
         <!--href="{{ url_for('.delete_note', note_id=note._id) }}" -->
+        <a href="#" class="btn btn-outline-info" role="button" data-toggle="modal" data-target="#exampleModal1">Add To Box</a>
         <a href="#" class="btn btn-outline-danger" role="button" data-toggle="modal" data-target="#exampleModal">Delete</a>
+        <a href="{{ url_for('message.send_note_radio', note_id=note._id) }}" class="btn btn-outline-info" role="button">Send Note</a>
 
         <a href="{{ url_for('.edit_note', note_id=note._id) }}" class="btn btn-outline-info" role="button">Edit</a>
 
         {% endif %}
 
     </div>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+
+
+
+
+
+    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-trash-alt"></i>  Delete note</h5>
+                    <h5 class="modal-title" id="exampleModalLabel1"><i class="fas fa-plus-circle"></i>  Add To Box</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
 
-                    <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i>
-                        Do you really want to delete this note?
-                        <p>If you delete this note, it would be permanently deleted!</p>
-                    </div>
+                    <form action="{{ url_for('notes.add_to_box', note_id=note._id) }}" method="POST">
+                        <div class="input-group mb-3">
+                            <label for="inputGroupSelect01">
+                                Select Box
+                            </label>
+                            {% for box in all_boxs %}
+                            <label class="list-group-item list-group-item-action flex-column align-items-start" id="inputGroupSelect01">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1"><a href="{{ url_for('boxs.box', box_id=box._id) }}">{{ box.name }}</a></h5>
+                                    <small class="text-muted">{{ box.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                                    <input type="radio" value="{{ box._id }}" name="box" id="box" />
+                                </div>
+                            </label>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                    <a href="{{ url_for('.delete_note', note_id=note._id) }}" class="btn btn-outline-danger" role="button">Permanently Delete</a>
-                </div>
+                            {% endfor %}
+                        </div>
+
+                        <button type="submit" class="btn btn-outline-success">Add</button>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                    <div class="modal-footer">
+
+
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-trash-alt"></i>  Delete note</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i>
+                    Do you really want to delete this note?
+                    <p>If you delete this note, it would be permanently deleted!</p>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                <a href="{{ url_for('.delete_note', note_id=note._id) }}" class="btn btn-outline-danger" role="button">Permanently Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 </div>
 
