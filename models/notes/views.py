@@ -1,4 +1,6 @@
 import os
+import uuid
+
 import shortid
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
@@ -70,11 +72,11 @@ def user_notes(box_id=None):
                 notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
 
                 return render_template('/notes/my_notes_sidebar.html', user_notes=notes, user_name=user_name,
-                                       form=form_, boxs=boxs, box_name=box_name, search=search)
+                                       form=form_, boxs=boxs, box_name=box_name, search=search, box_id=box_id)
 
         else:
             return render_template('/notes/my_notes_sidebar.html', user_name=user_name
-                               , user_notes=user_notes, boxs=boxs, box_name=box_name, search=search)
+                               , user_notes=user_notes, boxs=boxs, box_name=box_name, search=search, box_id=box_id)
 
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -155,9 +157,10 @@ def note(note_id):
         return render_template('error_page.html', error_msgr='Crashed during reading your note...')
 
 
-@note_blueprint.route('/add_note', methods=['GET', 'POST'])
+@note_blueprint.route('/add_note', defaults={'box_id': None}, methods=['POST', 'GET'])
+@note_blueprint.route('/add_note/<string:box_id>', methods=['GET', 'POST'])
 @user_decorators.require_login
-def create_note():
+def create_note(box_id):
     try:
         if request.method == 'POST':
             # getting forms
@@ -225,12 +228,22 @@ def create_note():
                 return redirect(url_for(".user_notes"))
             
             # saving note
-            all_box_id = Box.find_by_id(User.find_by_id(session['_id']).All_box_id)._id
-            note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
+            if box_id is None:
+                all_box_id = Box.find_by_id(User.find_by_id(session['_id']).All_box_id)._id
+            else:
+                all_box_id = box_id
+            note_id = uuid.uuid4().hex
+
+            note_for_save = Note(_id=note_id, title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
                                  share_label=label, file_name=filenames, box_id=all_box_id)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
+
+            box_for_save = Box.find_by_id(all_box_id)
+            box_for_save.notes.append(note_id)
+            box_for_save.save_to_mongo()
+            box_for_save.update_to_elastic()
             
             # flash message and redirect
             flash('Your note has successfully created.')

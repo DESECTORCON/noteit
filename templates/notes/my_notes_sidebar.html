@@ -126,7 +126,11 @@
                 </script>
 
                                     <div class="form-size jumbotron" id="MAINDIV">
-                                        <form method="POST" enctype=multipart/form-data action="{{ url_for('notes.create_note') }}">
+                                        <!--{% if box_id == None %}-->
+                                            <!--<form method="POST" enctype=multipart/form-data action="{{ url_for('notes.create_note') }}">-->
+                                                <!--{% else %}-->
+                                                <form method="POST" enctype=multipart/form-data action="{{ url_for('notes.create_note', box_id=box_id) }}">
+                                        <!--{% endif %}-->
 
                                             <div class="form-group">
 
