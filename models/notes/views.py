@@ -68,8 +68,11 @@ def user_notes(box_id=None):
             search = False
 
         if request.method == 'POST':
-            form_ = request.form['Search_note']
-            notes = Note.search_with_elastic(form_, user_nickname=user.nick_name, box_id=box_id)
+            form_ = request.form['form']
+            if box_id is None:
+                notes = Note.search_with_elastic(form_, user_nickname=user.nick_name, box_id=False)
+            else:
+                notes = Note.search_with_elastic(form_, user_nickname=user.nick_name, box_id=box_id)
 
             return render_template('/notes/my_notes_sidebar.html', user_notes=notes, user_name=user_name,
                                    form=form_, boxs=boxs, box_name=box_name, search=search, box_id=box_id)
@@ -415,6 +418,8 @@ def delete_multiple():
                 note = Note.find_by_id(note_id)
                 note.delete_on_elastic()
                 note.delete_img()
+                box = Box.find_by_id(note.box_id)
+                box.notes.remove(note._id)
                 note.delete()
 
             flash('Your notes has successfully deleted.')
@@ -429,22 +434,14 @@ def delete_multiple():
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
 
-#
-# @note_blueprint.route('/search_notes', defaults={'box_id': None}, methods=['POST'])
-# @note_blueprint.route('/search_notes/<box_id>', methods=['POST'])
-# @user_decorators.require_login
-# def search_notes(box_id):
-#     user = User.find_by_email(session['email'])
-#     user_name = user.email
-#     form_ = request.form['Search_note']
-#     notes = Note.search_with_elastic(form_, user_nickname=user.nick_name, box_id=box_id)
-#
-#     redirect_to = request.args.get('variable')
-#
-#     if redirect_to is None:
-#         return render_template('/notes/delete_multiple.html', user_notes=notes, user_name=user_name,
-#                                form=form_)
-#     else:
-#
-#         return redirect(url_for(redirect_to, user_notes=notes, user_name=user_name, box_id=box_id,
-#                                 form=form_))
+
+@note_blueprint.route('/search_notes', methods=['POST'])
+@user_decorators.require_login
+def search_notes(box_id):
+    user = User.find_by_email(session['email'])
+    user_name = user.email
+    form_ = request.form['Search_note']
+    notes = Note.search_with_elastic(form_, user_nickname=user.nick_name, box_id=box_id)
+
+    return render_template('/notes/delete_multiple.html', user_notes=notes, user_name=user_name,
+                               form=form_)

@@ -140,26 +140,8 @@ class Note(object):
     def search_with_elastic(form_data, box_id, user_nickname=None):
         el = Elasticsearch(port=port)
 
-        if form_data is '':
-            data = el.search(index='notes', doc_type='note', body={
-                "query": {
-                    "bool": {
-                        "must": [
-                            {
-                                "prefix": {"title": ""}
-                            },
-                            {
-                                "match": {"author_nickname": user_nickname}
-                            },
-                            {
-                                "match": {"box_id": box_id}
-                            }
-                        ]
-                    }
-                }
-            })
-        else:
-            data = el.search(index='notes', doc_type='note', body={
+        if box_id is False:
+            data = el.search(index='notes', body={
                 "query": {
                     "bool": {
                         "must": [
@@ -168,14 +150,48 @@ class Note(object):
                             },
                             {
                                 "match": {"author_nickname": user_nickname}
-                            },
-                            {
-                                "match": {"box_id": box_id}
                             }
                         ]
                     }
                 }
             })
+        else:
+            if form_data is '':
+                data = el.search(index='notes', body={
+                    "query": {
+                        "bool": {
+                            "must": [
+                                {
+                                    "prefix": {"title": ""}
+                                },
+                                {
+                                    "match": {"author_nickname": user_nickname}
+                                },
+                                {
+                                    "match": {"box_id": str(box_id)}
+                                }
+                            ]
+                        }
+                    }
+                })
+            else:
+                data = el.search(index='notes', body={
+                    "query": {
+                        "bool": {
+                            "must": [
+                                {
+                                    "prefix": {"title": form_data}
+                                },
+                                {
+                                    "match": {"author_nickname": user_nickname}
+                                },
+                                {
+                                    "match": {"box_id": box_id}
+                                }
+                            ]
+                        }
+                    }
+                })
 
         notes = []
         for note in data['hits']['hits']:
