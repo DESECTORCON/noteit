@@ -144,17 +144,15 @@ class Note(object):
             data = el.search(index='notes', doc_type='note', body={
                 "query": {
                     "bool": {
-                        "should": [
+                        "must": [
                             {
                                 "prefix": {"title": ""}
                             },
                             {
-                                "term": {"content": ""}
-                            }
-                        ],
-                        "filter": [
-                            {
                                 "match": {"author_nickname": user_nickname}
+                            },
+                            {
+                                "match": {"box_id": box_id}
                             }
                         ]
                     }
@@ -164,17 +162,15 @@ class Note(object):
             data = el.search(index='notes', doc_type='note', body={
                 "query": {
                     "bool": {
-                        "should": [
+                        "must": [
                             {
                                 "prefix": {"title": form_data}
                             },
                             {
-                                "term": {"content": form_data}
-                            }
-                        ],
-                        "filter": [
-                            {
                                 "match": {"author_nickname": user_nickname}
+                            },
+                            {
+                                "match": {"box_id": box_id}
                             }
                         ]
                     }
