@@ -68,15 +68,15 @@ def user_notes(box_id=None):
             search = False
 
         if request.method == 'POST':
-                form_ = request.form['Search_note']
-                notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
+            form_ = request.form['Search_note']
+            notes = Note.search_with_elastic(form_, user_nickname=user.nick_name, box_id=box_id)
 
-                return render_template('/notes/my_notes_sidebar.html', user_notes=notes, user_name=user_name,
-                                       form=form_, boxs=boxs, box_name=box_name, search=search, box_id=box_id)
+            return render_template('/notes/my_notes_sidebar.html', user_notes=notes, user_name=user_name,
+                                   form=form_, boxs=boxs, box_name=box_name, search=search, box_id=box_id)
 
         else:
             return render_template('/notes/my_notes_sidebar.html', user_name=user_name
-                               , user_notes=user_notes, boxs=boxs, box_name=box_name, search=search, box_id=box_id)
+                                   , user_notes=user_notes, boxs=boxs, box_name=box_name, search=search, box_id=box_id)
 
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -165,30 +165,30 @@ def create_note(box_id):
         if request.method == 'POST':
             # getting forms
             share = request.form['inputGroupSelect01']
-            
+
             # share label error handler
             try:
                 share, share_only_with_users = share_bool_function(share)
             except ValueError:
                 return render_template('/notes/create_note.html',
                                        error_msg="You did not selected an Share label. Please select an Share label.")
-            
+
             # getting title content and email
             title = request.form['title']
             content = request.form['content_'].strip('\n').strip('\r')
             author_email = session['email']
-            
+
             # getting files and saving
             try:
                 # getting files
                 files = request.files.getlist('file')
-                
+
                 # file length checker
                 if len(files) > 5:
                     flash("Too much files!")
                     return render_template('/notes/create_note.html'
                                            , title=title, content=content, share=share)
-                
+
                 filenames = []
                 for file in files:
                     if files and Note.allowed_file(file):
@@ -202,7 +202,7 @@ def create_note(box_id):
                         # save file and add file to filenames list
                         file.save(os.path.join(filename))
                         filenames.append(filename)
-                    
+
                     # if extenstion is not supported
                     elif file is not None:
                         flash("Sorry; your file's extension is supported.")
@@ -214,19 +214,19 @@ def create_note(box_id):
             except:
                 # file = None
                 filenames = []
-            
+
             # getting author nickname, label and user notes
             author_nickname = User.find_by_email(author_email).nick_name
 
             label = is_shared_validator(share, share_only_with_users)
 
             user_notes = Note.get_user_notes(session['email'])
-            
+
             # if too much notes, then redirect
             if len(user_notes) > 20:
                 flash("You have the maximum amount of notes. Please delete your notes")
-                return redirect(url_for(".user_notes"))
-            
+                return redirect(url_for(".user_notes", box_id=box_id))
+
             # saving note
             if box_id is None:
                 all_box_id = Box.find_by_id(User.find_by_id(session['_id']).All_box_id)._id
@@ -244,7 +244,7 @@ def create_note(box_id):
             box_for_save.notes.append(note_id)
             box_for_save.save_to_mongo()
             box_for_save.update_to_elastic()
-            
+
             # flash message and redirect
             flash('Your note has successfully created.')
 
@@ -430,13 +430,21 @@ def delete_multiple():
         return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
 
 
-@note_blueprint.route('/search_notes/', methods=['POST'])
+@note_blueprint.route('/search_notes', defaults={'box_id': None}, methods=['POST'])
+@note_blueprint.route('/search_notes/<box_id>', methods=['POST'])
 @user_decorators.require_login
-def search_notes():
+def search_notes(box_id):
     user = User.find_by_email(session['email'])
     user_name = user.email
     form_ = request.form['Search_note']
-    notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
+    notes = Note.search_with_elastic(form_, user_nickname=user.nick_name, box_id=box_id)
 
-    return render_template('/notes/delete_multiple.html', user_notes=notes, user_name=user_name,
-                           form=form_)
+    redirect_to = request.args.get('variable')
+
+    if redirect_to is None:
+        return render_template('/notes/delete_multiple.html', user_notes=notes, user_name=user_name,
+                               form=form_)
+    else:
+
+        return redirect(url_for(redirect_to, user_notes=notes, user_name=user_name, box_id=box_id,
+                                form=form_))

@@ -15,7 +15,6 @@
         <aside class="col-2 px-0 col-xs-12" id="left">
             <h1><i class="fas fa-box"></i> Box <small class="text-muted">{{ box_name }}</small></h1>
             <div class="list-group w-100">
-                <a href="{{ url_for('notes.user_notes') }}" class="list-group-item">All</a>
                 {% for box in boxs %}
 
                     <a href="{{ url_for('notes.user_notes', box_id=box._id) }}" class="list-group-item">{{ box.name }}</a>
@@ -47,16 +46,14 @@
 
                         {% endif %}
 
-                        {% if search %}
-                            <form class="form-inline my-2 my-lg-0" method="POST">
-                                {% if form %}
-                                <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
-                                {% else %}
-                                <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
-                                {% endif %}
-                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                            </form>
-                        {% endif %}
+                        <form class="form-inline my-2 my-lg-0" method="POST">
+                            {% if form %}
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
+                            {% else %}
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
+                            {% endif %}
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        </form>
 
                         <br>
                         {% for note in user_notes %}
