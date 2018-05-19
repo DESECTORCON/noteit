@@ -71,12 +71,6 @@ def register_user():
                                       reciver_id=list(user_id),
                                       sender_id=User.find_by_email('SE@SENOREPLAY.COM')._id)
                     message.save_to_mongo()
-                    box = Box(maker_id=session['_id'], name='All')
-                    box.save_to_elastic()
-                    box.save_to_mongo()
-                    user = User.find_by_id(session['_id'])
-                    user.All_box_id = box._id
-                    user.save_to_mongo()
 
                     return redirect(url_for("home"))
 
