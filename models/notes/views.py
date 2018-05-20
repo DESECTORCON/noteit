@@ -1,6 +1,5 @@
 import os
 import uuid
-
 import shortid
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
