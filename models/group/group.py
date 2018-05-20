@@ -38,6 +38,10 @@ class Group(object):
     def find_by_id(cls, note_id):
         return cls(**Database.find_one(GroupConstants.COLLECTION, {'_id': note_id}))
 
+    @classmethod
+    def get_all_shared_groups(cls):
+        return [cls(**elem) for elem in Database.find(GroupConstants.COLLECTION, {'shared': True})]
+
     def save_to_mongo(self):
         Database.update(GroupConstants.COLLECTION, {"_id": self._id}, self.json())
 
@@ -95,10 +99,25 @@ class Group(object):
         return True
 
     @staticmethod
-    def search_with_elastic(form_data, group_id, user_nickname=None):
+    def search_with_elastic(form_data, shared=True):
         el = Elasticsearch(port=port)
 
-        if group_id is False:
+        if form_data is '':
+            data = el.search(index='groups', body={
+                "query": {
+                    "bool": {
+                        "must": [
+                            {
+                                "prefix": {"title": ""}
+                            },
+                            {
+                                "match": {"shared": shared}
+                            }
+                        ]
+                    }
+                }
+            })
+        else:
             data = el.search(index='groups', body={
                 "query": {
                     "bool": {
@@ -107,49 +126,12 @@ class Group(object):
                                 "prefix": {"title": form_data}
                             },
                             {
-                                "match": {"author_nickname": user_nickname}
+                                "match": {"shared": shared}
                             }
                         ]
                     }
                 }
             })
-        else:
-            if form_data is '':
-                data = el.search(index='groups', body={
-                    "query": {
-                        "bool": {
-                            "must": [
-                                {
-                                    "prefix": {"title": ""}
-                                },
-                                {
-                                    "match": {"author_nickname": user_nickname}
-                                },
-                                {
-                                    "match": {"group_id": str(group_id)}
-                                }
-                            ]
-                        }
-                    }
-                })
-            else:
-                data = el.search(index='groups', body={
-                    "query": {
-                        "bool": {
-                            "must": [
-                                {
-                                    "prefix": {"title": form_data}
-                                },
-                                {
-                                    "match": {"author_nickname": user_nickname}
-                                },
-                                {
-                                    "match": {"group_id": group_id}
-                                }
-                            ]
-                        }
-                    }
-                })
 
         notes = []
         for note in data['hits']['hits']:

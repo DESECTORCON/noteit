@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon2.ico') }}">
+    {% block title %}
+
+    {% endblock %}
+
+    <!--<script>-->
+
+        <!--var myVar = setInterval(myTimer, 1000);-->
+
+        <!--function myTimer() {-->
+              <!--$(document).ready(function(){-->
+  <!--$('#close').trigger('click');-->
+<!--});-->
+        <!--}-->
+    <!--</script>-->
+
+    {% include 'html_dependencies.html' %}
+</head>
+<body>
+<br><br><br>
+<nav class="navbar navbar-expand-lg navbar-light bg-light  fixed-top">
+
+    <div class="container">
+
+        <div class="navbar-header">
+
+            <a href="/" class="navbar-brand" title="Home">Groups <small class="text-muted">for note-it™</small></a>
+        </div>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div id="navbarSupportedContent" class="collapse navbar-collapse">
+
+            {% if session['email'] %}
+
+            <ul class="nav navbar-nav navbar-right justify-content-end ml-auto">
+                <li class="nav-item active"><a href="{{ url_for('message.all_messages', user_id=session['_id']) }}" class="nav-link"><i class="fas fa-envelope"></i> Groups</a></li>
+            </ul>
+
+            {% else %}
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+</nav>
+
+{% block navbar %}
+
+{% endblock %}
+
+<br>
+
+<div class="content container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close" id="close" name="close">&times;</a>
+        <i class="fas fa-info-circle"></i>  {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}
+
+    {% endblock %}
+</div>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+<footer>
+
+    <div class="footer-size jumbotron">
+
+        <h7><span class="glyphicon glyphicon-console"></span> Made by <a href="https://www.jetbrains.com/pycharm/">Pycharm</a>
+            and
+            <a href="http://flask.pocoo.org/">Flask</a> and <i class="fab fa-python"></i> <a href="https://www.python.org/">Python</a></h7>
+
+    </div>
+
+</footer>
+</body>
+</html>
