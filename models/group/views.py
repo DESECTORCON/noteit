@@ -53,12 +53,14 @@ def create_group():
             name = request.form['name']
             members = request.form.getlist('members')
             group_img = request.form['img']
+            description = request.form['description']
+            share = request.form['inputGroupSelect01']
             if group_img is not None:
                 file_name, file_extenstion = os.path.splitext(group_img)
                 if file_extenstion not in ALLOWED_GROUP_IMG_FORMATS or len(group_img) > 1:
                     return render_template('groups/create_group.html',
                                            all_firends=all_firends, error_msg='Too much images!! Please upload just one image.',
-                                           name=name, members=members)
+                                           name=name, members=members, share=share, description=description)
 
                 # saving file
                 # create name for file
@@ -73,10 +75,9 @@ def create_group():
             else:
                 filename = None
 
-            shared = request.form.get("shared") is not None
-
             # saving group
-            group_for_save = Group(name=name, members=members, group_img_name=filename, shared=shared, shared_notes=[])
+            group_for_save = Group(name=name, members=members,
+                                   group_img_name=filename, shared=share, shared_notes=[], description=description)
             group_for_save.save_to_mongo()
             group_for_save.save_to_elastic()
             # redirecting

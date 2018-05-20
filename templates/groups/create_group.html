@@ -42,10 +42,10 @@ $(document).ready(function() {
 
         <div class="form-group">
 
-            <label for="title">Name</label>
-            <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="titleBlock" value="{{ title }}">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="Example title" aria-describedby="nameBlock" value="{{ name }}">
 
-            <small id="titleBlock" class="form-text text-muted">Your group's name goes here!</small>
+            <small id="nameBlock" class="form-text text-muted">Your group's name goes here!</small>
 
         </div>
 
@@ -54,8 +54,16 @@ $(document).ready(function() {
                 <label class="input-group-text" for="inputGroupSelect01">Share label</label>
             </div>
             <select class="custom-select" id="inputGroupSelect01" name="inputGroupSelect01" required>
-                <option selected value="0">Don't Share</option>
-                <option selected value="1">Share</option>
+                {% if share %}
+                    {% if share == 0 %}
+                    <option selected value="0">Don't Share</option>
+                    {% else %}
+                    <option selected value="1">Share</option>
+                    {% endif %}
+                {% else %}
+                    <option selected value="0">Don't Share</option>
+                    <option value="1">Share</option>
+                {% endif %}
 
             </select>
         </div>
@@ -65,23 +73,25 @@ $(document).ready(function() {
         <div class="input-group mb-3">
 
             <div class="input-group-prepend">
-                <label class="input-group-text" for="inputGroupSelect01">Content</label>
+                <label class="input-group-text" for="inputGroupSelect01">Description</label>
             </div>
-            <textarea class="form-control text_box_big" name="content" id="content" placeholder="Example content" aria-describedby="contentBlock">
-                    {{ content }}
-                </textarea>
+            <textarea class="form-control text_box_big" name="description" id="description" placeholder="Example Description" aria-describedby="contentBlock">
+                    {{ description }} Description
+            </textarea>
+
         </div>
 
         <div class="input-group mb-3">
             <div class="input-group-prepend">
-                <label class="input-group-text" for="inputGroupSelect01">file attach</label>
+                <label class="input-group-text" for="inputGroupSelect01">Image for Group</label>
             </div>
-            <input type="file" name="file" id="file" value="Image here!" placeholder="File here!" multiple>
+            <input type="file" name="file" id="file" value="Image here!" placeholder="File here!" aria-describedby="fileBlock">
+            <small id="fileBlock" class="form-text text-muted">This is a option.</small>
 
         </div>
 
         <br>
-        <button type="submit" class="btn btn-primary" style="" onclick="myFunction()">Save Note</button>
+        <button type="submit" class="btn btn-primary" style="" onclick="myFunction()">Save Group</button>
 
     </form>
 </div>
