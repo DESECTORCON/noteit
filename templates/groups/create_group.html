@@ -89,25 +89,25 @@ $(document).ready(function() {
             <small id="fileBlock" class="form-text text-muted">This is a option.</small>
 
         </div>
-
+        <label >Friends to add</label>
         <div class="input-group mb-">
-            <label for="list">Friends to send an invitation</label>
 
-            <div class="list-group" id="list">
+
+            <div class="list-group">
                 {% for friend in all_firends %}
 
-                <label class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                        {% if friend._id in members %}
-                            <input type="checkbox" value="{{ friend._id }}" name="friend" checked/>
-                        {% else %}
-                             <input type="checkbox" value="{{ friend._id }}" name="friend" />
-                        {% endif %}
-
-                        <h5 class="mb-1">{{ friend.nick_name }}</h5>
-                        <small class="text-muted">Last logined at {{ friend.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
-                    </div>
-                </label>
+                <div class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class=" justify-content-between">
+                    {% if members == friend._id %}
+                        <input type="checkbox" value="{{ friend._id }}" name="friend" checked>
+                    {% else %}
+                        <input type="checkbox" value="{{ friend._id }}" name="friend" />
+                    {% endif %}
+                    <h5 class="mb-1">{{ friend.nick_name }}</h5>
+                    <small class="text-muted">Last logined at {{ friend.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                    <small class="text-muted">Email: {{ friend.email }}</small>
+                </div>
+                </div>
 
                 {% endfor %}
             </div>

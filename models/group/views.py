@@ -53,36 +53,34 @@ def create_group():
         all_firends.append(User.find_by_id(current_user._id))
 
         if request.method == 'POST':
+            name = request.form['name']
+            members = request.form.get('members')
             try:
-                name = request.form['name']
-                members = request.form.getlist('members')
                 group_img = request.form['img']
-                description = request.form['description']
-                share = request.form['inputGroupSelect01']
-                if group_img is not None:
-                    file_name, file_extenstion = os.path.splitext(group_img)
-                    if file_extenstion not in ALLOWED_GROUP_IMG_FORMATS or len(group_img) > 1:
-                        return render_template('groups/create_group.html',
-                                               all_firends=all_firends, error_msg='Too much images!! Please upload just one image.',
-                                               name=name, members=members, share=share, description=description)
+            except:
+                group_img = None
 
-                    # saving file
-                    # create name for file
-                    sid = shortid.ShortId()
-                    # create path for file
-                    file_path, file_extenstion = os.path.splitext(group_img.filename)
-                    filename = secure_filename(sid.generate()) + file_extenstion
+            description = request.form['description']
+            share = request.form['inputGroupSelect01']
+            if group_img is not None:
+                file_name, file_extenstion = os.path.splitext(group_img)
+                if file_extenstion not in ALLOWED_GROUP_IMG_FORMATS or len(group_img) > 1:
+                    return render_template('groups/create_group.html',
+                                           all_firends=all_firends, error_msg='Too much images!! Please upload just one image.',
+                                           name=name, members=members, share=share, description=description)
 
-                    # os.chdir("static/img/file/")
-                    # save file and add file to filenames list
-                    group_img.save(os.path.join(filename))
-                else:
-                    filename = None
+                # saving file
+                # create name for file
+                sid = shortid.ShortId()
+                # create path for file
+                file_path, file_extenstion = os.path.splitext(group_img.filename)
+                filename = secure_filename(sid.generate()) + file_extenstion
 
-            except werkzeug.exceptions.BadRequestKeyError:
-                return render_template('groups/create_group.html',
-                                       all_firends=all_firends,
-                                       error_msg='Please fill the blanks below.')
+                # os.chdir("static/img/file/")
+                # save file and add file to filenames list
+                group_img.save(os.path.join(filename))
+            else:
+                filename = None
 
 
 

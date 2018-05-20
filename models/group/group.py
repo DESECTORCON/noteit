@@ -8,7 +8,7 @@ from models.group import constants as GroupConstants
 
 
 class Group(object):
-    def __init__(self, name, _id=None, members=[], description='', shared_notes=[], group_img_name='', shared=True):
+    def __init__(self, name, _id=None, members=[], description='', shared_notes=[], group_img_name='', shared="1"):
         self.name = name
         self._id = uuid.uuid4().hex if _id is None else _id
         self.members = members
@@ -40,7 +40,7 @@ class Group(object):
 
     @classmethod
     def get_all_shared_groups(cls):
-        return [cls(**elem) for elem in Database.find(GroupConstants.COLLECTION, {'shared': True})]
+        return [cls(**elem) for elem in Database.find(GroupConstants.COLLECTION, {'shared': "1"})]
 
     def save_to_mongo(self):
         Database.update(GroupConstants.COLLECTION, {"_id": self._id}, self.json())
