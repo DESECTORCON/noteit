@@ -12,8 +12,8 @@ class Note(object):
 
     def __init__(self, box_id, title, content, author_email, author_nickname, created_date=None, _id=None, shared=False,
                  share_only_with_users=False, share_label='', file_name=None):
-        self.title = "No title" if title is None else title
-        self.content = "No content" if content is None else content
+        self.title = "No title" if title is '' else title
+        self.content = "No content" if content is '' else content
         self.created_date = datetime.datetime.now() if created_date is None else created_date
         self.author_email = author_email
         self._id = uuid.uuid4().hex if _id is None else _id

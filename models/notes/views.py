@@ -416,9 +416,12 @@ def delete_multiple():
                 note = Note.find_by_id(note_id)
                 note.delete_on_elastic()
                 note.delete_img()
-                box = Box.find_by_id(note.box_id)
-                box.notes.remove(note._id)
-                note.delete()
+                try:
+                    box = Box.find_by_id(note.box_id)
+                    box.notes.remove(note._id)
+                    note.delete()
+                finally:
+                    pass
 
             flash('Your notes has successfully deleted.')
             return redirect(url_for('.user_notes'))
