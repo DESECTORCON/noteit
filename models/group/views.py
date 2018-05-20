@@ -54,7 +54,7 @@ def create_group():
 
         if request.method == 'POST':
             name = request.form['name']
-            members = request.form.get('members')
+            members = request.form.getlist('members')
             try:
                 group_img = request.form['img']
             except:
