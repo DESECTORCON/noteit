@@ -55,14 +55,14 @@ $(document).ready(function() {
             </div>
             <select class="custom-select" id="inputGroupSelect01" name="inputGroupSelect01" required>
                 {% if share %}
-                    {% if share == 0 %}
-                    <option selected value="0">Don't Share</option>
-                    {% else %}
-                    <option selected value="1">Share</option>
-                    {% endif %}
+                {% if share == 0 %}
+                <option selected value="0">Don't Share</option>
                 {% else %}
-                    <option selected value="0">Don't Share</option>
-                    <option value="1">Share</option>
+                <option selected value="1">Share</option>
+                {% endif %}
+                {% else %}
+                <option selected value="0">Don't Share</option>
+                <option value="1">Share</option>
                 {% endif %}
 
             </select>
@@ -87,6 +87,30 @@ $(document).ready(function() {
             </div>
             <input type="file" name="file" id="file" value="Image here!" placeholder="File here!" aria-describedby="fileBlock">
             <small id="fileBlock" class="form-text text-muted">This is a option.</small>
+
+        </div>
+
+        <div class="input-group mb-">
+            <label for="list">Friends to send an invitation</label>
+
+            <div class="list-group" id="list">
+                {% for friend in all_firends %}
+
+                <label class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        {% if friend._id in members %}
+                            <input type="checkbox" value="{{ friend._id }}" name="friend" checked/>
+                        {% else %}
+                             <input type="checkbox" value="{{ friend._id }}" name="friend" />
+                        {% endif %}
+
+                        <h5 class="mb-1">{{ friend.nick_name }}</h5>
+                        <small class="text-muted">Last logined at {{ friend.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                    </div>
+                </label>
+
+                {% endfor %}
+            </div>
 
         </div>
 
