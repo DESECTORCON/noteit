@@ -42,6 +42,8 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active"><a href="{{ url_for('groups.groups') }}" class="nav-link"><i class="far fa-object-group"></i> Groups</a></li>
                 <li class="nav-item active"><a href="{{ url_for('home') }}" class="nav-link"><i class="fas fa-home"></i> Go to home</a></li>
+                {% block navbar__ %}
+                {% endblock %}
             </ul>
             <ul class="nav navbar-nav navbar-right justify-content-end ">
                 <li class="nav-item active"><a href="{{ url_for('users.logout_user') }}" class="nav-link"><i class="fas fa-sign-out-alt"></i>    Log out</a></li>

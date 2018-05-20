@@ -1,0 +1,98 @@
+{% extends "base3.html" %}
+{% block title %}
+<title>Groups.io | Create Group</title>
+{% endblock %}
+{% block content %}
+
+{% if error_msg %}
+<div class="alert alert-danger" role="alert">
+    <i class="fas fa-exclamation-triangle"></i> {{ error_msg }}
+</div>
+{% endif %}
+
+<div class="jumbotron form-sizer">
+
+    <h1><i class="fas fa-plus-square"></i> Create a Group</h1>
+
+    <p>Fill in the blanks, and submit!</p>
+
+</div>
+
+<br>
+
+
+<script type="text/javascript">
+
+    function myFunction() {
+        $('#MAINDIV').hide();
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+    }
+}
+$(document).ready(function() {
+   $('#myDIV').hide();
+});
+</script>
+
+<div class="form-size jumbotron" id="MAINDIV">
+    <form method="post" enctype=multipart/form-data>
+
+        <div class="form-group">
+
+            <label for="title">Name</label>
+            <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="titleBlock" value="{{ title }}">
+
+            <small id="titleBlock" class="form-text text-muted">Your group's name goes here!</small>
+
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Share label</label>
+            </div>
+            <select class="custom-select" id="inputGroupSelect01" name="inputGroupSelect01" required>
+                <option selected value="0">Don't Share</option>
+                <option selected value="1">Share</option>
+
+            </select>
+        </div>
+
+
+
+        <div class="input-group mb-3">
+
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Content</label>
+            </div>
+            <textarea class="form-control text_box_big" name="content" id="content" placeholder="Example content" aria-describedby="contentBlock">
+                    {{ content }}
+                </textarea>
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">file attach</label>
+            </div>
+            <input type="file" name="file" id="file" value="Image here!" placeholder="File here!" multiple>
+
+        </div>
+
+        <br>
+        <button type="submit" class="btn btn-primary" style="" onclick="myFunction()">Save Note</button>
+
+    </form>
+</div>
+<div class="hidden jumbotron container form-size" id="myDIV">
+
+    <h1><i class="fas fa-spinner fa-pulse"></i> Processing...</h1>
+    <p>Please wait. This will take a few minutes</p>
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+    </div>
+
+</div>
+
+{% endblock %}
