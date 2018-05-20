@@ -36,6 +36,7 @@
                 </h4>
 
             <p class="list-group-item-text">Created date {{ group.created_date.strftime("%Y-%m-%d at %H:%M") }}<strong></strong></p>
+            <p class="list-group-item-text">{{ group.members|length }} Members</p>
 
         </div>
         <p class="mb-1"><span class="badge badge-pill badge-secondary"></span></p>

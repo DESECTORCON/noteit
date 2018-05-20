@@ -91,7 +91,7 @@ def create_group():
             group_for_save.save_to_elastic()
             # redirecting
 
-            return redirect(url_for('.home'))
+            return redirect(url_for('groups.groups'))
 
         return render_template('groups/create_group.html', all_firends=all_firends)
     except:

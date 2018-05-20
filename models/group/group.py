@@ -1,3 +1,4 @@
+import datetime
 import os
 import uuid
 from werkzeug.utils import secure_filename
@@ -8,7 +9,8 @@ from models.group import constants as GroupConstants
 
 
 class Group(object):
-    def __init__(self, name, _id=None, members=[], description='', shared_notes=[], group_img_name='', shared="1"):
+    def __init__(self, name, _id=None, members=[], description='', shared_notes=[]
+                 , group_img_name='', shared="1", created_date=datetime.datetime.now()):
         self.name = name
         self._id = uuid.uuid4().hex if _id is None else _id
         self.members = members
@@ -16,6 +18,7 @@ class Group(object):
         self.shared_notes = shared_notes
         self.group_img_name = group_img_name
         self.shared = shared
+        self.created_date = created_date
 
     def __repr__(self):
         return "<Group {} with members {}>".format(self.name, self.members)
@@ -28,7 +31,8 @@ class Group(object):
             "description": self.description,
             "shared_notes": self.shared_notes,
             "group_img_name": self.group_img_name,
-            "shared": self.shared
+            "shared": self.shared,
+            "created_date": self.created_date
         }
 
     def save_to_db(self):
