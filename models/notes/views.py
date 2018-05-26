@@ -230,13 +230,19 @@ def create_note(box_id):
                 flash("You have the maximum amount of notes. Please delete your notes")
                 return redirect(url_for(".user_notes", box_id=box_id))
 
+            share_with_group = request.form['share_with_group']
+            if share_with_group == '1':
+                share_with_group = User.find_by_id(session['_id']).group_id
+            else:
+                share_with_group = False
+
             # saving note
             all_box_id = box_id
             note_id = uuid.uuid4().hex
 
             note_for_save = Note(_id=note_id, title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
-                                 share_label=label, file_name=filenames, box_id=all_box_id)
+                                 share_label=label, file_name=filenames, box_id=all_box_id, share_with_group=share_with_group)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
             if box_id is not None:
@@ -418,9 +424,8 @@ def delete_multiple():
                 try:
                     box = Box.find_by_id(note.box_id)
                     box.notes.remove(note._id)
+                except:
                     note.delete()
-                finally:
-                    pass
 
             flash('Your notes has successfully deleted.')
             return redirect(url_for('.user_notes'))

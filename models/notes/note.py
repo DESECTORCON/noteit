@@ -209,7 +209,6 @@ class Note(object):
         if self.share_with_group is not False:
             el = Elasticsearch(port=port)
 
-
             if form_data is '':
                 data = el.search(index='notes', body={
                     "query": {
