@@ -11,7 +11,7 @@ import datetime
 class Note(object):
 
     def __init__(self, box_id, title, content, author_email, author_nickname, created_date=None, _id=None, shared=False,
-                 share_only_with_users=False, share_label='', file_name=None):
+                 share_only_with_users=False, share_label='', file_name=None, share_with_group=False):
         self.title = "No title" if title is '' else title
         self.content = "No content" if content is '' else content
         self.created_date = datetime.datetime.now() if created_date is None else created_date
@@ -23,6 +23,7 @@ class Note(object):
         self.share_label = share_label
         self.file_name = file_name
         self.box_id = box_id
+        self.share_with_group = share_with_group
 
     def __repr__(self):
         return "<Note {} with author {} and created date {}>".format(self.title, self.author_email, self.created_date)
@@ -39,7 +40,8 @@ class Note(object):
             "share_only_with_users": self.share_only_with_users,
             "share_label": self.share_label,
             "file_name": self.file_name,
-            "box_id": self.box_id
+            "box_id": self.box_id,
+            "share_with_group": self.share_with_group,
         }
 
     def save_to_db(self):
@@ -105,7 +107,8 @@ class Note(object):
             'share_only_with_users': self.share_only_with_users,
             'shared': self.shared,
             'created_date': self.created_date.strftime('%Y-%m-%d'),
-            "box_id": self.box_id
+            "box_id": self.box_id,
+            "share_with_group": self.share_with_group
         }
         el.index(index="notes", doc_type='note', body=doc)
         del el
@@ -201,6 +204,57 @@ class Note(object):
                 notes.append(Note.find_by_id(note['_source']['query']['match']['note_id']))
         del el
         return notes
+
+    def search_for_group_notes(self, form_data, user_nickname):
+        if self.share_with_group is not False:
+            el = Elasticsearch(port=port)
+
+
+            if form_data is '':
+                data = el.search(index='notes', body={
+                    "query": {
+                        "bool": {
+                            "must": [
+                                {
+                                    "prefix": {"title": ""}
+                                },
+                                {
+                                    "match": {"author_nickname": user_nickname}
+                                },
+                                {
+                                    "match": {"share_with_group": self.share_with_group}
+                                }
+                            ]
+                        }
+                    }
+                })
+            else:
+                data = el.search(index='notes', body={
+                    "query": {
+                        "bool": {
+                            "must": [
+                                {
+                                    "prefix": {"title": form_data}
+                                },
+                                {
+                                    "match": {"author_nickname": user_nickname}
+                                },
+                                {
+                                    "match": {"share_with_group": self.share_with_group}
+                                }
+                            ]
+                        }
+                    }
+                })
+
+            notes = []
+            for note in data['hits']['hits']:
+                try:
+                    notes.append(Note.find_by_id(note['_source']['note_id']))
+                except KeyError:
+                    notes.append(Note.find_by_id(note['_source']['query']['match']['note_id']))
+            del el
+            return notes
 
     @staticmethod
     def allowed_file(file):
