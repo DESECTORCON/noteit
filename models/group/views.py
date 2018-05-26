@@ -21,11 +21,13 @@ def share_bool_function(share):
 
     return share
 
+
 @group_blueprint.route('/group/<string:group_id>')
 @user_decorators.require_login
 def group(group_id):
-    pass
-    return render_template('groups/group.html')
+    group_ = Group.find_by_id(group_id)
+
+    return render_template('groups/group.html', group=group_)
 
 
 @group_blueprint.route('/groups', methods=['GET', 'POST'])
