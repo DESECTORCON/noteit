@@ -5,6 +5,7 @@ from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
 from models.boxes.box import Box
+from models.group.group import Group
 from models.notes.note import Note
 import models.users.decorators as user_decorators
 from models.users.user import User
@@ -231,14 +232,21 @@ def create_note(box_id):
                 return redirect(url_for(".user_notes", box_id=box_id))
 
             share_with_group = request.form['share_with_group']
-            if share_with_group == 'on':
-                share_with_group = User.find_by_id(session['_id']).group_id
-            else:
-                share_with_group = False
 
             # saving note
             all_box_id = box_id
             note_id = uuid.uuid4().hex
+
+            if share_with_group == 'on':
+                group_id = User.find_by_id(session['_id']).group_id
+                share_with_group = group_id
+                group = Group.find_by_id(group_id)
+                group.shared_notes.append(note_id)
+                group.save_to_mongo()
+                group.update_to_elastic()
+
+            else:
+                share_with_group = False
 
             note_for_save = Note(_id=note_id, title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
