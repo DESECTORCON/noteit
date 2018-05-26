@@ -1,5 +1,7 @@
 import os
 import traceback
+import uuid
+
 import shortid
 import werkzeug
 from flask import Blueprint, request, render_template, session, url_for, flash
@@ -100,13 +102,19 @@ def create_group():
             else:
                 filename = None
 
-
-
             # saving group
-            group_for_save = Group(name=name, members=members,
+            group_id = uuid.uuid4().hex
+
+            group_for_save = Group(_id=group_id, name=name, members=members,
                                    group_img_name=filename, shared=share, shared_notes=[], description=description)
             group_for_save.save_to_mongo()
             group_for_save.save_to_elastic()
+
+            # saving to user
+            user = User.find_by_id(session['_id'])
+            user.group_id = group_id
+            user.save_to_mongo()
+
             # redirecting
 
             return redirect(url_for('groups.groups'))

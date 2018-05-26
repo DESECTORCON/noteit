@@ -69,13 +69,14 @@ class User(object):
             # Tell user that their e-mail is not constructed properly.
             raise UserErrors.InvalidEmailError("The e-mail does not have the right format.")
 
+        user_id = User.find_by_email(email)._id
         if nick_name == '' or nick_name == None:
 
             User(email, Utils.hash_password(password), nick_name=None).save_to_mongo()
             doc = {
                 'email': email,
                 'nick_name': nick_name,
-                'user_id': "",
+                'user_id': user_id,
             }
 
         else:
@@ -84,9 +85,9 @@ class User(object):
             doc = {
                 'email': email,
                 'nick_name': nick_name,
-                'user_id': "",
+                'user_id': user_id,
             }
-        el.index(index="users", doc_type='user', body=doc, id=User.find_by_email(email)._id)
+        el.index(index="users", doc_type='user', body=doc, id=user_id)
 
         return True
 

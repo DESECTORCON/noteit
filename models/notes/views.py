@@ -231,7 +231,7 @@ def create_note(box_id):
                 return redirect(url_for(".user_notes", box_id=box_id))
 
             share_with_group = request.form['share_with_group']
-            if share_with_group == '1':
+            if share_with_group == 'on':
                 share_with_group = User.find_by_id(session['_id']).group_id
             else:
                 share_with_group = False
