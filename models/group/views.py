@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename, redirect
 import models.users.decorators as user_decorators
 from models.error_logs.error_log import Error_
 from models.group.group import Group
+from models.notes.note import Note
 from models.users.user import User
 from models.group.constants import ALLOWED_GROUP_IMG_FORMATS
 
@@ -27,10 +28,14 @@ def share_bool_function(share):
 def group(group_id):
     group_ = Group.find_by_id(group_id)
     members = []
+    shared_notes = []
     for member in group_.members:
         members.append(User.find_by_id(member))
 
-    return render_template('groups/group.html', group=group_, members=members)
+    for note in group_.shared_notes:
+        shared_notes.append(Note.find_by_id(note))
+
+    return render_template('groups/group.html', group=group_, members=members, shared_notes=shared_notes)
 
 
 @group_blueprint.route('/groups', methods=['GET', 'POST'])

@@ -9,14 +9,21 @@
     <div class="page-header">
         <h1><i class="far fa-object-group"></i> Group <small class="">{{ group.name }}</small></h1>
     </div>
+
     <hr>
+
     <div class="container">
         <h3 class="text-monospace"><i class="fas fa-users"></i> Members <small>total: {{ group.members|length }}</small></h3>
     </div>
+
+    <br>
+
     <div class="container">
         <div class="list-group">
+
         {% if members != [] %}
             {% for member in members %}
+
             <div class="group">
                 <a href="{{ url_for('users.user_page', user_id=member._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
@@ -25,10 +32,44 @@
                     </div>
                 </a>
             </div>
+
             {% endfor %}
         {% else %}
             <h4 class="text-muted"><i class="fas fa-question"></i> There are no members!</h4>
         {% endif %}
+
+    </div>
+    </div>
+
+    <br>
+
+    <div class="container">
+        <h3 class="text-monospace"><i class="fas fa-sticky-note"></i> Notes <small>total: {{ shared_notes|length }}</small></h3>
+    </div>
+
+    <br>
+
+    <div class="container">
+
+        <div class="list-group">
+        {% if shared_notes != [] %}
+            {% for note in shared_notes %}
+
+            <div class="group">
+                <a href="{{ url_for('users.user_page', user_id=member._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><i class="far fa-user-circle"></i> {{ note.title }}</h5>
+                        <small class="text-muted">Made by: <a href="{{ url_for('users.user_page', user_id=member._id) }}"></a>{{ note.author_nickname }}</small>
+                        <small class="text-muted">Created at {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                    </div>
+                </a>
+            </div>
+
+            {% endfor %}
+        {% else %}
+            <h4 class="text-muted"><i class="fas fa-question"></i> There are no shared notes!</h4>
+        {% endif %}
+
     </div>
     </div>
 
