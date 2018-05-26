@@ -65,7 +65,7 @@ def groups():
 def create_group():
     try:
         all_firends = []
-        current_user = User.find_by_id(session['_id'])
+        current_user = User.find_by_email("demoTESTUSER@name.com")
         # for friend_id in current_user:
         #     all_firends.append(User.find_by_id(friend_id))
         all_firends.append(User.find_by_id(current_user._id))
