@@ -26,8 +26,11 @@ def share_bool_function(share):
 @user_decorators.require_login
 def group(group_id):
     group_ = Group.find_by_id(group_id)
+    members = []
+    for member in group_.members:
+        members.append(User.find_by_id(member))
 
-    return render_template('groups/group.html', group=group_)
+    return render_template('groups/group.html', group=group_, members=members)
 
 
 @group_blueprint.route('/groups', methods=['GET', 'POST'])

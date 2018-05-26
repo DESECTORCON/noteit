@@ -46,3 +46,12 @@
 .navbar-nav li a:hover {
     color: #1abc9c !important;
 }
+
+.group {
+    border: 10px solid transparent;
+    margin-bottom: 25px;
+    opacity: 0.7;
+}
+.group:hover {
+    border-color: #f1f1f1;
+}

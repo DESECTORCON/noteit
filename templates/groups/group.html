@@ -1,13 +1,35 @@
 {% extends "base3.html" %}
 {% block title %}
-    <title>Groups.io | Group {{ group.name }}</title>
+<title>Groups.io | Group {{ group.name }}</title>
 {% endblock %}
 {% block content %}
 
 <div class="container-fluid">
 
     <div class="page-header">
-        <h1><i class="fas fa-users"></i> Group <small class="">{{ group.name }}</small></h1>
+        <h1><i class="far fa-object-group"></i> Group <small class="">{{ group.name }}</small></h1>
+    </div>
+    <hr>
+    <div class="container">
+        <h3 class="text-monospace"><i class="fas fa-users"></i> Members <small>total: {{ group.members|length }}</small></h3>
+    </div>
+    <div class="container">
+        <div class="list-group">
+        {% if members != [] %}
+            {% for member in members %}
+            <div class="group">
+                <a href="{{ url_for('users.user_page', user_id=member._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><i class="far fa-user-circle"></i> {{ member.nick_name }}</h5>
+                        <small class="text-muted">Last logined at {{ member.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <h4 class="text-muted"><i class="fas fa-question"></i> There are no members!</h4>
+        {% endif %}
+    </div>
     </div>
 
 </div>
