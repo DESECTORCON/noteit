@@ -28,10 +28,11 @@ def groups():
     try:
         all_groups = Group.get_all_shared_groups()
 
-        if request.method is 'POST':
+        if request.method == 'POST':
             form = request.form['Search']
             all_groups = Group.search_with_elastic(form_data=form, shared=True)
 
+            return render_template('groups/shared_groups.html', all_groups=all_groups, form=form)
         return render_template('groups/shared_groups.html', all_groups=all_groups)
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -66,7 +67,8 @@ def create_group():
                 file_name, file_extenstion = os.path.splitext(group_img)
                 if file_extenstion not in ALLOWED_GROUP_IMG_FORMATS or len(group_img) > 1:
                     return render_template('groups/create_group.html',
-                                           all_firends=all_firends, error_msg='Too much images!! Please upload just one image.',
+                                           all_firends=all_firends
+                                           , error_msg='Too much images!! Please upload just one image.',
                                            name=name, members=members, share=share, description=description)
 
                 # saving file

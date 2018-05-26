@@ -103,16 +103,21 @@ class Group(object):
         return True
 
     @staticmethod
-    def search_with_elastic(form_data, shared=True):
+    def search_with_elastic(form_data, shared):
         el = Elasticsearch(port=port)
 
+        if shared is True:
+            shared = "1"
+        else:
+            shared = "0"
+
         if form_data is '':
-            data = el.search(index='groups', body={
+            data = el.search(index='groups',body={
                 "query": {
                     "bool": {
                         "must": [
                             {
-                                "prefix": {"title": ""}
+                                "prefix": {"name": ""}
                             },
                             {
                                 "match": {"shared": shared}
@@ -127,7 +132,7 @@ class Group(object):
                     "bool": {
                         "must": [
                             {
-                                "prefix": {"title": form_data}
+                                "prefix": {"name": form_data}
                             },
                             {
                                 "match": {"shared": shared}
