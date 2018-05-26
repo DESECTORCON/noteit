@@ -22,13 +22,13 @@
         <div class="list-group">
 
         {% if members != [] %}
-            {% for member in members %}
+            {% for user in members %}
 
             <div class="group">
-                <a href="{{ url_for('users.user_page', user_id=member._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1"><i class="far fa-user-circle"></i> {{ member.nick_name }}</h5>
-                        <small class="text-muted">Last logined at {{ member.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                        <h5 class="mb-1"><i class="far fa-user-circle"></i> {{ user.nick_name }}</h5>
+                        <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
                     </div>
                 </a>
             </div>
@@ -56,10 +56,10 @@
             {% for note in shared_notes %}
 
             <div class="group">
-                <a href="{{ url_for('users.user_page', user_id=member._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1"><i class="fas fa-sticky-note"></i> {{ note.title }}</h5>
-                        <small class="text-muted">Made by: <a href="{{ url_for('users.user_page', user_id=member._id) }}"></a>{{ note.author_nickname }}</small>
+                        <small class="text-muted">Made by: {{ note.author_nickname }}</small>
                         <small class="text-muted">Created at {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
                     </div>
                 </a>
