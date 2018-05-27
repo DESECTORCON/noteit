@@ -36,7 +36,13 @@ def group(group_id):
         for note in group_.shared_notes:
             shared_notes.append(Note.find_by_id(note))
 
-        return render_template('groups/group.html', group=group_, members=members, shared_notes=shared_notes)
+        if session['_id'] in group_.members:
+            is_in_group = True
+        else:
+            is_in_group = False
+
+        return render_template('groups/group.html', group=group_, members=members, shared_notes=shared_notes,
+                               is_in_group=is_in_group)
     except:
         error_msg = traceback.format_exc().split('\n')
 
@@ -74,7 +80,11 @@ def create_group():
         # # for friend_id in current_user:
         # #     all_firends.append(User.find_by_id(friend_id))
         # all_firends.append(User.find_by_id(current_user._id))
-        all_firends.remove(User.find_by_id(session['_id']))
+        try:
+            # all_firends.remove(User.find_by_id(session['_id']))
+            del all_firends[all_firends.index(User.find_by_id(session['_id']))]
+        except ValueError:
+            pass
 
         if request.method == 'POST':
             user = User.find_by_id(session['_id'])
@@ -120,8 +130,10 @@ def create_group():
             group_for_save.save_to_elastic()
 
             # saving to user
-            user.group_id = group_id
-            user.save_to_mongo()
+            for member in members:
+                user = User.find_by_id(member)
+                user.group_id = group_id
+                user.save_to_mongo()
 
             # redirecting
 
@@ -139,7 +151,7 @@ def create_group():
 @group_blueprint.route('/my_group')
 @user_decorators.require_login
 def my_group():
-    user_group_id = User.get_current_user().group_id
+    user_group_id = User.find_by_id(session['_id']).group_id
     if user_group_id is None:
         return render_template('groups/my_group_demo.html')
     else:
@@ -157,6 +169,10 @@ def get_out_group(group_id):
     # save to group object
     group_ = Group.find_by_id(group_id)
     group_.members.remove(user._id)
+    if group_.members is []:
+        group_.delete_on_elastic()
+        group_.delete_img()
+        group_.delete()
     group_.save_to_mongo()
     group_.update_to_elastic()
 

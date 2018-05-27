@@ -168,10 +168,10 @@ class User(object):
     @classmethod
     def find_by_nickname_mulitple(cls, nickname):
         return [cls(**elem) for elem in Database.find(UserConstants.COLLECTION, {"nick_name": nickname})]
-
-    @classmethod
-    def get_current_user(cls):
-        return cls(**Database.find_one(UserConstants.COLLECTION, {'_id': session['_id']}))
+    #
+    # @classmethod
+    # def get_current_user(cls):
+    #     return cls(**Database.find_one(UserConstants.COLLECTION, {'_id': session['_id']}))
 
     def delete(self):
         el = Elasticsearch(port=port)
