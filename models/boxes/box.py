@@ -44,7 +44,7 @@ class Box(object):
         try:
             return cls(**Database.find_one(BoxConstants.COLLECTION, {'maker_id': maker_id}))
         except:
-            return
+            return None
 
     def save_to_mongo(self):
         Database.update(BoxConstants.COLLECTION, {"_id": self._id}, self.json())

@@ -1,6 +1,7 @@
 import os
 import uuid
 import shortid
+import werkzeug
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
@@ -231,19 +232,27 @@ def create_note(box_id):
                 flash("You have the maximum amount of notes. Please delete your notes")
                 return redirect(url_for(".user_notes", box_id=box_id))
 
-            share_with_group = request.form['share_with_group']
-
             # saving note
             all_box_id = box_id
             note_id = uuid.uuid4().hex
 
-            if share_with_group == 'on':
-                group_id = User.find_by_id(session['_id']).group_id
-                share_with_group = group_id
-                group = Group.find_by_id(group_id)
-                group.shared_notes.append(note_id)
-                group.save_to_mongo()
-                group.update_to_elastic()
+            try:
+                share_with_group = request.form['share_with_group']
+
+                if share_with_group == 'on':
+                    try:
+                        group_id = User.find_by_id(session['_id']).group_id
+                        share_with_group = group_id
+                        group = Group.find_by_id(group_id)
+                        group.shared_notes.append(note_id)
+                        group.save_to_mongo()
+                        group.update_to_elastic()
+                    except:
+                        flash("You aren't in a group. Please join a group to share with group users.")
+                        return render_template('/notes/create_note.html'
+                                        , title=title, content=content, share=share)
+            except werkzeug.exceptions.BadRequestKeyError:
+                share_with_group = False
 
             else:
                 share_with_group = False
