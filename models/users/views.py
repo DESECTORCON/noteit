@@ -209,3 +209,20 @@ def edit_user(user_id):
                            error_location='edit_user while finding user/saving changes to database')
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during saving changes...')
+
+
+@user_blueprint.route('/add_friend', methods=['GET', 'POST'])
+@user_decorators.require_login
+def add_friend():
+    all_users = User.get_all()
+    if request.method == 'POST':
+        current_user = User.find_by_id(session['_id'])
+        current_user.friends.append(request.form.getlist['friends'])
+        current_user.save_to_mongo()
+
+    return render_template('users/add_friend.html', all_users=all_users)
+
+
+@user_blueprint.route('/SEARCH___', methods=['POST'])
+def search_for_above():
+    pass
