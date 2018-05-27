@@ -1,6 +1,6 @@
 {% extends "base3.html" %}
 {% block title %}
-<title>Login | Note-it™</title>
+<title>Add Friend | Note-it™</title>
 {% endblock %}
 {% block content %}
 
@@ -9,12 +9,36 @@
         <h1><i class="fas fa-plus"></i><i class="fas fa-user-friends"></i>  Add friends</h1>
     </div>
 
+    <form action="{{ url_for('users.search_for_above') }}">
+        {% if form %}
+        <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
+        {% else %}
+        <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
+        {% endif %}
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+
     <form method="POST">
-
         <div class="form-group">
+            <div class="list-group">
+                {% for user in all_users %}
 
+                <label class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class=" justify-content-between">
+                    {% if user._id in selected %}
+                        <input type="checkbox" value="{{ user._id }}" name="users" checked>
+                    {% else %}
+                        <input type="checkbox" value="{{ user._id }}" name="users" />
+                    {% endif %}
+                    <h5 class="mb-1"><a href="{{ url_for('users.user_page', user_id=user._id) }}">{{ user.nick_name }}</a></h5>
+                    <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                    <small class="text-muted">Email: {{ user.email }}</small>
+                </div>
+                </label>
+
+                {% endfor %}
+            </div>
         </div>
-
     </form>
 
 </div>

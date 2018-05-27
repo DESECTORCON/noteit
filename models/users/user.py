@@ -10,7 +10,6 @@ from models.notes.note import Note
 from shortid import ShortId
 from elasticsearch import Elasticsearch
 from config import ELASTIC_PORT as port
-from flask import session
 
 
 class User(object):

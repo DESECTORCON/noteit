@@ -225,4 +225,21 @@ def add_friend():
 
 @user_blueprint.route('/SEARCH___', methods=['POST'])
 def search_for_above():
-    pass
+    users = []
+
+    el = Elasticsearch(port=port)
+    data = el.search(index='users', doc_type='user', body={
+        "query": {
+            "prefix": {"nick_name": request.form['Search_user']}
+        }
+    })
+
+    try:
+        for user in data['hits']['hits']:
+            users.append(User.find_by_id(user['_source']['user_id']))
+    except:
+        pass
+    # print(users)
+    del el
+
+    return render_template('users/add_friend.html', all_users=users, selected=request.form['users'])
