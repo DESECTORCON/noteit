@@ -140,7 +140,7 @@ def create_group():
 def my_group():
     user_group_id = User.get_current_user().group_id
     if user_group_id is None:
-        return
+        return render_template('groups/my_group_demo.html')
     else:
 
         return redirect(url_for('groups.group', group_id=user_group_id))
