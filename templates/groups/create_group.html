@@ -96,7 +96,7 @@ $(document).ready(function() {
             <div class="list-group">
                 {% for friend in all_firends %}
 
-                <div class="list-group-item list-group-item-action flex-column align-items-start">
+                <label class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class=" justify-content-between">
                     {% if members == friend._id %}
                         <input type="checkbox" value="{{ friend._id }}" name="members" checked>
@@ -107,7 +107,7 @@ $(document).ready(function() {
                     <small class="text-muted">Last logined at {{ friend.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
                     <small class="text-muted">Email: {{ friend.email }}</small>
                 </div>
-                </div>
+                </label>
 
                 {% endfor %}
             </div>

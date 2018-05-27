@@ -69,11 +69,12 @@ def groups():
 @user_decorators.require_login
 def create_group():
     try:
-        all_firends = []
-        current_user = User.find_by_email("demoTESTUSER@name.com")
-        # for friend_id in current_user:
-        #     all_firends.append(User.find_by_id(friend_id))
-        all_firends.append(User.find_by_id(current_user._id))
+        all_firends = User.get_all()
+        # current_user = User.get_all()
+        # # for friend_id in current_user:
+        # #     all_firends.append(User.find_by_id(friend_id))
+        # all_firends.append(User.find_by_id(current_user._id))
+        all_firends.remove(User.find_by_id(session['_id']))
 
         if request.method == 'POST':
             user = User.find_by_id(session['_id'])
@@ -144,3 +145,19 @@ def my_group():
     else:
 
         return redirect(url_for('groups.group', group_id=user_group_id))
+
+
+@group_blueprint.route('/get_out_group/<string:group_id>')
+@user_decorators.require_login
+def get_out_group(group_id):
+    # save to user object
+    user = User.find_by_id(session['_id'])
+    user.group_id = None
+    user.save_to_mongo()
+    # save to group object
+    group_ = Group.find_by_id(group_id)
+    group_.members.remove(user._id)
+    group_.save_to_mongo()
+    group_.update_to_elastic()
+
+    return redirect(url_for('groups.groups'))

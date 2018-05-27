@@ -71,17 +71,17 @@ section .section-title {
     text-transform: uppercase;
 }
 #footer {
-    background: #007b5e !important;
+    background: #cccccc !important;
 }
 #footer h5{
 	padding-left: 10px;
-    border-left: 3px solid #eeeeee;
+    border-left: 3px solid #c1ffc2;
     padding-bottom: 6px;
     margin-bottom: 20px;
-    color:#ffffff;
+    color:#c1ffc2
 }
 #footer a {
-    color: #ffffff;
+    color: #c1ffc2;
     text-decoration: none !important;
     background-color: transparent;
     -webkit-text-decoration-skip: objects;
@@ -102,10 +102,10 @@ section .section-title {
 }
 #footer ul.social li a,
 #footer ul.quick-links li a{
-	color:#ffffff;
+	color:#f2f2f2;
 }
 #footer ul.social li a:hover{
-	color:#eeeeee;
+	color:#f9f4f4;
 }
 #footer ul.quick-links li{
 	padding: 3px 0;

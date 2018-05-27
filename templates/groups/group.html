@@ -21,7 +21,7 @@
     <div class="container">
         <div class="list-group">
 
-        {% if members != [] %}
+            {% if members != [] %}
             {% for user in members %}
 
             <div class="group">
@@ -34,11 +34,11 @@
             </div>
 
             {% endfor %}
-        {% else %}
+            {% else %}
             <h4 class="text-muted"><i class="fas fa-question"></i> There are no members!</h4>
-        {% endif %}
+            {% endif %}
 
-    </div>
+        </div>
     </div>
 
     <br>
@@ -52,7 +52,7 @@
     <div class="container">
 
         <div class="list-group">
-        {% if shared_notes != [] %}
+            {% if shared_notes != [] %}
             {% for note in shared_notes %}
 
             <div class="group">
@@ -66,11 +66,19 @@
             </div>
 
             {% endfor %}
-        {% else %}
+            {% else %}
             <h4 class="text-muted"><i class="fas fa-question"></i> There are no shared notes!</h4>
-        {% endif %}
+            {% endif %}
 
+        </div>
     </div>
+    <hr class="my-4">
+
+    <div class="card">
+
+        <div class="card-body">
+            <a href="{{ url_for('groups.get_out_group', group_id=group._id) }}" class="btn btn-outline-warning" role="button">Secession</a>
+        </div>
     </div>
 
 </div>

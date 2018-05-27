@@ -41,8 +41,8 @@
 
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active"><a href="{{ url_for('groups.groups') }}" class="nav-link"><i class="far fa-object-group"></i> Groups</a></li>
-                <li class="nav-item active"><a href="{{ url_for('home') }}" class="nav-link"><i class="fas fa-home"></i> Go to home</a></li>
                 <li class="nav-item active"><a href="{{ url_for('groups.my_group') }}" class="nav-link"><i class="far fa-id-badge"></i> My group</a></li>
+                <li class="nav-item active"><a href="{{ url_for('home') }}" class="nav-link"><i class="fas fa-home"></i> Go to home</a></li>
                 {% block navbar__ %}
                 {% endblock %}
             </ul>
@@ -94,9 +94,9 @@
 
 <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-<footer>
+<footer id="footer">
 
-    <div class="footer-size jumbotron container-fluid bg-4 text-center">
+    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
 
         <h7><span class="glyphicon glyphicon-console"></span> Made by <a href="https://www.jetbrains.com/pycharm/">Pycharm</a>
             and
