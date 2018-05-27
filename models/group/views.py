@@ -76,6 +76,10 @@ def groups():
 def create_group():
     try:
         all_firends = User.find_by_id(session['_id']).friends
+        all_firends_ = []
+        for friend in all_firends:
+            all_firends_.append(User.find_by_id(friend))
+
 
         if request.method == 'POST':
             user = User.find_by_id(session['_id'])
@@ -130,7 +134,7 @@ def create_group():
 
             return redirect(url_for('groups.groups'))
 
-        return render_template('groups/create_group.html', all_firends=all_firends)
+        return render_template('groups/create_group.html', all_firends=all_firends_)
     except:
         error_msg = traceback.format_exc().split('\n')
 
@@ -160,6 +164,7 @@ def get_out_group(group_id):
     # save to group object
     group_ = Group.find_by_id(group_id)
     group_.members.remove(user._id)
+    group_.shared_notes.remove(user)
     if group_.members is []:
         group_.delete_on_elastic()
         group_.delete_img()

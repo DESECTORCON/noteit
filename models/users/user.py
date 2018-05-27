@@ -199,6 +199,10 @@ class User(object):
     def delete_user_boxes(self):
         boxes = Box.find_by_maker_id(self._id)
         if boxes is not None:
-            for box in boxes:
-                box.delete_on_elastic()
-                box.delete()
+            try:
+                for box in boxes:
+                    box.delete_on_elastic()
+                    box.delete()
+            except:
+                boxes.delete_on_elastic()
+                boxes.delete()

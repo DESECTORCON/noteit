@@ -220,6 +220,7 @@ def add_friend():
     if request.method == 'POST':
         current_user.friends.extend(request.form.getlist('users'))
         current_user.save_to_mongo()
+        return redirect(url_for('users.user_page', user_id=current_user._id))
 
     return render_template('users/add_friend.html', all_users=all_users)
 
