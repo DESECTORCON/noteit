@@ -53,7 +53,13 @@ def register_user():
         if request.method == 'POST':
 
             email = request.form['email']
+            if email == '':
+                flash('Please type your email')
+                return render_template("users/register.html")
             password = request.form['password']
+            if password == '':
+                flash('Please type your password')
+                return render_template("users/register.html")
             nick_name = request.form['nickname']
 
             try:

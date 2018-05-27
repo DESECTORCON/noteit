@@ -16,6 +16,16 @@ class User(object):
 
     def __init__(self, email, password, _id=None
                  , nick_name=None, last_logined=datetime.datetime.now(), friends=[], group_id=None):
+        """
+
+        :param email:
+        :param password:
+        :param _id:
+        :param nick_name:
+        :param last_logined:
+        :param friends:
+        :param group_id:
+        """
         self.email = email
         self.password = password
         self._id = uuid.uuid4().hex if _id is None else _id
@@ -32,7 +42,7 @@ class User(object):
     def is_login_valid(email, password):
         """
         This method verifies that an email/password combo (as sent by the site forms) is valid or not.
-        Chacks that the e-mail exists, and that the password associated to that email is correct.
+        Checkes that the e-mail exists, and that the password associated to that email is correct.
         :param email: The user's email
         :param password: A sha512 hashed password
         :return: True if valid, Flase otherwise
@@ -59,37 +69,67 @@ class User(object):
         :param password: sha512-hashed password
         :return: True if registered successfully, of False otherwise (exceptions can also be raised)
         """
-        user_data = Database.find_one(UserConstants.COLLECTION, {"email": email})
+        try:
+            user_data = Database.find_one(UserConstants.COLLECTION, {"email": email})
 
-        if user_data is not None:
-            # Tell user they are already registered
-            raise UserErrors.UserAlreadyRegisteredError("The e-mail you used to register already exists.")
+            if user_data is not None:
+                # Tell user they are already registered
+                raise UserErrors.UserAlreadyRegisteredError("The e-mail you used to register already exists.")
 
-        if not Utils.email_is_valid(email):
-            # Tell user that their e-mail is not constructed properly.
-            raise UserErrors.InvalidEmailError("The e-mail does not have the right format.")
+            if not Utils.email_is_valid(email):
+                # Tell user that their e-mail is not constructed properly.
+                raise UserErrors.InvalidEmailError("The e-mail does not have the right format.")
 
-        user_id = User.find_by_email(email)._id
-        if nick_name == '' or nick_name == None:
+            if nick_name == '' or nick_name == None:
 
-            User(email, Utils.hash_password(password), nick_name=None).save_to_mongo()
-            doc = {
-                'email': email,
-                'nick_name': nick_name,
-                'user_id': user_id,
-            }
+                user = User(email, Utils.hash_password(password), nick_name=None)
+                user.save_to_mongo()
+                doc = {
+                    'email': email,
+                    'nick_name': nick_name,
+                    'user_id': user._id,
+                }
 
-        else:
-            User(email, Utils.hash_password(password), nick_name=nick_name).save_to_mongo()
+            else:
+                user = User(email, Utils.hash_password(password), nick_name=nick_name)
+                user.save_to_mongo()
 
-            doc = {
-                'email': email,
-                'nick_name': nick_name,
-                'user_id': user_id,
-            }
-        el.index(index="users", doc_type='user', body=doc, id=user_id)
+                doc = {
+                    'email': email,
+                    'nick_name': nick_name,
+                    'user_id': user._id,
+                }
+            el.index(index="users", doc_type='user', body=doc, id=user._id)
 
-        return True
+            return True
+
+        except TypeError:
+
+            if not Utils.email_is_valid(email):
+                # Tell user that their e-mail is not constructed properly.
+                raise UserErrors.InvalidEmailError("The e-mail does not have the right format.")
+
+            user_id = User.find_by_email(email)._id
+            if nick_name == '' or nick_name == None:
+
+                User(email, Utils.hash_password(password), nick_name=None).save_to_mongo()
+                doc = {
+                    'email': email,
+                    'nick_name': nick_name,
+                    'user_id': user_id,
+                }
+
+            else:
+                User(email, Utils.hash_password(password), nick_name=nick_name).save_to_mongo()
+
+                doc = {
+                    'email': email,
+                    'nick_name': nick_name,
+                    'user_id': user_id,
+                }
+            el.index(index="users", doc_type='user', body=doc, id=user_id)
+
+            return True
 
     def save_to_mongo(self):
         Database.update(UserConstants.COLLECTION, {"_id": self._id}, self.json())
