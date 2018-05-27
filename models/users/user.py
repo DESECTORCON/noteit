@@ -10,6 +10,7 @@ from models.notes.note import Note
 from shortid import ShortId
 from elasticsearch import Elasticsearch
 from config import ELASTIC_PORT as port
+from flask import session
 
 
 class User(object):
@@ -167,6 +168,10 @@ class User(object):
     @classmethod
     def find_by_nickname_mulitple(cls, nickname):
         return [cls(**elem) for elem in Database.find(UserConstants.COLLECTION, {"nick_name": nickname})]
+
+    @classmethod
+    def get_current_user(cls):
+        return cls(**Database.find_one(UserConstants.COLLECTION, {'_id': session['_id']}))
 
     def delete(self):
         el = Elasticsearch(port=port)

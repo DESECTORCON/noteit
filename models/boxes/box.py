@@ -34,11 +34,17 @@ class Box(object):
 
     @classmethod
     def find_by_id(cls, box_id):
-        return cls(**Database.find_one(BoxConstants.COLLECTION, {'_id': box_id}))
+        try:
+            return cls(**Database.find_one(BoxConstants.COLLECTION, {'_id': box_id}))
+        except:
+            return None
 
     @classmethod
     def find_by_maker_id(cls, maker_id):
-        return cls(**Database.find_one(BoxConstants.COLLECTION, {'maker_id': maker_id}))
+        try:
+            return cls(**Database.find_one(BoxConstants.COLLECTION, {'maker_id': maker_id}))
+        except:
+            return
 
     def save_to_mongo(self):
         Database.update(BoxConstants.COLLECTION, {"_id": self._id}, self.json())

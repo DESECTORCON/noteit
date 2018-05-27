@@ -126,8 +126,9 @@ def delete_box_mutiple():
 
             for box_id in boxes_id:
                 box = Box.find_by_id(box_id)
-                box.delete_on_elastic()
-                box.delete()
+                if box is not None:
+                    box.delete_on_elastic()
+                    box.delete()
 
             flash('Your boxes has successfully deleted.')
             return redirect(url_for('.boxs'))

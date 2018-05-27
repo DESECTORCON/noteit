@@ -1,9 +1,7 @@
 import os
 import traceback
 import uuid
-
 import shortid
-import werkzeug
 from flask import Blueprint, request, render_template, session, url_for, flash
 from werkzeug.utils import secure_filename, redirect
 import models.users.decorators as user_decorators
@@ -28,16 +26,23 @@ def share_bool_function(share):
 @group_blueprint.route('/group/<string:group_id>')
 @user_decorators.require_login
 def group(group_id):
-    group_ = Group.find_by_id(group_id)
-    members = []
-    shared_notes = []
-    for member in group_.members:
-        members.append(User.find_by_id(member))
+    try:
+        group_ = Group.find_by_id(group_id)
+        members = []
+        shared_notes = []
+        for member in group_.members:
+            members.append(User.find_by_id(member))
 
-    for note in group_.shared_notes:
-        shared_notes.append(Note.find_by_id(note))
+        for note in group_.shared_notes:
+            shared_notes.append(Note.find_by_id(note))
 
-    return render_template('groups/group.html', group=group_, members=members, shared_notes=shared_notes)
+        return render_template('groups/group.html', group=group_, members=members, shared_notes=shared_notes)
+    except:
+        error_msg = traceback.format_exc().split('\n')
+
+        Error_obj = Error_(error_msg=''.join(error_msg), error_location='group getting group')
+        Error_obj.save_to_mongo()
+        return render_template('error_page.html', error_msgr='Crashed during getting your group info...')
 
 
 @group_blueprint.route('/groups', methods=['GET', 'POST'])
@@ -128,3 +133,14 @@ def create_group():
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='create_group creating group')
         Error_obj.save_to_mongo()
         return render_template('error_page.html', error_msgr='Crashed during creating your group...')
+
+
+@group_blueprint.route('/my_group')
+@user_decorators.require_login
+def my_group():
+    user_group_id = User.get_current_user().group_id
+    if user_group_id is None:
+        return
+    else:
+
+        return redirect(url_for('groups.group', group_id=user_group_id))
