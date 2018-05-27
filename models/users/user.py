@@ -38,6 +38,9 @@ class User(object):
     def __repr__(self):
         return "<User {} with nick name {}>".format(self.email, self.nick_name)
 
+    def __eq__(self, other):
+        return self._id == other._id
+
     @staticmethod
     def is_login_valid(email, password):
         """

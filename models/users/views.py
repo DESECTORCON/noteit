@@ -215,31 +215,43 @@ def edit_user(user_id):
 @user_decorators.require_login
 def add_friend():
     all_users = User.get_all()
+    current_user = User.find_by_id(session['_id'])
+    all_users.remove(current_user)
     if request.method == 'POST':
-        current_user = User.find_by_id(session['_id'])
         current_user.friends.append(request.form.getlist['friends'])
         current_user.save_to_mongo()
 
     return render_template('users/add_friend.html', all_users=all_users)
 
 
-@user_blueprint.route('/SEARCH___', methods=['POST'])
+@user_blueprint.route('/searhc_', methods=['POST'])
 def search_for_above():
     users = []
+    form = request.form['Search_users']
 
     el = Elasticsearch(port=port)
-    data = el.search(index='users', doc_type='user', body={
-        "query": {
-            "prefix": {"nick_name": request.form['Search_user']}
-        }
-    })
+
+    if form is '':
+        data = el.search(index='users', doc_type='user', body={
+            "query": {
+                "match_all": {}
+            }
+        })
+    else:
+        data = el.search(index='users', doc_type='user', body={
+            "query": {
+                "prefix": {"nick_name": form}
+            }
+        })
 
     try:
         for user in data['hits']['hits']:
-            users.append(User.find_by_id(user['_source']['user_id']))
+            users.append(User.find_by_id(user['_id']))
     except:
         pass
     # print(users)
     del el
-
-    return render_template('users/add_friend.html', all_users=users, selected=request.form['users'])
+    try:
+        return render_template('users/add_friend.html', all_users=users, form=form, selected=request.form['users'])
+    except:
+        return render_template('users/add_friend.html', all_users=users, form=form)
