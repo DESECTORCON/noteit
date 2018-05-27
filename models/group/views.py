@@ -75,16 +75,7 @@ def groups():
 @user_decorators.require_login
 def create_group():
     try:
-        all_firends = User.get_all()
-        # current_user = User.get_all()
-        # # for friend_id in current_user:
-        # #     all_firends.append(User.find_by_id(friend_id))
-        # all_firends.append(User.find_by_id(current_user._id))
-        try:
-            # all_firends.remove(User.find_by_id(session['_id']))
-            del all_firends[all_firends.index(User.find_by_id(session['_id']))]
-        except ValueError:
-            pass
+        all_firends = User.find_by_id(session['_id']).friends
 
         if request.method == 'POST':
             user = User.find_by_id(session['_id'])

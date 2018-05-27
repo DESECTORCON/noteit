@@ -218,7 +218,7 @@ def add_friend():
     current_user = User.find_by_id(session['_id'])
     all_users.remove(current_user)
     if request.method == 'POST':
-        current_user.friends.append(request.form.getlist['friends'])
+        current_user.friends.extend(request.form.getlist('users'))
         current_user.save_to_mongo()
 
     return render_template('users/add_friend.html', all_users=all_users)
