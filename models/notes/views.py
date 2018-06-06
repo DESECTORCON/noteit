@@ -496,7 +496,7 @@ def add_to_box(note_id):
 def add_to_group():
 
     # getting all user's notes
-    notes = Note.get_user_notes(session['_id'])
+    notes = Note.get_user_notes(session['email'])
 
     if request.method == 'POST':
         user = User.find_by_id(session['_id'])
