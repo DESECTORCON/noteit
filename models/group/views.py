@@ -23,6 +23,20 @@ def share_bool_function(share):
     return share
 
 
+@group_blueprint.route('/group/_join/_joingroup/<string:group_id>')
+@user_decorators.require_login
+def join_group(group_id):
+    # saving group with user id
+    group_ = Group.find_by_id(group_id)
+    group_.members.extend([session['_id']])
+    group_.save_to_elastic()
+    group_.save_to_mongo()
+
+    # redirecting
+    flash('Joined group successfully')
+    return redirect(url_for('.group', group_id=group_id))
+
+
 @group_blueprint.route('/group/<string:group_id>')
 @user_decorators.require_login
 def group(group_id):
@@ -34,7 +48,7 @@ def group(group_id):
             members.append(User.find_by_id(member))
 
         for note in group_.shared_notes:
-            shared_notes.append(Note.find_by_id(note))
+            shared_notes.append(Note.find_by_id(note['note_id']))
 
         if session['_id'] in group_.members:
             is_in_group = True
@@ -164,7 +178,10 @@ def get_out_group(group_id):
     # save to group object
     group_ = Group.find_by_id(group_id)
     group_.members.remove(user._id)
-    group_.shared_notes.remove(user)
+    group_.shared_notes.remove({'author': user._id})
+    for note in group_.shared_notes:
+        pass
+
     if group_.members is []:
         group_.delete_on_elastic()
         group_.delete_img()

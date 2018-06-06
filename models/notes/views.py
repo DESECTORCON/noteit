@@ -241,10 +241,10 @@ def create_note(box_id):
 
                 if share_with_group == 'on':
                     try:
-                        group_id = User.find_by_id(session['_id']).group_id
-                        share_with_group = group_id
-                        group = Group.find_by_id(group_id)
-                        group.shared_notes.append(note_id)
+                        user = User.find_by_id(session['_id'])
+                        share_with_group = user.group_id
+                        group = Group.find_by_id(user.group_id)
+                        group.shared_notes.append({'note_id': note_id, 'author': user._id})
                         group.save_to_mongo()
                         group.update_to_elastic()
                     except:
