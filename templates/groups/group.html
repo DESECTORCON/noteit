@@ -79,6 +79,8 @@
         <div class="card-body">
             {% if is_in_group %}
             <a href="" class="btn btn-outline-warning" role="button" data-toggle="modal" data-target="#exampleModal">Secession</a>
+            {% else %}
+            <a href="{{ url_for('groups.join_group', group_id=group._id) }}" class="btn btn-outline-secondary" role="button">Join group</a>
             {% endif %}
         </div>
     </div>

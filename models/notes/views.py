@@ -489,3 +489,29 @@ def add_to_box(note_id):
     box_for_save.save_to_mongo()
     box_for_save.update_to_elastic()
     return redirect(url_for('.user_notes', box_id=box_id))
+
+
+@note_blueprint.route('/add_to_group/', methods=['POST', 'GET'])
+@user_decorators.require_login
+def add_to_group():
+
+    # getting all user's notes
+    notes = Note.get_user_notes(session['_id'])
+
+    if request.method == 'POST':
+        user = User.find_by_id(session['_id'])
+        if user.group_id is None:
+            flash("You aren't in a group. Please join a group to share notes to friends.")
+            return redirect(url_for('groups.groups'))
+
+        group_ = Group.find_by_id(user.group_id)
+        add_notes = request.form.getlist('selected_notes')
+
+        for note in add_notes:
+            note = Note.find_by_id(note)
+            group_.shared_notes.extend([{'author': user._id, 'note_id': note._id}])
+        # saving to database
+        group_.save_to_elastic()
+        group_.save_to_mongo()
+
+    return render_template('notes/add_to_group.html', notes=notes)
