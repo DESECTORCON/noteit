@@ -15,7 +15,9 @@ from config import ELASTIC_PORT as port
 class User(object):
 
     def __init__(self, email, password, _id=None
-                 , nick_name=None, last_logined=datetime.datetime.now(), friends=[], group_id=None):
+                 , nick_name=None, last_logined=datetime.datetime.now()
+                 , friends=[], group_id=None,
+                 picture=None):
         """
 
         :param email:
@@ -34,6 +36,7 @@ class User(object):
         self.last_logined = last_logined
         self.friends = friends
         self.group_id = group_id
+        self.picture = picture
 
     def __repr__(self):
         return "<User {} with nick name {}>".format(self.email, self.nick_name)
@@ -146,6 +149,7 @@ class User(object):
             "last_logined": self.last_logined,
             "friends": self.friends,
             "group_id": self.group_id,
+            "picture": self.picture
         }
 
     @classmethod

@@ -1,48 +1,64 @@
 {% extends "base.html" %}
 {% block title %}
-    <title>Note-it™ | Register</title>
+<title>Note-it™ | Register</title>
 {% endblock %}
 {% block content %}
 
-    <div class="jumbotron form-size">
+<script type="text/javascript">
 
-        <h2><i class="fab fa-wpforms"></i> Register page</h2>
+    function myFunction() {
+        $('#MAINDIV').hide();
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+    }
+}
+$(document).ready(function() {
+   $('#myDIV').hide();
+});
+</script>
 
-        <p>Register Now! All you need to do is put in your email and password!!</p>
+<div class="jumbotron form-size" id="MAINDIV">
 
-    </div>
+    <h2><i class="fab fa-wpforms"></i> Register page</h2>
 
-    <br>
+    <p>Register Now! All you need to do is put in your email and password!!</p>
 
-    <div class="form-size jumbotron">
-        <form action="{{ url_for('users.register_user') }}" method="post">
+</div>
 
-            <div class="form-group">
+<br>
 
-                <label for="email">Email address</label>
-                <input type="email" class="form-control" name="email" id="email" placeholder="Email here!">
+<div class="form-size jumbotron">
+    <form action="{{ url_for('users.register_user') }}" method="post">
 
-            </div>
+        <div class="form-group">
 
-            <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" name="email" id="email" placeholder="Email here!">
 
-                <label for="password">Password</label>
-                <input type="password" class="form-control" name="password" id="password" placeholder="Password here!">
+        </div>
 
-            </div>
+        <div class="form-group">
 
-            <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="Password here!">
 
-                <label for="nickname">Nick Name</label>
-                <input type="text" class="form-control" name="nickname" id="nickname" placeholder="Your nickname" aria-describedby="nicknameHelpBlock">
-                <small id="nicknameHelpBlock" class="form-text text-muted">
-                    This is not required. BUT if you don't put in a nick name, the website will generate a nick name for you.
-                </small>
+        </div>
 
-            </div>
+        <div class="form-group">
 
-            <button type="submit" class="btn btn-primary">Sign Up</button>
+            <label for="nickname">Nick Name</label>
+            <input type="text" class="form-control" name="nickname" id="nickname" placeholder="Your nickname" aria-describedby="nicknameHelpBlock">
+            <small id="nicknameHelpBlock" class="form-text text-muted">
+                This is not required. BUT if you don't put in a nick name, the website will generate a nick name for you.
+            </small>
 
-        </form>
-    </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+
+    </form>
+</div>
 {% endblock %}
