@@ -509,7 +509,11 @@ def add_to_group():
 
         for note in add_notes:
             note = Note.find_by_id(note)
-            group_.shared_notes.extend([{'author': user._id, 'note_id': note._id}])
+            if {'author': user._id, 'note_id': note._id} in group_.shared_notes:
+                pass
+            else:
+                group_.shared_notes.extend([{'author': user._id, 'note_id': note._id}])
+                group_.shared_notes = group_.shared_notes
         # saving to database
         group_.save_to_elastic()
         group_.save_to_mongo()
