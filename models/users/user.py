@@ -70,7 +70,7 @@ class User(object):
         return True
 
     @staticmethod
-    def register_user(email, password, nick_name):
+    def register_user(email, password, nick_name, file):
         el = Elasticsearch(port=port)
         """
         This method registers a user using e-mail and password
@@ -92,7 +92,7 @@ class User(object):
 
             if nick_name == '' or nick_name == None:
 
-                user = User(email, Utils.hash_password(password), nick_name=None)
+                user = User(email, Utils.hash_password(password), nick_name=None, picture=file)
                 user.save_to_mongo()
                 doc = {
                     'email': email,
@@ -101,7 +101,7 @@ class User(object):
                 }
 
             else:
-                user = User(email, Utils.hash_password(password), nick_name=nick_name)
+                user = User(email, Utils.hash_password(password), nick_name=nick_name, picture=file)
                 user.save_to_mongo()
 
                 doc = {
@@ -122,7 +122,7 @@ class User(object):
             user_id = User.find_by_email(email)._id
             if nick_name == '' or nick_name == None:
 
-                User(email, Utils.hash_password(password), nick_name=None).save_to_mongo()
+                User(email, Utils.hash_password(password), nick_name=None, picture=file).save_to_mongo()
                 doc = {
                     'email': email,
                     'nick_name': nick_name,
@@ -130,7 +130,7 @@ class User(object):
                 }
 
             else:
-                User(email, Utils.hash_password(password), nick_name=nick_name).save_to_mongo()
+                User(email, Utils.hash_password(password), nick_name=nick_name, picture=file).save_to_mongo()
 
                 doc = {
                     'email': email,

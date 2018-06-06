@@ -1,7 +1,6 @@
 import datetime
 import os
 import traceback
-
 import shortid
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
@@ -64,9 +63,9 @@ def register_user():
                 flash('Please type your password')
                 return render_template("users/register.html")
             nick_name = request.form['nickname']
-            file = request.file['file']
+            file = request.files.get('file')
 
-            if file and Note.allowed_file(file):
+            if file and User.allowed_file(file):
                 # create name for file
                 sid = shortid.ShortId()
                 # create path for file
@@ -83,7 +82,7 @@ def register_user():
                 return render_template("users/register.html")
 
             try:
-                if User.register_user(email, password, nick_name):
+                if User.register_user(email, password, nick_name, filename):
                     user_id = User.find_by_email(email)._id
                     session['email'] = email
                     session['_id'] = user_id
