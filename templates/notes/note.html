@@ -28,6 +28,13 @@ if (video.canPlayType('video/mp4')) {
     video.src = 'videoUrl.mp4';
 
 }
+  $('#video_id').on('loadstart', function (event) {
+    $(this).addClass('loading');
+  });
+  $('#video_id').on('canplay', function (event) {
+    $(this).removeClass('loading');
+    $(this).attr('poster', '');
+  });
 </script>
 
 <div class="jumbotron">
@@ -45,7 +52,7 @@ if (video.canPlayType('video/mp4')) {
     <h5>Media files: </h5>
     {% for url_ in url %}
     {% if url_['is_video'] %}
-    <video width="1050" controls>
+    <video width="1050" style="width:100%;height: 50%;" controls>
         <source src="{{ url_['url'] }}" type="video/mp4">
         <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
         Your browser does not support the video tag. Please use Chrome or Firefox
