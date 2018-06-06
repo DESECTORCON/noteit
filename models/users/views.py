@@ -1,8 +1,11 @@
 import datetime
+import os
 import traceback
+
+import shortid
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
-from werkzeug.utils import redirect
+from werkzeug.utils import redirect, secure_filename
 import models.users.errors as UserErrors
 from models.error_logs.error_log import Error_
 from models.notes.note import Note
@@ -61,6 +64,23 @@ def register_user():
                 flash('Please type your password')
                 return render_template("users/register.html")
             nick_name = request.form['nickname']
+            file = request.file['file']
+
+            if file and Note.allowed_file(file):
+                # create name for file
+                sid = shortid.ShortId()
+                # create path for file
+                file_path, file_extenstion = os.path.splitext(file.filename)
+                filename = secure_filename(sid.generate()) + file_extenstion
+
+                # os.chdir("static/img/file/")
+                # save file and add file to filenames list
+                file.save(os.path.join(filename))
+
+            # if extenstion is not supported
+            elif file is not None:
+                flash("Sorry; your file's extension is supported.")
+                return render_template("users/register.html")
 
             try:
                 if User.register_user(email, password, nick_name):

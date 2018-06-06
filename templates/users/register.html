@@ -31,7 +31,7 @@ $(document).ready(function() {
 <br>
 
 <div class="form-size jumbotron">
-    <form action="{{ url_for('users.register_user') }}" method="post">
+    <form action="{{ url_for('users.register_user') }}" method="post" enctype=multipart/form-data>
 
         <div class="form-group">
 

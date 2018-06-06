@@ -1,5 +1,9 @@
 import datetime
+import os
 import uuid
+
+from werkzeug.utils import secure_filename
+
 from common.utils import Utils
 from common.database import Database
 import models.users.errors as UserErrors
@@ -9,7 +13,7 @@ from models.messages.message import Message
 from models.notes.note import Note
 from shortid import ShortId
 from elasticsearch import Elasticsearch
-from config import ELASTIC_PORT as port
+from config import ELASTIC_PORT as port, UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 
 
 class User(object):
@@ -210,3 +214,20 @@ class User(object):
             except:
                 boxes.delete_on_elastic()
                 boxes.delete()
+
+    @staticmethod
+    def allowed_file(file):
+        return '.' in file.filename and \
+               file.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+    def save_img_file(self, file):
+        if file and self.allowed_file(file.name):
+            filename = secure_filename(file.name)
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
+
+    def delete_img(self):
+            try:
+                for file in self.picture:
+                    os.remove(file)
+            finally:
+                return
