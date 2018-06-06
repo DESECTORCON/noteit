@@ -242,7 +242,7 @@ def create_note(box_id):
                 if share_with_group == 'on':
                     try:
                         user = User.find_by_id(session['_id'])
-                        share_with_group = user.group_id
+                        share_with_group = True
                         group = Group.find_by_id(user.group_id)
                         group.shared_notes.append({'note_id': note_id, 'author': user._id})
                         group.save_to_mongo()
@@ -251,6 +251,10 @@ def create_note(box_id):
                         flash("You aren't in a group. Please join a group to share with group users.")
                         return render_template('/notes/create_note.html'
                                         , title=title, content=content, share=share)
+
+                else:
+                    share_with_group = False
+
             except werkzeug.exceptions.BadRequestKeyError:
                 share_with_group = False
 
@@ -259,7 +263,8 @@ def create_note(box_id):
 
             note_for_save = Note(_id=note_id, title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
-                                 share_label=label, file_name=filenames, box_id=all_box_id, share_with_group=share_with_group)
+                                 share_label=label, file_name=filenames, box_id=all_box_id
+                                 , share_with_group=share_with_group)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
             if box_id is not None:

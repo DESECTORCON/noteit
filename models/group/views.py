@@ -178,9 +178,18 @@ def get_out_group(group_id):
     # save to group object
     group_ = Group.find_by_id(group_id)
     group_.members.remove(user._id)
-    group_.shared_notes.remove({'author': user._id})
-    for note in group_.shared_notes:
-        pass
+    group_notes = group_.shared_notes
+    # group_.shared_notes.remove({'author': user._id})
+    # integrating through group notes and deleting notes from group
+    for note in group_notes:
+        # saving changes to note
+        note_ = Note.find_by_id(note['note_id'])
+        note_.share_with_group = False
+        note_.save_to_mongo()
+        note_.save_to_elastic()
+
+        # removing note from group
+        group_notes.remove({'author': user._id, 'note_id': note['note_id']})
 
     if group_.members is []:
         group_.delete_on_elastic()
