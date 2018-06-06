@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Note-it™ | Add Note to Group</title>
+{% endblock %}
+{% block content %}
+
+{% if error_msg %}
+<div class="alert alert-danger" role="alert">
+    <i class="fas fa-exclamation-triangle"></i> {{ error_msg }}
+</div>
+{% endif %}
+<div class="container">
+
+    <div class="jumbotron">
+
+        <h1><i class="fas fa-parachute-box"></i>  <i class="far fa-plus-square fa-xs"></i> Add Notes to Group</h1>
+
+        <p>Fill in the blanks, and submit!</p>
+
+    </div>
+
+    <br>
+
+
+    <script type="text/javascript">
+
+    function myFunction() {
+        $('#MAINDIV').hide();
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+    }
+}
+$(document).ready(function() {
+   $('#myDIV').hide();
+});
+</script>
+
+    <div class="container-fluid jumbotron" id="MAINDIV">
+
+        <div>
+            <h1><i class="fas fa-sticky-note"></i> Your notes</h1>
+        </div>
+
+        <div>
+            <form method="POST">
+
+                {% for note in notes %}
+                <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+
+                    <div class="d-flex w-100 justify-content-between">
+                        <input type="checkbox" name="selected_notes" id="{{note._id}}" value="{{ note._id }}">
+                        <h4 class="mb-1"><i class="far fa-sticky-note"></i>
+                            {{ note.title }}</h4>
+
+                        <p class="list-group-item-text">Created date <strong>{{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</strong></p>
+
+                    </div>
+                    <p class="mb-1"><span class="badge badge-pill badge-secondary">{{ note.share_label }}</span></p>
+
+                </a>
+                {% endfor %}
+
+                <button class="btn btn-outline-info" type="submit">Share note</button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
