@@ -514,4 +514,6 @@ def add_to_group():
         group_.save_to_elastic()
         group_.save_to_mongo()
 
+        return redirect(url_for('groups.group', group_id=group_._id))
+
     return render_template('notes/add_to_group.html', notes=notes)

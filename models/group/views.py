@@ -32,6 +32,11 @@ def join_group(group_id):
     group_.save_to_elastic()
     group_.save_to_mongo()
 
+    # saving to user database
+    user_ = User.find_by_id(session['_id'])
+    user_.group_id = group_._id
+    user_.save_to_mongo()
+
     # redirecting
     flash('Joined group successfully')
     return redirect(url_for('.group', group_id=group_id))

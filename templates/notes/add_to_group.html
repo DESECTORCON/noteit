@@ -48,20 +48,21 @@ $(document).ready(function() {
             <form method="POST">
 
                 {% for note in notes %}
-                <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <label class="list-group-item list-group-item-action flex-column align-items-start">
 
                     <div class="d-flex w-100 justify-content-between">
                         <input type="checkbox" name="selected_notes" id="{{ note._id }}" value="{{ note._id }}">
-                        <h4 class="mb-1"><i class="far fa-sticky-note"></i>
-                            {{ note.title }}</h4>
+                        <h4 class="mb-1">
+                            <a href="{{ url_for('notes.note', note_id=note._id) }}" ><i class="far fa-sticky-note"></i>  {{ note.title }}</a></h4>
 
                         <p class="list-group-item-text">Created date <strong>{{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</strong></p>
 
                     </div>
                     <p class="mb-1"><span class="badge badge-pill badge-secondary">{{ note.share_label }}</span></p>
 
-                </a>
+                </label>
                 {% endfor %}
+                <br>
 
                 <button class="btn btn-outline-info" type="submit">Share note</button>
             </form>
