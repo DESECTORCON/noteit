@@ -166,8 +166,10 @@ def user_page(user_id):
         except:
             user = User.find_by_email(user_id)
         user_notes = Note.find_shared_notes_by_user(user.email)
+        filepath = url_for('static', filename=user.picture)
 
-        return render_template('/users/user.html', user=user, user_notes=user_notes, user_note_count=len(user_notes))
+        return render_template('/users/user.html', user=user, user_notes=user_notes
+                               , user_note_count=len(user_notes), filepath=filepath)
 
     except:
         error_msg = traceback.format_exc().split('\n')
