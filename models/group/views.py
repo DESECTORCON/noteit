@@ -2,6 +2,7 @@ import os
 import traceback
 import uuid
 import shortid
+import werkzeug
 from flask import Blueprint, request, render_template, session, url_for, flash
 from werkzeug.utils import secure_filename, redirect
 import models.users.decorators as user_decorators
@@ -99,6 +100,22 @@ def create_group():
         for friend in all_firends:
             all_firends_.append(User.find_by_id(friend))
 
+        all_firends_diclist = []
+        for user in all_firends_:
+            try:
+                all_firends_diclist.append({'url': url_for('static', filename=user.picture), 'user_id': user._id,
+                                   "last_logined": user.last_logined,
+                                   "nickname": user.nick_name,
+                                   "email": user.email})
+
+            except werkzeug.routing.BuildError:
+                try:
+                    all_firends_diclist.append({'url': url_for('static', filename='img/index.jpg'), 'user_id': user._id,
+                                       "last_logined": user.last_logined,
+                                       "nickname": user.nick_name,
+                                       "email": user.email})
+                except:
+                    raise Exception('File image not exists. server shutdown')
 
         if request.method == 'POST':
             user = User.find_by_id(session['_id'])
@@ -118,7 +135,7 @@ def create_group():
                 file_name, file_extenstion = os.path.splitext(group_img)
                 if file_extenstion not in ALLOWED_GROUP_IMG_FORMATS or len(group_img) > 1:
                     return render_template('groups/create_group.html',
-                                           all_firends=all_firends
+                                           all_firends=all_firends_diclist
                                            , error_msg='Too much images!! Please upload just one image.',
                                            name=name, members=members, share=share, description=description)
 

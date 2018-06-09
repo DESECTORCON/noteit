@@ -27,15 +27,15 @@
 
                 <label class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class=" justify-content-between">
+
+                    <h5 class="mb-1"><a href="{{ url_for('users.user_page', user_id=user['user_id']) }}">
+                        <img src="{{ user['url'] }}" id="img" class="tumbnailimgSmaller" />   {{ user['nickname'] }}
+                    </a></h5>
                     {% if user._id in selected %}
                         <input type="checkbox" value="{{ user['user_id'] }}" name="users" id="users" checked>
                     {% else %}
                         <input type="checkbox" value="{{ user['user_id'] }}" name="users" id="users" />
                     {% endif %}
-                    <h5 class="mb-1"><a href="{{ url_for('users.user_page', user_id=user['user_id']) }}">
-                        <img src="{{ user['url'] }}" id="img" class="tumbnailimgSmaller" />{{ user['nickname'] }}
-                    </a></h5>
-
                     <small class="text-muted">Last logined at {{ user['last_logined'].strftime("%Y-%m-%d at %H:%M") }}</small>
                     <small class="text-muted">Email: {{ user['email'] }}</small>
                 </div>
