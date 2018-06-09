@@ -244,10 +244,17 @@ def add_friend():
     all_users.remove(current_user)
     users_list = []
     for user in all_users:
-        try:
-            users_list.append({'url': url_for('static', filename=user.picture), 'user_id': user._id})
-        except werkzeug.routing.BuildError:
-            users_list.append({'url': 'static.pwd', 'user_id': user._id})
+            try:
+                users_list.append({'url': url_for('static', filename=user.picture , quality=95), 'user_id': user._id,
+                                   "last_logined":user.last_logined,
+                                   "nickname": user.nick_name,
+                                   "email": user.email})
+
+            except werkzeug.routing.BuildError:
+                users_list.append({'url': 'static.pwd', 'user_id': user._id,
+                                   "last_logined":user.last_logined,
+                                   "nickname": user.nick_name,
+                                   "email": user.email})
 
     if request.method == 'POST':
         current_user.friends.extend(request.form.getlist('users'))

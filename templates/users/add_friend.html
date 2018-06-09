@@ -23,7 +23,7 @@
     <form method="POST" action="{{ url_for('users.add_friend') }}">
         <div class="form-group">
             <div class="list-group">
-                {% for user in all_users %}
+                {% for user in users_list %}
 
                 <label class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class=" justify-content-between">
@@ -32,10 +32,10 @@
                     {% else %}
                         <input type="checkbox" value="{{ user['user_id'] }}" name="users" id="users" />
                     {% endif %}
-                    <h5 class="mb-1"><a href="{{ url_for('users.user_page', user['user_id']) }}">{{ user.nick_name }}</a></h5>
-                    <img src="{{ url_for('static', filename=user['user_filename']) }}" id="img" onerror="this.style.display='none'">
-                    <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
-                    <small class="text-muted">Email: {{ user.email }}</small>
+                    <h5 class="mb-1"><a href="{{ url_for('users.user_page', user_id=user['user_id']) }}">{{ user['nickname'] }}</a></h5>
+                    <img src="user['url']" id="img" typeof="image   " />
+                    <small class="text-muted">Last logined at {{ user['last_logined'].strftime("%Y-%m-%d at %H:%M") }}</small>
+                    <small class="text-muted">Email: {{ user['email'] }}</small>
                 </div>
                 </label>
 
