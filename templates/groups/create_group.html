@@ -90,7 +90,7 @@ $(document).ready(function() {
 
         </div>
         <label >Friends to add</label>
-        <div class="input-group mb-">
+        <div class="">
 
 
             <div class="list-group">
@@ -104,12 +104,13 @@ $(document).ready(function() {
 
                 <label class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class=" justify-content-between">
+                        <h5 class="mb-1"><img src="{{ friend['url'] }}" class="tumbnailimgSmaller" id="img" />   {{ friend['nick_name'] }}</h5>
                         {% if members == friend._id %}
                         <input type="checkbox" value="{{ friend['user_id'] }}" name="members" checked>
                         {% else %}
                         <input type="checkbox" value="{{ friend['user_id'] }}" name="members" />
                         {% endif %}
-                        <h5 class="mb-1"><img src="{{ friend['url'] }}" id="img" class="tumbnailimgSmaller" />   {{ friend['nick_name'] }}</h5>
+
                         <small class="text-muted">Last logined at {{ friend['last_logined'].strftime("%Y-%m-%d at %H:%M") }}</small>
                         <small class="text-muted">Email: {{ friend['email'] }}</small>
                     </div>
