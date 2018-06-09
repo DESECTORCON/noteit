@@ -443,6 +443,12 @@ def delete_multiple():
                 note = Note.find_by_id(note_id)
                 note.delete_on_elastic()
                 note.delete_img()
+
+                my_group = Group.find_by_id(user.group_id)
+                del my_group.shared_notes[note._id]
+                my_group.save_to_mongo()
+                my_group.save_to_elastic()
+
                 try:
                     box = Box.find_by_id(note.box_id)
                     box.notes.remove(note._id)

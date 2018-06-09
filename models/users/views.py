@@ -83,12 +83,20 @@ def register_user():
                 return render_template("users/register.html")
 
             try:
-                if User.register_user(email, password, nick_name, filename):
-                    user_id = User.find_by_email(email)._id
-                    session['email'] = email
-                    session['_id'] = user_id
+                try:
+                    if User.register_user(email, password, nick_name, filename):
+                        user_id = User.find_by_email(email)._id
+                        session['email'] = email
+                        session['_id'] = user_id
 
-                    return redirect(url_for("home"))
+                        return redirect(url_for("home"))
+                except UnboundLocalError:
+                    if User.register_user(email, password, nick_name):
+                        user_id = User.find_by_email(email)._id
+                        session['email'] = email
+                        session['_id'] = user_id
+
+                        return redirect(url_for("home"))
 
             except UserErrors.UserError as e:
                 return e.message

@@ -1,9 +1,7 @@
 import datetime
 import os
 import uuid
-
 from werkzeug.utils import secure_filename
-
 from common.utils import Utils
 from common.database import Database
 import models.users.errors as UserErrors
@@ -70,7 +68,7 @@ class User(object):
         return True
 
     @staticmethod
-    def register_user(email, password, nick_name, file):
+    def register_user(email, password, nick_name, file=None):
         el = Elasticsearch(port=port)
         """
         This method registers a user using e-mail and password

@@ -105,7 +105,7 @@ $(document).ready(function() {
                 <label class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class=" justify-content-between">
                         <h5 class="mb-1"><img src="{{ friend['url'] }}" class="tumbnailimgSmaller" id="img" />   {{ friend['nick_name'] }}</h5>
-                        {% if members == friend._id %}
+                        {% if members == friend['_id'] %}
                         <input type="checkbox" value="{{ friend['user_id'] }}" name="members" checked>
                         {% else %}
                         <input type="checkbox" value="{{ friend['user_id'] }}" name="members" />
