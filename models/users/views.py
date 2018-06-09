@@ -2,6 +2,7 @@ import datetime
 import os
 import traceback
 import shortid
+import werkzeug
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect, secure_filename
@@ -166,7 +167,10 @@ def user_page(user_id):
         except:
             user = User.find_by_email(user_id)
         user_notes = Note.find_shared_notes_by_user(user.email)
-        filepath = url_for('static', filename=user.picture)
+        try:
+            filepath = url_for('static', filename=user.picture)
+        except werkzeug.routing.BuildError:
+            filepath = None
 
         return render_template('/users/user.html', user=user, user_notes=user_notes
                                , user_note_count=len(user_notes), filepath=filepath)
