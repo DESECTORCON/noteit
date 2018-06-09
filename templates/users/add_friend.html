@@ -28,11 +28,12 @@
                 <label class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class=" justify-content-between">
                     {% if user._id in selected %}
-                        <input type="checkbox" value="{{ user._id }}" name="users" id="users" checked>
+                        <input type="checkbox" value="{{ user['user_id'] }}" name="users" id="users" checked>
                     {% else %}
-                        <input type="checkbox" value="{{ user._id }}" name="users" id="users" />
+                        <input type="checkbox" value="{{ user['user_id'] }}" name="users" id="users" />
                     {% endif %}
-                    <h5 class="mb-1"><a href="{{ url_for('users.user_page', user_id=user._id) }}">{{ user.nick_name }}</a></h5>
+                    <h5 class="mb-1"><a href="{{ url_for('users.user_page', user['user_id']) }}">{{ user.nick_name }}</a></h5>
+                    <img src="{{ url_for('static', filename=user['user_filename']) }}" id="img" onerror="this.style.display='none'">
                     <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
                     <small class="text-muted">Email: {{ user.email }}</small>
                 </div>

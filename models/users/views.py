@@ -242,12 +242,19 @@ def add_friend():
     all_users = User.get_all()
     current_user = User.find_by_id(session['_id'])
     all_users.remove(current_user)
+    users_list = []
+    for user in all_users:
+        try:
+            users_list.append({'url': url_for('static', filename=user.picture), 'user_id': user._id})
+        except werkzeug.routing.BuildError:
+            users_list.append({'url': 'static.pwd', 'user_id': user._id})
+
     if request.method == 'POST':
         current_user.friends.extend(request.form.getlist('users'))
         current_user.save_to_mongo()
         return redirect(url_for('users.user_page', user_id=current_user._id))
 
-    return render_template('users/add_friend.html', all_users=all_users)
+    return render_template('users/add_friend.html', all_users=all_users, users_list=users_list)
 
 
 @user_blueprint.route('/searhc_', methods=['POST'])
