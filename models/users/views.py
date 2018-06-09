@@ -251,10 +251,13 @@ def add_friend():
                                    "email": user.email})
 
             except werkzeug.routing.BuildError:
-                users_list.append({'url': 'static.pwd', 'user_id': user._id,
-                                   "last_logined":user.last_logined,
-                                   "nickname": user.nick_name,
-                                   "email": user.email})
+                try:
+                    users_list.append({'url': url_for('static', filename='img/index.jpg'), 'user_id': user._id,
+                                       "last_logined":user.last_logined,
+                                       "nickname": user.nick_name,
+                                       "email": user.email})
+                except:
+                    raise Exception('File image not exists. server shutdown')
 
     if request.method == 'POST':
         current_user.friends.extend(request.form.getlist('users'))
