@@ -245,7 +245,7 @@ def add_friend():
     users_list = []
     for user in all_users:
             try:
-                users_list.append({'url': url_for('static', filename=user.picture , quality=95), 'user_id': user._id,
+                users_list.append({'url': url_for('static', filename=user.picture), 'user_id': user._id,
                                    "last_logined":user.last_logined,
                                    "nickname": user.nick_name,
                                    "email": user.email})

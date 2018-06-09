@@ -2,6 +2,20 @@
     box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
 }
 
+.tumbnailimg {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 40%;
+}
+
+.tumbnailimgSmaller {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 10%;
+}
+
 .form-size {
     max-width: 900px;
     margin: 0 auto;
