@@ -184,10 +184,8 @@ def create_group():
             group_for_save.save_to_elastic()
 
             # # saving to user
-            # for member in members:
-            #     user = User.find_by_id(member)
-            #     user.group_id = group_id
-            #     user.save_to_mongo()
+            user.group_id = group_id
+            user.save_to_mongo()
 
             # sending messages to users
 
