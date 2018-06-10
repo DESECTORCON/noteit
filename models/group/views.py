@@ -8,6 +8,7 @@ from werkzeug.utils import secure_filename, redirect
 import models.users.decorators as user_decorators
 from models.error_logs.error_log import Error_
 from models.group.group import Group
+from models.messages.message import Message
 from models.notes.note import Note
 from models.users.user import User
 from models.group.constants import ALLOWED_GROUP_IMG_FORMATS
@@ -153,16 +154,24 @@ def create_group():
             # saving group
             group_id = uuid.uuid4().hex
 
-            group_for_save = Group(_id=group_id, name=name, members=members,
+            group_for_save = Group(_id=group_id, name=name, members=[user._id],
                                    group_img_name=filename, shared=share, shared_notes=[], description=description)
             group_for_save.save_to_mongo()
             group_for_save.save_to_elastic()
 
-            # saving to user
+            # # saving to user
+            # for member in members:
+            #     user = User.find_by_id(member)
+            #     user.group_id = group_id
+            #     user.save_to_mongo()
+
+            # sending messages to users
+
             for member in members:
-                user = User.find_by_id(member)
-                user.group_id = group_id
-                user.save_to_mongo()
+                message = Message(title='Do you want to join my group?', content='''
+                    Join group %s!
+                    
+                ''')
 
             # redirecting
 

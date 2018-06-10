@@ -8,7 +8,8 @@ from config import ELASTIC_PORT as port
 
 class Message(object):
 
-    def __init__(self, title, content, reciver_id, sender_id, sended_date=None, readed_date=None ,_id=None, readed_by_reciver=False, is_a_noteOBJ=False):
+    def __init__(self, title, content, reciver_id, sender_id, sended_date=None, readed_date=None ,
+                 _id=None, readed_by_reciver=False, is_a_noteOBJ=False, is_invtation=False):
         self._id = uuid.uuid4().hex if _id is None else _id
         self.title = title
         self.content = content
