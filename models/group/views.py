@@ -169,9 +169,9 @@ def create_group():
 
             for member in members:
                 message = Message(title='Do you want to join my group?', content='''
-                    Join group %s!
-                    
-                ''')
+                    Join me on group %s!
+                    If you want to join, please click the link below.
+                ''', is_invtation=group_id, reciver_id=member, sender_id=user._id)
 
             # redirecting
 
