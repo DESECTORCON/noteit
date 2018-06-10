@@ -42,7 +42,7 @@ def join_group_(list_):
     user_.save_to_mongo()
 
     # if invatation, then remove the message and flash a message
-    message = Message.find_by_id(list__[1])
+    message = Message.find_by_id(list__[0])
     message.delete_on_elastic()
     message.delete()
 
@@ -51,7 +51,7 @@ def join_group_(list_):
     # redirecting
     flash('Joined group successfully')
 
-    return redirect(url_for('.group', group_id=group_id))
+    return redirect(url_for('.group', group_id=list__[1]))
 
 
 @group_blueprint.route('/group/_join/_joingroup/<string:group_id>')
