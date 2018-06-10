@@ -211,11 +211,14 @@ def get_out_group(group_id):
         # removing note from group
         group_notes.remove({'author': user._id, 'note_id': note['note_id']})
 
-    if group_.members is []:
+    if not group_.members:
         group_.delete_on_elastic()
         group_.delete_img()
         group_.delete()
-    group_.save_to_mongo()
-    group_.update_to_elastic()
+        flash('The group you secessioned was deleted because it has no members.')
+    else:
+        group_.save_to_mongo()
+        group_.update_to_elastic()
+        flash('Secession complete')
 
     return redirect(url_for('groups.groups'))
