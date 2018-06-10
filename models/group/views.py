@@ -32,9 +32,14 @@ def join_group_(list_):
     # saving group with user id
 
     group_ = Group.find_by_id(list__[1])
-    group_.members.extend([session['_id']])
-    group_.save_to_elastic()
-    group_.save_to_mongo()
+
+    if session['_id'] in group_.members:
+        flash('You\'ve already joined this group!')
+    else:
+
+        group_.members.extend([session['_id']])
+        group_.save_to_elastic()
+        group_.save_to_mongo()
 
     # saving to user database
     user_ = User.find_by_id(session['_id'])
@@ -227,7 +232,8 @@ def create_group():
                 message.save_to_mongo()
 
             # redirecting
-
+            flash('Successfully saved to database!')
+            flash('Sended invitations to {}'.format(', '.join(members)))
             return redirect(url_for('groups.groups'))
 
 
