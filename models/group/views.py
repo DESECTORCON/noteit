@@ -25,13 +25,13 @@ def share_bool_function(share):
     return share
 
 
-@group_blueprint.route('/group/_join/_joingroup/<string:object_list>')
+@group_blueprint.route('/group/_join/_joingroup/<string:group_id>')
 @user_decorators.require_login
-def join_group(object_list='__+__'):
+def join_group(group_id):
+    is_invatation = request.cookies.get('b8a070bbb21390060e65e9946661468d')
     # saving group with user id
-    object_list_regroup = object_list.split('__+__')
 
-    group_ = Group.find_by_id(object_list_regroup[0])
+    group_ = Group.find_by_id(group_id)
     group_.members.extend([session['_id']])
     group_.save_to_elastic()
     group_.save_to_mongo()
@@ -40,6 +40,10 @@ def join_group(object_list='__+__'):
     user_ = User.find_by_id(session['_id'])
     user_.group_id = group_._id
     user_.save_to_mongo()
+
+    # if invatation, then remove the message and flash a message
+    if not is_invatation:
+        pass
 
     # redirecting
     flash('Joined group successfully')
