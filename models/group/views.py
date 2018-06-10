@@ -92,27 +92,50 @@ def groups():
         return render_template('error_page.html', error_msgr='Crashed during getting groups...')
 
 
+def gen_all_friends_diclist():
+    all_firends = User.find_by_id(session['_id']).friends
+    all_firends_ = []
+    for friend in all_firends:
+        all_firends_.append(User.find_by_id(friend))
+    all_firends_diclist = []
+    for user in all_firends_:
+        try:
+            image = url_for('static', filename=user.picture)
+        except werkzeug.routing.BuildError:
+            image = url_for('static', filename='img/index.jpg')
+
+        all_firends_diclist.append({'url': image, 'user_id': user._id,
+                                    "last_logined": user.last_logined,
+                                    "nickname": user.nick_name,
+                                    "email": user.email})
+
+    return all_firends_diclist
+
+
 @group_blueprint.route('/create_group', methods=['GET', 'POST'])
 @user_decorators.require_login
 def create_group():
     try:
         if request.method == 'GET':
-            all_firends = User.find_by_id(session['_id']).friends
-            all_firends_ = []
-            for friend in all_firends:
-                all_firends_.append(User.find_by_id(friend))
+            # all_firends = User.find_by_id(session['_id']).friends
+            # all_firends_ = []
+            # for friend in all_firends:
+            #     all_firends_.append(User.find_by_id(friend))
 
-            all_firends_diclist = []
-            for user in all_firends_:
-                try:
-                    image = url_for('static', filename=user.picture)
-                except werkzeug.routing.BuildError:
-                    image = url_for('static', filename='img/index.jpg')
+            # all_firends_diclist = []
+            # for user in all_firends_:
+            #     try:
+            #         image = url_for('static', filename=user.picture)
+            #     except werkzeug.routing.BuildError:
+            #         image = url_for('static', filename='img/index.jpg')
+            #
+            #     all_firends_diclist.append({'url': image, 'user_id': user._id,
+            #                        "last_logined": user.last_logined,
+            #                        "nickname": user.nick_name,
+            #                        "email": user.email})
+            ### function ###
 
-                all_firends_diclist.append({'url': image, 'user_id': user._id,
-                                   "last_logined": user.last_logined,
-                                   "nickname": user.nick_name,
-                                   "email": user.email})
+            all_firends_diclist = gen_all_friends_diclist()
 
             return render_template('groups/create_group.html', all_firends=all_firends_diclist)
 
@@ -133,6 +156,7 @@ def create_group():
             if group_img is not None:
                 file_name, file_extenstion = os.path.splitext(group_img)
                 if file_extenstion not in ALLOWED_GROUP_IMG_FORMATS or len(group_img) > 1:
+                    all_firends_diclist = gen_all_friends_diclist()
                     return render_template('groups/create_group.html',
                                            all_firends=all_firends_diclist
                                            , error_msg='Too much images!! Please upload just one image.',
@@ -172,6 +196,8 @@ def create_group():
                     Join me on group %s!
                     If you want to join, please click the link below.
                 ''', is_invtation=group_id, reciver_id=member, sender_id=user._id)
+                message.save_to_elastic()
+                message.save_to_mongo()
 
             # redirecting
 
