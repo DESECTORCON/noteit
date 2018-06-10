@@ -25,13 +25,13 @@ def share_bool_function(share):
     return share
 
 
-@group_blueprint.route('/group/_join/_joingroup/<string:group_id>')
+@group_blueprint.route('/group/_join/_joingroup_/<string:list_>')
 @user_decorators.require_login
-def join_group(group_id):
-    is_invatation = request.cookies.get('b8a070bbb21390060e65e9946661468d')
+def join_group_(list_):
+    list__ = list_.split(',')
     # saving group with user id
 
-    group_ = Group.find_by_id(group_id)
+    group_ = Group.find_by_id(list__[1])
     group_.members.extend([session['_id']])
     group_.save_to_elastic()
     group_.save_to_mongo()
@@ -42,12 +42,34 @@ def join_group(group_id):
     user_.save_to_mongo()
 
     # if invatation, then remove the message and flash a message
-    if not is_invatation:
-        pass
+    message = Message.find_by_id(list__[1])
+    message.delete_on_elastic()
+    message.delete()
+
+    flash('Your invitation has expired.')
 
     # redirecting
     flash('Joined group successfully')
 
+    return redirect(url_for('.group', group_id=group_id))
+
+
+@group_blueprint.route('/group/_join/_joingroup/<string:group_id>')
+@user_decorators.require_login
+def join_group(group_id):
+    # saving group with user id
+    group_ = Group.find_by_id(group_id)
+    group_.members.extend([session['_id']])
+    group_.save_to_elastic()
+    group_.save_to_mongo()
+
+    # saving to user database
+    user_ = User.find_by_id(session['_id'])
+    user_.group_id = group_._id
+    user_.save_to_mongo()
+
+    # redirecting
+    flash('Joined group successfully')
     return redirect(url_for('.group', group_id=group_id))
 
 

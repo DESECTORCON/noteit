@@ -127,7 +127,7 @@
         <a class="btn btn-outline-warning" href="" data-toggle="modal" data-target="#exampleModal">Delete</a>
 
         {% if message.is_invtation != False %}
-            <a class="btn btn-outline-info" href="{{ url_for('groups.join_group', group_id=message.is_invtation) }}">Join group <small>group invtation</small></a>
+            <a class="btn btn-outline-info" href="{{ url_for('groups.join_group', list_=join_group_redirect_info) }}">Join group <small>group invtation</small></a>
         {% endif %}
 
     </div>

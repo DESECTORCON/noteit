@@ -189,9 +189,8 @@ def message(message_id, is_sended=False):
         else:
             note = None
         resp = make_response(render_template('messages/message.html', message=message, sender_nickname=sender_nickname,
-                               reciver_nickname=reciver_nickname, is_a_note=message.is_a_noteOBJ, note=note))
-        resp.set_cookie('b8a070bbb21390060e65e9946661468d', message.is_invtation)
-        resp.set_cookie('4ccaa172acbdcbf38fa0ea0ef0229c49', message._id)
+                               reciver_nickname=reciver_nickname, is_a_note=message.is_a_noteOBJ, note=note,
+                                             join_group_redirect_info=','.join([message_id, message.is_invtation])))
 
         return resp
 
