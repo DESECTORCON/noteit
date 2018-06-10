@@ -126,6 +126,10 @@
     <div class="card-body">
         <a class="btn btn-outline-warning" href="" data-toggle="modal" data-target="#exampleModal">Delete</a>
 
+        {% if message.is_invtation != False %}
+            <a class="btn btn-outline-info" href="{{ url_for('groups.join_group', group_id=message.is_invtation) }}">Join group <small>group invtation</small></a>
+        {% endif %}
+
     </div>
 
 </div>

@@ -191,9 +191,9 @@ def create_group():
 
             for member in members:
                 message = Message(title='Do you want to join my group?', content='''
-                    Join me on group %s!
+                    Join me on group {}!
                     If you want to join, please click the link below.
-                ''', is_invtation=group_id, reciver_id=member, sender_id=user._id)
+                '''.format(group_for_save.name), is_invtation=group_id, reciver_id=member, sender_id=user._id)
                 message.save_to_elastic()
                 message.save_to_mongo()
 
