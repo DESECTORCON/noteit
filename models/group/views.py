@@ -95,27 +95,25 @@ def groups():
 @user_decorators.require_login
 def create_group():
     try:
-        all_firends = User.find_by_id(session['_id']).friends
-        all_firends_ = []
-        for friend in all_firends:
-            all_firends_.append(User.find_by_id(friend))
+        if request.method == 'GET':
+            all_firends = User.find_by_id(session['_id']).friends
+            all_firends_ = []
+            for friend in all_firends:
+                all_firends_.append(User.find_by_id(friend))
 
-        all_firends_diclist = []
-        for user in all_firends_:
-            try:
-                all_firends_diclist.append({'url': url_for('static', filename=user.picture), 'user_id': user._id,
+            all_firends_diclist = []
+            for user in all_firends_:
+                try:
+                    image = url_for('static', filename=user.picture)
+                except werkzeug.routing.BuildError:
+                    image = url_for('static', filename='img/index.jpg')
+
+                all_firends_diclist.append({'url': image, 'user_id': user._id,
                                    "last_logined": user.last_logined,
                                    "nickname": user.nick_name,
                                    "email": user.email})
 
-            except werkzeug.routing.BuildError:
-                try:
-                    all_firends_diclist.append({'url': url_for('static', filename='img/index.jpg'), 'user_id': user._id,
-                                       "last_logined": user.last_logined,
-                                       "nickname": user.nick_name,
-                                       "email": user.email})
-                except:
-                    raise Exception('File image not exists. server shutdown')
+            return render_template('groups/create_group.html', all_firends=all_firends_diclist)
 
         if request.method == 'POST':
             user = User.find_by_id(session['_id'])
@@ -170,7 +168,7 @@ def create_group():
 
             return redirect(url_for('groups.groups'))
 
-        return render_template('groups/create_group.html', all_firends=all_firends_)
+
     except:
         error_msg = traceback.format_exc().split('\n')
 
