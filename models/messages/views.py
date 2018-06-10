@@ -24,6 +24,11 @@ def label_maker(messages, user_id):
     return labels
 
 
+def cookie_maker():
+    pass
+    return
+
+
 @message_blueprint.route('/all_messages/<string:user_id>', methods=['GET', 'POST'])
 @user_decorators.require_login
 def all_messages(user_id):

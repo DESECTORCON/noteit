@@ -25,11 +25,13 @@ def share_bool_function(share):
     return share
 
 
-@group_blueprint.route('/group/_join/_joingroup/<string:group_id>')
+@group_blueprint.route('/group/_join/_joingroup/<string:object_list>')
 @user_decorators.require_login
-def join_group(group_id):
+def join_group(object_list='__+__'):
     # saving group with user id
-    group_ = Group.find_by_id(group_id)
+    object_list_regroup = object_list.split('__+__')
+
+    group_ = Group.find_by_id(object_list_regroup[0])
     group_.members.extend([session['_id']])
     group_.save_to_elastic()
     group_.save_to_mongo()
@@ -41,6 +43,7 @@ def join_group(group_id):
 
     # redirecting
     flash('Joined group successfully')
+
     return redirect(url_for('.group', group_id=group_id))
 
 
