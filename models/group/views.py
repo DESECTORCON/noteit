@@ -233,7 +233,7 @@ def create_group():
 
             # redirecting
             flash('Successfully saved to database!')
-            flash('Sended invitations to {}'.format(', '.join(members)))
+            flash('Sended invitations to users')
             return redirect(url_for('groups.groups'))
 
 
