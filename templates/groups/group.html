@@ -84,6 +84,7 @@
             {% if is_in_group %}
             <a href="" class="btn btn-outline-warning" role="button" data-toggle="modal" data-target="#exampleModal">Secession</a>
             <a href="{{ url_for('groups.invite_friend') }}" class="btn btn-outline-secondary" role="button">Invite friend</a>
+            <a href="{{ url_for('notes.add_to_group') }}" class="btn btn-outline-info" role="button">Add Notes</a>
             {% else %}
             <a href="{{ url_for('groups.join_group', group_id=group._id) }}" class="btn btn-outline-secondary" role="button">Join group</a>
             {% endif %}

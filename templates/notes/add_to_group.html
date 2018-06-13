@@ -11,17 +11,17 @@
 {% endif %}
 <div class="container">
 
-    <div class="jumbotron">
+    <div class="">
 
         <h1><i class="fas fa-parachute-box"></i>  <i class="far fa-plus-square fa-xs"></i> Add Notes to Group</h1>
 
-        <p>Fill in the blanks, and submit!</p>
+        <p>Select, and submit!</p>
 
     </div>
 
     <br>
 
-
+    <hr>
     <script type="text/javascript">
 
     function myFunction() {
@@ -38,12 +38,13 @@ $(document).ready(function() {
 });
 </script>
 
-    <div class="container-fluid jumbotron" id="MAINDIV">
+    <div class="container-fluid" id="MAINDIV">
 
         <div>
             <h1><i class="fas fa-sticky-note"></i> Your notes</h1>
         </div>
-
+        <gr>
+            <hr></gr>
         <div>
             <form method="POST">
 
@@ -62,9 +63,22 @@ $(document).ready(function() {
 
                 </label>
                 {% endfor %}
+
+                {% if notes == [] %}
+                <div class="oaerror info">
+                    <strong><i class="fas fa-meh"></i> Umm...</strong> - Seems like you have no notes! <a href="{{ url_for('notes.create_note') }}">Create note</a>
+                </div>
+                {% endif %}
                 <br>
 
-                <button class="btn btn-outline-info" type="submit">Share note</button>
+                <div class="card">
+
+                    <div class="card-body">
+                        <button class="btn btn-outline-info" type="submit">Share note</button>
+                    </div>
+
+                </div>
+
             </form>
         </div>
 
