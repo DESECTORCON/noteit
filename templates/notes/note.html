@@ -35,9 +35,34 @@ if (video.canPlayType('video/mp4')) {
     $(this).removeClass('loading');
     $(this).attr('poster', '');
   });
+
+  // show loading image
+$('#loader').show();
+
+// main image loaded ?
+$('#main').on('load', function(){
+  // hide/remove the loading image
+  $('#loader').hide();
+});
 </script>
 
-<div class="jumbotron">
+<div class="jumbotron" id="main">
+
+    <div class="container">
+	<div class="row">
+		<div id="loader">
+    		<div class="dot"></div>
+			<div class="dot"></div>
+			<div class="dot"></div>
+			<div class="dot"></div>
+			<div class="dot"></div>
+			<div class="dot"></div>
+			<div class="dot"></div>
+			<div class="dot"></div>
+			<div class="lading"></div>
+		</div>
+	</div>
+</div>
 
     <div class="container">
         <p class="text-center font-weight-bold"><bold>{{ note.content }}</bold></p>
@@ -139,11 +164,11 @@ if (video.canPlayType('video/mp4')) {
 
                         <button type="submit" class="btn btn-outline-success">Add</button>
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                    <div class="modal-footer">
+                </div>
+                <div class="modal-footer">
 
 
-                    </div>
+                </div>
                 </form>
             </div>
         </div>
