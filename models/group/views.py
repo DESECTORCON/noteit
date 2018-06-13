@@ -129,10 +129,7 @@ def groups():
 
 
 def gen_all_friends_diclist():
-    all_firends = User.find_by_id(session['_id']).friends
-    all_firends_ = []
-    for friend in all_firends:
-        all_firends_.append(User.find_by_id(friend))
+    all_firends_ = User.find_by_id(session['_id']).get_friends()
     all_firends_diclist = []
     for user in all_firends_:
         try:
@@ -153,23 +150,6 @@ def gen_all_friends_diclist():
 def create_group():
     try:
         if request.method == 'GET':
-            # all_firends = User.find_by_id(session['_id']).friends
-            # all_firends_ = []
-            # for friend in all_firends:
-            #     all_firends_.append(User.find_by_id(friend))
-
-            # all_firends_diclist = []
-            # for user in all_firends_:
-            #     try:
-            #         image = url_for('static', filename=user.picture)
-            #     except werkzeug.routing.BuildError:
-            #         image = url_for('static', filename='img/index.jpg')
-            #
-            #     all_firends_diclist.append({'url': image, 'user_id': user._id,
-            #                        "last_logined": user.last_logined,
-            #                        "nickname": user.nick_name,
-            #                        "email": user.email})
-            ### function ###
 
             all_firends_diclist = gen_all_friends_diclist()
 
@@ -293,3 +273,11 @@ def get_out_group(group_id):
         flash('Secession complete')
 
     return redirect(url_for('groups.groups'))
+
+
+@group_blueprint.route('/invite/invite_friend/<string:group_id>')
+@user_decorators.require_login
+def invite_friend(group_id):
+    user_friends = User.find_by_id(session['_id']).get_friends()
+
+    return render_template('groups/invite_friend.html', friends=None)

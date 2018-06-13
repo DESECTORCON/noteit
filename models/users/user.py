@@ -173,6 +173,13 @@ class User(object):
     def find_by_id(cls, id):
         return cls(**Database.find_one(UserConstants.COLLECTION, {'_id': id}))
 
+    def get_friends(self):
+        return_data = []
+        for friend in self.friends:
+            return_data.append(User.find_by_id(friend))
+
+        return return_data
+
     @classmethod
     def find_by_nickname_mulitple(cls, nickname):
         return [cls(**elem) for elem in Database.find(UserConstants.COLLECTION, {"nick_name": nickname})]
