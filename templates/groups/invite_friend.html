@@ -11,14 +11,14 @@
         </div>
 
         <!--<div class="form-group">-->
-            <!--<form action="{{ url_for('users.search_for_above') }}" method="POST">-->
-                <!--{% if form %}-->
-                <!--<input class="form-control mr-sm-2" type="search" placeholder="Search Users" aria-label="Search" id="Search_users" name="Search_users" value="{{ form }}">-->
-                <!--{% else %}-->
-                <!--<input class="form-control mr-sm-2" type="search" placeholder="Search Users" aria-label="Search" id="Search_users" name="Search_users" value="{{ form }}">-->
-                <!--{% endif %}-->
-                <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
-            <!--</form>-->
+        <!--<form action="{{ url_for('users.search_for_above') }}" method="POST">-->
+        <!--{% if form %}-->
+        <!--<input class="form-control mr-sm-2" type="search" placeholder="Search Users" aria-label="Search" id="Search_users" name="Search_users" value="{{ form }}">-->
+        <!--{% else %}-->
+        <!--<input class="form-control mr-sm-2" type="search" placeholder="Search Users" aria-label="Search" id="Search_users" name="Search_users" value="{{ form }}">-->
+        <!--{% endif %}-->
+        <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+        <!--</form>-->
         <!--</div>-->
         <hr>
 
@@ -44,11 +44,24 @@
                     </label>
 
                     {% endfor %}
+                    {% if friends == [] %}
+
+                    <div class="col-sm-6 col-md-6">
+                        <div class="alert-message alert-message-info">
+                            <h4>
+                                Alert Message Info</h4>
+                            <p>
+                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. For performance
+                                reasons, the Tooltip and Popover data-apis are opt-in, meaning <strong>strong message</strong>.</p>
+                        </div>
+                    </div>
+
+                    {% endif %}
                 </div>
                 <br>
                 <div class="card">
                     <div class="card-body">
-                        <button type="submit" class="btn btn-outline-success">Save</button>
+                        <button type="submit" class="btn btn-outline-success">Invite</button>
                     </div>
                 </div>
             </div>

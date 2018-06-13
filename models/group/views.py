@@ -284,13 +284,14 @@ def invite_friend():
     group_name = group_.name
     group_members = group_.members
 
+    all_friends_ = []
     for friend in all_friends:
 
         for group_member in group_members:
             try:
                 if group_member == friend['user_id']:
-                    all_friends.remove(friend)
-            except UnboundLocalError:
+                    all_friends_.remove(friend)
+            except ValueError:
                 break
 
     if request.method == 'POST':
@@ -301,5 +302,5 @@ def invite_friend():
 
         return redirect(url_for('groups.group', group_id=group_._id))
 
-    return render_template('groups/invite_friend.html', friends=all_friends, group_name=group_name)
+    return render_template('groups/invite_friend.html', friends=all_friends_, group_name=group_name)
 
