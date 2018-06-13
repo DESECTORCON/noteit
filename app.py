@@ -129,9 +129,11 @@ from models.notes.views import note_blueprint
 from models.messages.views import message_blueprint
 from models.boxes.views import box_blueprint
 from models.group.views import group_blueprint
+from models.notification.views import notification_blueprint
 
 app.register_blueprint(user_blueprint, url_prefix="/users")
 app.register_blueprint(note_blueprint, url_prefix="/notes")
 app.register_blueprint(message_blueprint, url_prefix='/messages')
 app.register_blueprint(box_blueprint, url_prefix='/boxs')
 app.register_blueprint(group_blueprint, url_prefix='/groups')
+app.register_blueprint(notification_blueprint, url_prefix='/notifications')

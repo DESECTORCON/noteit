@@ -1,8 +1,5 @@
 import datetime
 import uuid
-
-from flask import flash
-
 from common.database import Database
 from models.notification.constants import COLLECTION as NotificationCollection
 
