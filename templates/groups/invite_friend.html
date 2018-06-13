@@ -46,14 +46,8 @@
                     {% endfor %}
                     {% if friends == [] %}
 
-                    <div class="col-sm-6 col-md-6">
-                        <div class="alert-message alert-message-info">
-                            <h4>
-                                Alert Message Info</h4>
-                            <p>
-                                Lorem Ipsum is simply dummy text of the printing and typesetting industry. For performance
-                                reasons, the Tooltip and Popover data-apis are opt-in, meaning <strong>strong message</strong>.</p>
-                        </div>
+                    <div class="oaerror info">
+                        <strong><i class="fas fa-meh"></i> Umm...</strong> - Seems like you have no more friends to add! <a href="{{ url_for('users.add_friend') }}">Add friends</a>
                     </div>
 
                     {% endif %}
