@@ -23,6 +23,13 @@
         <hr>
 
         <form method="POST" action="{{ url_for('groups.invite_friend') }}">
+            {% if error_msg %}
+            <div class="oaerror warning">
+                <strong><i class="fas fa-binoculars"></i>  Error</strong> - {{ error_msg }}
+            </div>
+            {% endif %}
+            <br><br>
+
             <div class="form-group">
                 <div class="list-group">
                     {% for user in friends %}

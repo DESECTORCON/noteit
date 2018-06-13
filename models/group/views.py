@@ -296,9 +296,14 @@ def invite_friend():
 
     if request.method == 'POST':
         users = request.form.getlist('users')
-        group_.members.extend(users)
-        group_.save_to_mongo()
-        group_.save_to_elastic()
+        if users == []:
+            return render_template('groups/invite_friend.html', friends=all_friends_, group_name=group_name,
+                                   error_msg='You havn\'t submitted anything!')
+        else:
+
+            group_.members.extend(users)
+            group_.save_to_mongo()
+            group_.save_to_elastic()
 
         return redirect(url_for('groups.group', group_id=group_._id))
 
