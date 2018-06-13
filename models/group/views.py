@@ -97,7 +97,7 @@ def group(group_id):
             is_in_group = False
 
         return render_template('groups/group.html', group=group_, members=members, shared_notes=shared_notes,
-                               is_in_group=is_in_group)
+                               is_in_group=is_in_group, session_id=session['_id'])
     except:
         error_msg = traceback.format_exc().split('\n')
 
@@ -248,7 +248,8 @@ def create_group():
 @group_blueprint.route('/my_group')
 @user_decorators.require_login
 def my_group():
-    user_group_id = User.find_by_id(session['_id']).group_id
+    current_user = User.find_by_id(session['_id'])
+    user_group_id = current_user.group_id
     if user_group_id is None:
         return render_template('groups/my_group_demo.html')
     else:
