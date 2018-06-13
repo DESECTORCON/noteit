@@ -282,10 +282,24 @@ def invite_friend():
     all_friends = gen_all_friends_diclist()
     group_ = Group.find_by_id(user_.group_id)
     group_name = group_.name
-    if request.method == 'POST':
-        pass
+    group_members = group_.members
 
-        return redirect(url_for('groups.group', group_id=group._id))
+    for friend in all_friends:
+
+        for group_member in group_members:
+            try:
+                if group_member == friend['user_id']:
+                    all_friends.remove(friend)
+            except UnboundLocalError:
+                break
+
+    if request.method == 'POST':
+        users = request.form.getlist('users')
+        group_.members.extend(users)
+        group_.save_to_mongo()
+        group_.save_to_elastic()
+
+        return redirect(url_for('groups.group', group_id=group_._id))
 
     return render_template('groups/invite_friend.html', friends=all_friends, group_name=group_name)
 
