@@ -40,9 +40,9 @@
             {% if session['email'] %}
 
             <ul class="navbar-nav mr-auto">
+
                 <li class="nav-item active"><a href="{{ url_for('groups.groups') }}" class="nav-link"><i class="far fa-object-group"></i> Groups</a></li>
                 <li class="nav-item active"><a href="{{ url_for('groups.my_group') }}" class="nav-link"><i class="far fa-id-badge"></i> My group</a></li>
-                <li class="nav-item active"><a href="{{ url_for('home') }}" class="nav-link"><i class="fas fa-home"></i> Go to home</a></li>
                 {% block navbar__ %}
                 {% endblock %}
             </ul>
@@ -51,6 +51,10 @@
             </ul>
 
             {% else %}
+
+            <ul class="navbar-nav mr-auto">
+                 <li class="nav-item active"><a href="{{ url_for('home') }}" class="nav-link"><i class="fas fa-home"></i> Go to home</a></li>
+            </ul>
 
             <ul class="nav navbar-nav navbar-right justify-content-end ml-auto">
                 <li class="nav-item active"><a href="{{ url_for('users.register_user') }}" class="nav-link"><i class="fas fa-user-plus"></i>   Sign up</a></li>
