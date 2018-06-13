@@ -275,12 +275,17 @@ def get_out_group(group_id):
     return redirect(url_for('groups.groups'))
 
 
-@group_blueprint.route('/invite/invite_friend/<string:group_id>', methods=['GET', 'POST'])
+@group_blueprint.route('/invite/invite_friend/', methods=['GET', 'POST'])
 @user_decorators.require_login
-def invite_friend(group_id):
+def invite_friend():
     user_ = User.find_by_id(session['_id'])
     all_friends = gen_all_friends_diclist()
     group_ = Group.find_by_id(user_.group_id)
     group_name = group_.name
+    if request.method == 'POST':
+        pass
+
+        return redirect(url_for('groups.group', group_id=group._id))
 
     return render_template('groups/invite_friend.html', friends=all_friends, group_name=group_name)
+
