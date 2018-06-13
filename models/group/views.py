@@ -14,15 +14,17 @@ from models.users.user import User
 from models.group.constants import ALLOWED_GROUP_IMG_FORMATS
 
 group_blueprint = Blueprint('groups', __name__)
-
-
-def share_bool_function(share):
-    if share == '0':
-        share = False
-    elif share == '1':
-        share = True
-
-    return share
+#
+#
+# def share_bool_function(share):
+#     if share == '0':
+#         share = False
+#     elif share == '1':
+#         share = True
+#     elif share == '2':
+#         share = True
+#
+#     return share
 
 
 @group_blueprint.route('/group/_join/_joingroup_/<string:list_>')
