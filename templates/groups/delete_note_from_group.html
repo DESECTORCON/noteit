@@ -31,9 +31,10 @@
     <div class="container-fluid container-fluid">
 
         <form method="POST" action="">
+            <br>
             <div class="list-group ul">
 
-                {% if friends == [] %}
+                {% if group_notes == [] %}
 
                 <div class="oaerror info">
                     <strong><i class="fas fa-meh"></i> Umm...</strong> - Seems like you have no notes to delete!
@@ -61,8 +62,13 @@
             </div>
 
             <br>
-            <a href="#" class="btn btn-outline-danger" role="button" data-toggle="modal" data-target="#exampleModal">Delete</a>
-            <a href="{{ url_for('groups.group', group_id=group_id) }}">               Go back</a>
+            <div class="card">
+                <div class="card-body">
+                    <a href="#" class="btn btn-outline-danger" role="button" data-toggle="modal" data-target="#exampleModal">Delete</a>
+                    <a href="{{ url_for('groups.group', group_id=group_id) }}" class="btn btn-outline-secondary">               Go back</a>
+                </div>
+            </div>
+
 
 
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
