@@ -53,7 +53,10 @@ class Note(object):
 
     @classmethod
     def find_by_id(cls, note_id):
-        return cls(**Database.find_one(NoteConstants.COLLECTION, {'_id': note_id}))
+        try:
+            return cls(**Database.find_one(NoteConstants.COLLECTION, {'_id': note_id}))
+        except TypeError:
+            return
 
     def save_to_mongo(self):
         Database.update(NoteConstants.COLLECTION, {"_id": self._id}, self.json())

@@ -347,6 +347,6 @@ def delete_note_from_group(group_id):
 
         return redirect(url_for('groups.group', group_id=group_id))
 
-    return render_template('delete_note_from_group.html', group_notes=group_notes, group_id=group_id)
+    return render_template('groups/delete_note_from_group.html', group_notes=group_notes, group_id=group_id)
 
 
