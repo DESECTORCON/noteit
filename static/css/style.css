@@ -16,6 +16,15 @@
     width: 10%;
 }
 
+.tumbnailimgEXSmaller {
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    padding: 5px;
+    width: 5%;
+        word-wrap: break-word;
+    width: 100px;
+}
+
 .form-size {
     max-width: 900px;
     margin: 0 auto;

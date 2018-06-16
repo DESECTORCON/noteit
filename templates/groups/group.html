@@ -26,11 +26,11 @@
 
             <div class="group">
                 <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
+                    <div class="d-flex w-100">
                         {% if session_id == user._id %}
-                        <h5 class="mb-1"><i class="far fa-user-circle"></i> {{ user.nick_name }} <small style="color:red">--me</small></h5>
+                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture) }}" id="" class="tumbnailimgEXSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
                         {% else %}
-                        <h5 class="mb-1"><i class="far fa-user-circle"></i> {{ user.nick_name }}</h5>
+                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture) }}" id="" class="tumbnailimgEXSmaller"> {{ user.nick_name }}</h5>
                         {% endif %}
                         <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
                     </div>
