@@ -14,6 +14,7 @@
     border-radius: 4px;
     padding: 5px;
     width: 10%;
+
 }
 
 .tumbnailimgEXSmaller {
@@ -23,6 +24,8 @@
     width: 5%;
     word-wrap: break-word;
     text-align: justify;
+    border: 10px solid transparent;
+    margin-bottom: 5px;
 }
 
 .form-size {

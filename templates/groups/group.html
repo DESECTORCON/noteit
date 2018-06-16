@@ -25,8 +25,8 @@
             {% for user in members %}
 
             <div class="group">
-                <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100">
+                <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start hover_">
+                    <div class="d-flex w-100 justify-content-between">
                         {% if session_id == user._id %}
                         <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
                         {% else %}
