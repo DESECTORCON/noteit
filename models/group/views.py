@@ -328,7 +328,7 @@ def delete_note_from_group(group_id):
     if request.method == 'GET':
         group_notes_ = []
         for note in group_notes:
-            group_notes_.append(Note.find_by_id(note))
+            group_notes_.append(Note.find_by_id(note['note_id']))
 
     if request.method == 'POST':
         delete_notes = request.form.getlist('delete')
@@ -347,6 +347,6 @@ def delete_note_from_group(group_id):
 
         return redirect(url_for('groups.group', group_id=group_id))
 
-    return render_template('groups/delete_note_from_group.html', group_notes=group_notes, group_id=group_id)
+    return render_template('groups/delete_note_from_group.html', group_notes=group_notes_, group_id=group_id)
 
 
