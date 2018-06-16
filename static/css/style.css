@@ -372,3 +372,10 @@ section .section-title {
     transform: scale(1);
 }
 }
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    color: #fff;
+    text-decoration: none;
+    background-color: #f7941d;
+
+}

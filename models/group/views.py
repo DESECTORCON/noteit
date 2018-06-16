@@ -319,11 +319,16 @@ def invite_friend():
     return render_template('groups/invite_friend.html', friends=all_friends_, group_name=group_name)
 
 
-@group_blueprint.route('/delete_note/_fromgroup/<string:group_id>')
+@group_blueprint.route('/delete_note/_fromgroup/<string:group_id>', methods=['GET', 'POST'])
 @user_decorators.require_login
 def delete_note_from_group(group_id):
     group = Group.find_by_id(group_id)
     group_notes = group.shared_notes
+
+    if request.method == 'GET':
+        group_notes_ = []
+        for note in group_notes:
+            group_notes_.append(Note.find_by_id(note))
 
     if request.method == 'POST':
         delete_notes = request.form.getlist('delete')
