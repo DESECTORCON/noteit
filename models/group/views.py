@@ -329,7 +329,7 @@ def delete_note_from_group(group_id):
 
         for note in group_notes:
             if note['author'] != session['_id']:
-                del group_notes[group_notes.index(note)]
+                group_notes.remove(note)
 
         group_notes_ = []
         for note in group_notes:
