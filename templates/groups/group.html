@@ -24,7 +24,7 @@
             {% if members != [] %}
             {% for user in members %}
 
-            <div class="group">
+            <div class="hoverdiv">
                 <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start hover_">
                     <div class="d-flex w-100 justify-content-between">
                         {% if session_id == user._id %}
