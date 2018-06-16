@@ -326,13 +326,14 @@ def delete_note_from_group(group_id):
     group_notes = group.shared_notes
 
     if request.method == 'GET':
-
+        group_notes_filtered = []
         for note in group_notes:
-            if note['author'] != session['_id']:
-                group_notes.remove(note)
+            if note['author'] == session['_id']:
+                group_notes_filtered.append(note)
 
+        # group_notes_filtered[:] = [note for note in group_notes if note['author'] is not session['_id']]
         group_notes_ = []
-        for note in group_notes:
+        for note in group_notes_filtered:
             group_notes_.append(Note.find_by_id(note['note_id']))
 
     if request.method == 'POST':
