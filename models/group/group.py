@@ -40,7 +40,10 @@ class Group(object):
 
     @classmethod
     def find_by_id(cls, note_id):
-        return cls(**Database.find_one(GroupConstants.COLLECTION, {'_id': note_id}))
+        try:
+            return cls(**Database.find_one(GroupConstants.COLLECTION, {'_id': note_id}))
+        except TypeError:
+            return None
 
     @classmethod
     def get_all_shared_groups(cls):

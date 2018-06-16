@@ -85,6 +85,8 @@ def join_group(group_id):
 def group(group_id):
     try:
         group_ = Group.find_by_id(group_id)
+        if group_ is None:
+            return render_template('groups/group.html', error_msg='The group you requested is no longer exists!')
         members = []
         shared_notes = []
         for member in group_.members:
