@@ -318,3 +318,30 @@ def invite_friend():
 
     return render_template('groups/invite_friend.html', friends=all_friends_, group_name=group_name)
 
+
+@group_blueprint.route('/delete_note/_fromgroup/<string:group_id>')
+@user_decorators.require_login
+def delete_note_from_group(group_id):
+    group = Group.find_by_id(group_id)
+    group_notes = group.shared_notes
+
+    if request.method == 'POST':
+        delete_notes = request.form.getlist('delete')
+
+        flash_messages = []
+        for note in delete_notes:
+            try:
+                del group_notes[note]
+            except Exception:
+                flash_messages.append('Note: ' + Note.find_by_id(note).title + ', ')
+
+        group.save_to_elastic()
+        group.save_to_mongo()
+        if flash_messages is not []:
+            flash(' '.join(flash_messages))
+
+        return redirect(url_for('groups.group', group_id=group_id))
+
+    return render_template('delete_note_from_group.html', group_notes=group_notes)
+
+
