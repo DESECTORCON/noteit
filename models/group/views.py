@@ -326,6 +326,11 @@ def delete_note_from_group(group_id):
     group_notes = group.shared_notes
 
     if request.method == 'GET':
+
+        for note in group_notes:
+            if note['author'] != session['_id']:
+                del group_notes[group_notes.index(note)]
+
         group_notes_ = []
         for note in group_notes:
             group_notes_.append(Note.find_by_id(note['note_id']))
@@ -336,14 +341,14 @@ def delete_note_from_group(group_id):
         flash_messages = []
         for note in delete_notes:
             try:
-                del group_notes[note]
+                del group_notes[group_notes.index({'note_id': note, 'author': session['_id']})]
             except Exception:
                 flash_messages.append('Note: ' + Note.find_by_id(note).title + ', ')
 
         group.save_to_elastic()
         group.save_to_mongo()
         if flash_messages is not []:
-            flash(' '.join(flash_messages))
+            flash(' '.join(flash_messages)+'can\'t be deleted. Please try again')
 
         return redirect(url_for('groups.group', group_id=group_id))
 
