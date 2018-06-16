@@ -35,6 +35,10 @@ def join_group_(list_):
 
     group_ = Group.find_by_id(list__[1])
 
+    if group_ is None:
+        flash('The group you want to join does not exist!')
+        return redirect(url_for('groups.groups'))
+
     if session['_id'] in group_.members:
         flash('You\'ve already joined this group!')
     else:
@@ -66,6 +70,10 @@ def join_group_(list_):
 def join_group(group_id):
     # saving group with user id
     group_ = Group.find_by_id(group_id)
+    if group_ is None:
+        flash('The group you want to join does not exist!')
+        return redirect(url_for('groups.groups'))
+
     group_.members.extend([session['_id']])
     group_.save_to_elastic()
     group_.save_to_mongo()
