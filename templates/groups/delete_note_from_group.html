@@ -31,7 +31,7 @@
     <div class="container-fluid container-fluid">
 
         <form method="POST" action="{{ url_for('notes.delete_multiple') }}">
-            <div class="list-group">
+            <div class="list-group ul">
 
                 {% if friends == [] %}
 
@@ -43,7 +43,7 @@
                 <br>
                 {% for note in group_notes %}
 
-                <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start group">
 
                     <div class="d-flex w-100 justify-content-between">
                         <input type="checkbox" name="delete" id="{{note._id}}" value="{{ note._id }}">
