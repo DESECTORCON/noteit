@@ -9,17 +9,6 @@
 
     {% include 'html_dependencies.html' %}
 
-    <!--<script>-->
-
-        <!--var myVar = setInterval(myTimer, 1000);-->
-
-        <!--function myTimer() {-->
-              <!--$(document).ready(function(){-->
-  <!--$('#close').trigger('click');-->
-<!--});-->
-        <!--}-->
-    <!--</script>-->
-
 </head>
 <body>
 
@@ -87,8 +76,11 @@
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     {% for message in messages %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close" id="close" name="close">&times;</a>
+    <div class="" id="alert_placeholder">
+
+    </div>
+    <div class="alert alert-success alert-dismissible fade show" id="alert">
+        <button type="button" class="close" data-dismiss="alert" id="close">x</button>
         <i class="fas fa-info-circle"></i>  {{ message }}
     </div>
     {% endfor %}
@@ -117,7 +109,10 @@ function myTimer() {
     var d = new Date();
     document.getElementById("demo").innerHTML = d.toLocaleTimeString();
 }
+
 </script>
+
+
         <h7><span class="glyphicon glyphicon-console"></span> Made by <a href="https://www.jetbrains.com/pycharm/">Pycharm</a>
             and
             <a href="http://flask.pocoo.org/">Flask</a> and <i class="fab fa-python"></i> <a href="https://www.python.org/">Python</a></h7>

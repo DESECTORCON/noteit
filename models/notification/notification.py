@@ -30,17 +30,17 @@ class Notification(object):
         }
 
     def save_to_db(self):
-        Database.insert(NotificationCollection.COLLECTION, self.json())
+        Database.insert(NotificationCollection, self.json())
 
     @classmethod
     def find_by_id(cls, notification_id):
-        return cls(**Database.find_one(NotificationCollection.COLLECTION, {'_id': notification_id}))
+        return cls(**Database.find_one(NotificationCollection, {'_id': notification_id}))
 
     def save_to_mongo(self):
-        Database.update(NotificationCollection.COLLECTION, {"_id": self._id}, self.json())
+        Database.update(NotificationCollection, {"_id": self._id}, self.json())
 
     def delete(self):
-        Database.remove(NotificationCollection.COLLECTION, {'_id': self._id})
+        Database.remove(NotificationCollection, {'_id': self._id})
 
     def alert(self):
         return {'title': self.title, 'content': self.content, 'target': self.target, 'type': self.type}
@@ -48,7 +48,7 @@ class Notification(object):
     @classmethod
     def find_by_type(cls, type, target):
         try:
-            return cls(**Database.find_one(NotificationCollection.COLLECTION, {'type': type, 'target': target}))
+            return cls(**Database.find_one(NotificationCollection, {'type': type, 'target': target}))
         except TypeError:
             return None
 
