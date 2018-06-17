@@ -127,7 +127,7 @@ def group(group_id):
         else:
             is_in_group = False
 
-        group_alerts = Notification.find_by_type('to_group', group_._id)
+        group_alerts = Notification.find_by_type('to_group', group_._id, session['_id'])
 
         return render_template('groups/group.html', group=group_, members=members, shared_notes=shared_notes,
                                is_in_group=is_in_group, session_id=session['_id'], group_alerts=group_alerts)

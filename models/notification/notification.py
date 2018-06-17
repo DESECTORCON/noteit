@@ -49,9 +49,10 @@ class Notification(object):
         return {'title': self.title, 'content': self.content, 'target': self.target, 'type': self.type}
 
     @classmethod
-    def find_by_type(cls, type, target):
+    def find_by_type(cls, type, target, session_id):
         try:
-            return [cls(**Database.find_one(NotificationCollection, {'type': type, 'target': target}))]
+            return [cls(**Database.find_one(NotificationCollection
+                                            , {'type': type, 'target': target, 'dismis_to': { "$nin":[session_id] }}))]
         except TypeError:
             return None
 
