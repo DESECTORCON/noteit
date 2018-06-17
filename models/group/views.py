@@ -332,7 +332,7 @@ def invite_friend():
         users = request.form.getlist('users')
         if users == []:
             return render_template('groups/invite_friend.html', friends=all_friends_, group_name=group_name,
-                                   error_msg='You havn\'t submitted anything!')
+                                   error_msg='You havn\'t submitted anything!', group_id=group_._id)
         else:
 
             group_.members.extend(users)
@@ -341,7 +341,7 @@ def invite_friend():
 
         return redirect(url_for('groups.group', group_id=group_._id))
 
-    return render_template('groups/invite_friend.html', friends=all_friends_, group_name=group_name)
+    return render_template('groups/invite_friend.html', friends=all_friends_, group_name=group_name, group_id=group_._id)
 
 
 @group_blueprint.route('/delete_note/_fromgroup/<string:group_id>', methods=['GET', 'POST'])
