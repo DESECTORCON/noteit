@@ -252,12 +252,13 @@ def add_friend():
     all_users.remove(current_user)
     user_friends = current_user.friends
 
+    all_users_ = []
     for user in all_users:
-        if user in user_friends:
-            all_users.remove(user)
+        if user._id not in user_friends:
+            all_users_.append(user)
 
     users_list = []
-    for user in all_users:
+    for user in all_users_:
             try:
                 users_list.append({'url': url_for('static', filename=user.picture), 'user_id': user._id,
                                    "last_logined":user.last_logined,
