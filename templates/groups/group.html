@@ -82,6 +82,18 @@
     </div>
     {% else %}
 
+    {% if group_alerts %}
+    <div id="row">
+        <div class="error-notice">
+            {% for alert in group_alerts %}
+                <div class="oaerror info">
+                    <strong>Error</strong> - Please Select a Different Username
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+
     <div class="page-header">
         <h1><i class="far fa-object-group"></i> Group <small class="">{{ group.name }}</small></h1>
     </div>

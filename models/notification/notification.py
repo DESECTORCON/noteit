@@ -48,7 +48,7 @@ class Notification(object):
     @classmethod
     def find_by_type(cls, type, target):
         try:
-            return cls(**Database.find_one(NotificationCollection, {'type': type, 'target': target}))
+            return [cls(**Database.find_one(NotificationCollection, {'type': type, 'target': target}))]
         except TypeError:
             return None
 
