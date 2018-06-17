@@ -44,6 +44,10 @@ def join_group_(list_):
         flash('You\'ve already joined this group!')
     else:
 
+        if len(group_.members) >= 30:
+            flash('Sorry, this group\'s member amount has reached it\'s limit!')
+            return redirect(url_for('groups.groups'))
+
         group_.members.extend([session['_id']])
         group_.save_to_elastic()
         group_.save_to_mongo()
@@ -73,6 +77,10 @@ def join_group(group_id):
     group_ = Group.find_by_id(group_id)
     if group_ is None:
         flash('The group you want to join does not exist!')
+        return redirect(url_for('groups.groups'))
+
+    if len(group_.members) >= 30:
+        flash('Sorry, this group\'s member amount has reached it\'s limit!')
         return redirect(url_for('groups.groups'))
 
     group_.members.extend([session['_id']])
