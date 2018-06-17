@@ -87,12 +87,12 @@
         <div class="error-notice">
             {% for alert in group_alerts %}
                 <div class="oaerror info">
-                    <strong>Error</strong> - Please Select a Different Username
+                    <strong>{{ alert.title }}</strong> - {{ alert.content }}
                 </div>
             {% endfor %}
         </div>
     </div>
-    {% else %}
+    {% endif %}
 
     <div class="page-header">
         <h1><i class="far fa-object-group"></i> Group <small class="">{{ group.name }}</small></h1>

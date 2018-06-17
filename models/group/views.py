@@ -302,12 +302,17 @@ def get_friends_whitout_added():
     all_friends_ = []
     for friend in all_friends:
 
-        for group_member in group_members:
-            try:
-                if group_member == friend['user_id']:
-                    all_friends_.remove(friend)
-            except ValueError:
-                break
+        # for group_member in group_members:
+        #     try:
+        #         if group_member == friend['user_id']:
+        #             all_friends_.remove(friend)
+        #     except ValueError:
+        #         break
+        try:
+            if friend in group_members:
+                all_friends_.remove(friend)
+        except ValueError:
+            continue
 
     return all_friends_
 
