@@ -10,6 +10,7 @@ from models.error_logs.error_log import Error_
 from models.group.group import Group
 from models.messages.message import Message
 from models.notes.note import Note
+from models.notification.notification import Notification
 from models.users.user import User
 from models.group.constants import ALLOWED_GROUP_IMG_FORMATS
 
@@ -83,6 +84,11 @@ def join_group(group_id):
     user_.group_id = group_._id
     user_.save_to_mongo()
 
+    # adding to group alerts - to alert users that someone joined
+
+    notifi = Notification(title='User {} has joined', content='', target=group_._id, type='to_group')
+    notifi.save_to_mongo()
+
     # redirecting
     flash('Joined group successfully')
     return redirect(url_for('.group', group_id=group_id))
@@ -108,8 +114,10 @@ def group(group_id):
         else:
             is_in_group = False
 
+        group_alerts = Notification.find_by_type('to_group', group_._id)
+
         return render_template('groups/group.html', group=group_, members=members, shared_notes=shared_notes,
-                               is_in_group=is_in_group, session_id=session['_id'])
+                               is_in_group=is_in_group, session_id=session['_id'], group_alerts=group_alerts)
     except:
         error_msg = traceback.format_exc().split('\n')
 

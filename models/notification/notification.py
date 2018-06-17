@@ -6,7 +6,7 @@ from models.notification.constants import COLLECTION as NotificationCollection
 
 class Notification(object):
 
-    def __init__(self, _id, title, content, target=None, type='to_all_users', created_date=datetime.datetime.now()):
+    def __init__(self, title, content, target=None, type='to_all_users', created_date=datetime.datetime.now(), _id=None):
         self._id = uuid.uuid4().hex if _id is None else _id
         self.title = title
         self.content = content
@@ -44,4 +44,12 @@ class Notification(object):
 
     def alert(self):
         return {'title': self.title, 'content': self.content, 'target': self.target, 'type': self.type}
+
+    @classmethod
+    def find_by_type(cls, type, target):
+        try:
+            return cls(**Database.find_one(NotificationCollection.COLLECTION, {'type': type, 'target': target}))
+        except TypeError:
+            return None
+
 
