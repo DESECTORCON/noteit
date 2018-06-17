@@ -82,25 +82,26 @@
     </div>
     {% else %}
 
-    {% if group_alerts %}
-    <div id="row">
-        <div class="error-notice">
-            {% for alert in group_alerts %}
-                <div class="oaerror info" role="alert">
-                    <strong>{{ alert.title }}</strong> - {{ alert.content }}
-                    <a href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}" class="close" data-dismiss="alert" aria-label="close" id="close" name="close"><a
-                            style="float: right;" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}" class="btn btn-xs btn- pull-right btn-outline-secondary">
-                        Dismiss</a></a>
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-
     <div class="page-header">
         <h1><i class="far fa-object-group"></i> Group <small class="">{{ group.name }}</small></h1>
     </div>
 
+    <hr>
+
+    {% if group_alerts %}
+    <div id="row">
+        <div class="error-notice">
+            {% for alert in group_alerts %}
+            <div class="oaerror info" role="alert">
+                <strong>{{ alert.title }}</strong> - {{ alert.content }}
+                <a href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}" class="close" data-dismiss="alert" aria-label="close" id="close" name="close"><a
+                        style="float: right;" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}" class="btn btn-xs btn- pull-right btn-outline-secondary">
+                    Dismiss</a></a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
     <hr>
 
     <div class="container">

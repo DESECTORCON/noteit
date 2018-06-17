@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, url_for, session
 from werkzeug.utils import redirect
+
+from models.group.group import Group
 from models.notification.notification import Notification
 
 notification_blueprint = Blueprint('notification', __name__)
@@ -23,5 +25,9 @@ def dismis_notifi(notification_id):
     notifi = Notification.find_by_id(notification_id)
     notifi.dismis_to.extend([session['_id']])
     notifi.save_to_mongo()
+    if notifi.type == 'to_group':
+        group_ = Group.find_by_id(notifi.target)
+        if notifi.dismis_to == group_.members:
+            notifi.delete()
 
     return redirect(url_for('groups.group', group_id=session['group_id']))

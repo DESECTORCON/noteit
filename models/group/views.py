@@ -68,6 +68,10 @@ def join_group_(list_):
     notifi = Notification(title='User {} has joined'.format(user_.nick_name), content='', target=group_._id, type='to_group')
     notifi.save_to_mongo()
 
+    # adding group _id to session
+    session['group_id'] = group_._id
+
+    # flashing
     flash('Your invitation has expired.')
 
     # redirecting
@@ -101,6 +105,9 @@ def join_group(group_id):
 
     notifi = Notification(title='User {} has joined'.format(user_.nick_name), content='', target=group_._id, type='to_group')
     notifi.save_to_mongo()
+
+    # adding group _id to session
+    session['group_id'] = group_._id
 
     # redirecting
     flash('Joined group successfully')
