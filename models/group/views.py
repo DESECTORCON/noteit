@@ -48,10 +48,11 @@ def join_group_(list_):
         group_.save_to_elastic()
         group_.save_to_mongo()
 
-    # saving to user database
-    user_ = User.find_by_id(session['_id'])
-    user_.group_id = group_._id
-    user_.save_to_mongo()
+        # saving to user database
+        user_ = User.find_by_id(session['_id'])
+        user_.group_id = group_._id
+        user_.save_to_mongo()
+        flash('Joined group successfully')
 
     # if invatation, then remove the message and flash a message
     message = Message.find_by_id(list__[0])
@@ -61,7 +62,6 @@ def join_group_(list_):
     flash('Your invitation has expired.')
 
     # redirecting
-    flash('Joined group successfully')
 
     return redirect(url_for('.group', group_id=list__[1]))
 
