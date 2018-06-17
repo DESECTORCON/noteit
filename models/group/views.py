@@ -310,7 +310,9 @@ def get_friends_whitout_added():
         #         break
         try:
             if friend in group_members:
-                all_friends_.remove(friend)
+                pass
+            else:
+                all_friends_.append(friend)
         except ValueError:
             continue
 
