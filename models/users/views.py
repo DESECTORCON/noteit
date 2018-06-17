@@ -250,6 +250,12 @@ def add_friend():
     all_users = User.get_all()
     current_user = User.find_by_id(session['_id'])
     all_users.remove(current_user)
+    user_friends = current_user.friends
+
+    for user in all_users:
+        if user in user_friends:
+            all_users.remove(user)
+
     users_list = []
     for user in all_users:
             try:
