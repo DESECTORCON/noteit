@@ -232,8 +232,7 @@ def create_group():
                 message.save_to_mongo()
 
             # redirecting
-            flash('Successfully saved to database!')
-            flash('Sended invitations to users')
+            flash('Successfully created group! | Sended invitations to users')
             return redirect(url_for('groups.groups'))
 
 
@@ -335,9 +334,15 @@ def invite_friend():
                                    error_msg='You havn\'t submitted anything!', group_id=group_._id)
         else:
 
-            group_.members.extend(users)
-            group_.save_to_mongo()
-            group_.save_to_elastic()
+            for member in users:
+                message = Message(title='Do you want to join my group?', content='''
+                    Join me on group {}!
+                    If you want to join, please click the link below.
+                '''.format(group_.name), is_invtation=group_._id, reciver_id=member, sender_id=user_._id)
+                message.save_to_elastic()
+                message.save_to_mongo()
+
+            flash('Successfully sended invitations to friends!')
 
         return redirect(url_for('groups.group', group_id=group_._id))
 
