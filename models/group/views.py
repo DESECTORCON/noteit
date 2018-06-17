@@ -32,6 +32,7 @@ group_blueprint = Blueprint('groups', __name__)
 @user_decorators.require_login
 def join_group_(list_):
     list__ = list_.split(',')
+    user_ = User.find_by_id(session['_id'])
     # saving group with user id
 
     group_ = Group.find_by_id(list__[1])
@@ -53,7 +54,6 @@ def join_group_(list_):
         group_.save_to_mongo()
 
         # saving to user database
-        user_ = User.find_by_id(session['_id'])
         user_.group_id = group_._id
         user_.save_to_mongo()
         flash('Joined group successfully')
@@ -62,6 +62,11 @@ def join_group_(list_):
     message = Message.find_by_id(list__[0])
     message.delete_on_elastic()
     message.delete()
+
+    # adding to group alerts - to alert users that someone joined
+
+    notifi = Notification(title='User {} has joined'.format(user_.nick_name), content='', target=group_._id, type='to_group')
+    notifi.save_to_mongo()
 
     flash('Your invitation has expired.')
 
@@ -94,7 +99,7 @@ def join_group(group_id):
 
     # adding to group alerts - to alert users that someone joined
 
-    notifi = Notification(title='User {} has joined', content='', target=group_._id, type='to_group')
+    notifi = Notification(title='User {} has joined'.format(user_.nick_name), content='', target=group_._id, type='to_group')
     notifi.save_to_mongo()
 
     # redirecting
