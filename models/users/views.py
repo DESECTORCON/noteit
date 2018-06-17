@@ -34,6 +34,7 @@ def login_user():
                     user.last_logined = datetime.datetime.now()
                     user.save_to_mongo()
                     flash('You were successfully logged in')
+                    session['group_id'] = user.group_id
                     return redirect(url_for("home"))
 
             except UserErrors.UserError as e:
@@ -85,16 +86,18 @@ def register_user():
             try:
                 try:
                     if User.register_user(email, password, nick_name, filename):
-                        user_id = User.find_by_email(email)._id
+                        user = User.find_by_email(email)
                         session['email'] = email
-                        session['_id'] = user_id
+                        session['_id'] = user._id
+                        session['group_id'] = user.group_id
 
                         return redirect(url_for("home"))
                 except UnboundLocalError:
                     if User.register_user(email, password, nick_name):
-                        user_id = User.find_by_email(email)._id
+                        user = User.find_by_email(email)
                         session['email'] = email
-                        session['_id'] = user_id
+                        session['_id'] = user._id
+                        session['group_id'] = user.group_id
 
                         return redirect(url_for("home"))
 
