@@ -14,6 +14,7 @@ class ChatBox(object):
         self.messages = messages
         self.created_date = created_date
         self.max_exists_time = datetime.timedelta(days=100)
+        self.last_logined = None
 
     def json(self):
         return {
@@ -21,7 +22,8 @@ class ChatBox(object):
             "user_ids": self.user_ids,
             "messages": self.messages,
             "created_date": self.created_date,
-            "max_exists_time": self.max_exists_time
+            "max_exists_time": self.max_exists_time,
+            "last_logined": self.last_logined
         }
 
     def save_to_mongo(self):
@@ -81,6 +83,10 @@ class ChatBox(object):
             members.append(User.find_by_id(user))
 
         return members
+
+    def update_last_logined(self):
+        self.last_logined = datetime.datetime.now()
+        self.save_to_mongo()
 
 
 
