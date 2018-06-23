@@ -163,144 +163,162 @@
     <hr>
 
     {% if group_alerts %}
-    <div id="">
-        <div class="">
 
-            <nav class="navbar fixed-top navbar-light bg-faded">
+    <div class="">
 
-                <!-- ICON -->
-                <div class="dropdown nav-button notifications-button hidden-sm-down">
+        <!-- ICON -->
+        <div class="dropdown notifications-button hidden-sm-down">
 
-                    <a class="btn btn-secondary dropdown-toggle" href="#" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i id="notificationsIcon" class="fa fa-bell-o" aria-hidden="true"></i>
-                        <span id="notificationsBadge" class="badge badge-danger"><i class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i></span>
-                    </a>
+            <a class="btn btn-secondary dropdown-toggle" href="#" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i id="notificationsIcon" class="fa fa-bell-o" aria-hidden="true"></i>
+                <span id="notificationsBadge" class="badge badge-danger">{{ group_alerts|length }}</span>
+            </a>
 
-                    <!-- NOTIFICATIONS -->
-                    <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown">
-                        <h6 class="dropdown-header">Notifications</h6>
-
-                        <!--&lt;!&ndash; CHARGEMENT &ndash;&gt;-->
-                        <!--<a id="notificationsLoader" class="dropdown-item dropdown-notification" href="#">-->
-                        <!--<p class="notification-solo text-center"><i id="notificationsIcon" class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i> Loading notifications...</p>-->
-                        <!--</a>-->
-
-                        <div id="notificationsContainer" class="notifications-container"></div>
-
-                        <!-- AUCUNE NOTIFICATION -->
-                        <a id="notificationAucune" class="dropdown-item dropdown-notification" href="#">
-                            <p class="notification-solo text-center">Aucune nouvelle notification</p>
-                        </a>
-
-                        <!-- TOUTES -->
-                        <a class="dropdown-item dropdown-notification-all" href="#">
-                            SE.inc
-                        </a>
-                        <div class="notifications-container">
-                            {% for alert in group_alerts %}
-                            <a class="dropdown-item dropdown-notification" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}">
-                                <div class="notification-read">
-                                    <i class="fa fa-times" aria-hidden="true"></i>
-                                </div>
-                                <img class="notification-img" src="https://placehold.it/48x48" alt="Icone Notification" />
-                                <div class="notifications-body">
-                                    <p class="notification-texte">{{ alert.title }}</p>
-                                    <p class="notification-date text-muted">
-                                        {{ alert.content }}
-                                        <i class="fa fa-clock-o" aria-hidden="true"></i> {{ alert.created_date }}
-                                    </p>
-                                </div>
-                            </a>
-                            {% endfor %}
+            <!-- NOTIFICATIONS -->
+            <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown">
+                <h6 class="dropdown-header">Notifications</h6>
+                <div class="notifications-container" id="notificationsContainer">
+                    {% for alert in group_alerts %}
+                    <a class="dropdown-item dropdown-notification" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}">
+                        <div class="notification-read">
+                            <i class="fa fa-times" aria-hidden="true"></i>
                         </div>
-                    </div>
+                        <i class="far fa-bell"></i>
+                        <div class="notifications-body">
+                            <p class="notification-texte">{{ alert.title }}</p>
+                            <p class="notification-date text-muted">
+                                {{ alert.content }}
+                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ alert.created_date }}
+                            </p>
+                        </div>
+                    </a>
+                    {% endfor %}
                 </div>
-            </nav>
-        </div>
-    </div>
-    {% endif %}
-    <hr>
 
-    <div class="container">
-        <h3 class="text-monospace"><i class="fas fa-users"></i> Members <small>total: {{ group.members|length }}</small></h3>
-    </div>
-
-    <br>
-
-    <div class="container">
-        <div class="list-group">
-
-            {% if members != [] %}
-            {% for user in members %}
-
-            <div class="hoverdiv">
-                <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start hover_">
-                    <div class="d-flex w-100 justify-content-between">
-                        {% if session_id == user._id %}
-                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
-                        {% else %}
-                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }}</h5>
-                        {% endif %}
-
-                    </div>
-                    <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                <!-- TOUTES -->
+                <a class="dropdown-item dropdown-notification-all" href="#">
+                    SE.inc
                 </a>
             </div>
-
-            {% endfor %}
-            {% else %}
-            <h4 class="text-muted"><i class="fas fa-question"></i> There are no members!</h4>
-            {% endif %}
-
         </div>
     </div>
+</div>
 
-    <br>
+{% else %}
 
-    <div class="container">
-        <h3 class="text-monospace"><i class="fas fa-sticky-note"></i> Notes <small>total: {{ shared_notes|length }}</small></h3>
-    </div>
 
-    <br>
+<div class="navbar fixed-top navbar-light bg-faded">
 
-    <div class="container">
+    <!-- ICON -->
+    <div class="dropdown notifications-button hidden-sm-down">
 
-        <div class="list-group">
-            {% if shared_notes != [] %}
-            {% for note in shared_notes %}
+        <a class="btn btn-secondary dropdown-toggle" href="#" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-bell"></i>
+            <span id="notificationsBadge" class="badge badge-danger"></span>
+        </a>
 
-            <div class="group">
-                <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1"><i class="fas fa-sticky-note"></i> {{ note.title }}</h5>
-                        <small class="text-muted">Made by: {{ note.author_nickname }}</small>
-                        <small class="text-muted">Created at {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
-                    </div>
-                </a>
-            </div>
+        <!-- NOTIFICATIONS -->
+        <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown">
+            <h6 class="dropdown-header">Notifications</h6>
+            <div class="notifications-container" id="notificationsContainer">
 
-            {% endfor %}
-            {% else %}
-            <h4 class="text-muted"><i class="fas fa-question"></i> There are no shared notes!</h4>
-            {% endif %}
+            <a class="dropdown-item dropdown-notification-all" href="#">
+                 No new notifications!
+            </a>
 
+            <!-- TOUTES -->
+            <a class="dropdown-item dropdown-notification-all" href="#">
+                SE.inc
+            </a>
         </div>
     </div>
-    <hr class="my-4">
+</div>
+</div>
 
-    <div class="card">
 
-        <div class="card-body">
-            {% if is_in_group %}
-            <a href="" class="btn btn-outline-warning" role="button" data-toggle="modal" data-target="#exampleModal">Secession</a>
-            <a href="{{ url_for('groups.invite_friend') }}" class="btn btn-outline-secondary" role="button">Invite friend</a>
-            <a href="{{ url_for('notes.add_to_group') }}" class="btn btn-outline-info" role="button">Add Notes</a>
-            <a href="{{ url_for('groups.delete_note_from_group', group_id=group._id) }}" class="btn btn-outline-warning" role="button">Delete notes</a>
-            {% else %}
-            <a href="{{ url_for('groups.join_group', group_id=group._id) }}" class="btn btn-outline-secondary" role="button">Join group</a>
-            {% endif %}
+{% endif %}
+<hr>
+
+<div class="container">
+    <h3 class="text-monospace"><i class="fas fa-users"></i> Members <small>total: {{ group.members|length }}</small></h3>
+</div>
+
+<br>
+
+<div class="container">
+    <div class="list-group">
+
+        {% if members != [] %}
+        {% for user in members %}
+
+        <div class="hoverdiv">
+            <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start hover_">
+                <div class="d-flex w-100 justify-content-between">
+                    {% if session_id == user._id %}
+                    <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
+                    {% else %}
+                    <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }}</h5>
+                    {% endif %}
+
+                </div>
+                <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+            </a>
         </div>
+
+        {% endfor %}
+        {% else %}
+        <h4 class="text-muted"><i class="fas fa-question"></i> There are no members!</h4>
+        {% endif %}
+
     </div>
+</div>
+
+<br>
+
+<div class="container">
+    <h3 class="text-monospace"><i class="fas fa-sticky-note"></i> Notes <small>total: {{ shared_notes|length }}</small></h3>
+</div>
+
+<br>
+
+<div class="container">
+
+    <div class="list-group">
+        {% if shared_notes != [] %}
+        {% for note in shared_notes %}
+
+        <div class="group">
+            <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1"><i class="fas fa-sticky-note"></i> {{ note.title }}</h5>
+                    <small class="text-muted">Made by: {{ note.author_nickname }}</small>
+                    <small class="text-muted">Created at {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                </div>
+            </a>
+        </div>
+
+        {% endfor %}
+        {% else %}
+        <h4 class="text-muted"><i class="fas fa-question"></i> There are no shared notes!</h4>
+        {% endif %}
+
+    </div>
+</div>
+<hr class="my-4">
+
+<div class="card">
+
+    <div class="card-body">
+        {% if is_in_group %}
+        <a href="" class="btn btn-outline-warning" role="button" data-toggle="modal" data-target="#exampleModal">Secession</a>
+        <a href="{{ url_for('groups.invite_friend') }}" class="btn btn-outline-secondary" role="button">Invite friend</a>
+        <a href="{{ url_for('notes.add_to_group') }}" class="btn btn-outline-info" role="button">Add Notes</a>
+        <a href="{{ url_for('groups.delete_note_from_group', group_id=group._id) }}" class="btn btn-outline-warning" role="button">Delete notes</a>
+        {% else %}
+        <a href="{{ url_for('groups.join_group', group_id=group._id) }}" class="btn btn-outline-secondary" role="button">Join group</a>
+        {% endif %}
+    </div>
+</div>
 
 </div>
 

@@ -297,7 +297,10 @@ def get_out_group(group_id):
         note_.save_to_elastic()
 
         # removing note from group
-        group_notes.remove({'author': user._id, 'note_id': note['note_id']})
+        try:
+            group_notes.remove({'author': user._id, 'note_id': note['note_id']})
+        except ValueError:
+            pass
 
     if not group_.members:
         group_.delete_on_elastic()
