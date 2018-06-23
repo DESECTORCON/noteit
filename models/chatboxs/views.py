@@ -1,8 +1,11 @@
+import uuid
+
 from flask import Blueprint, render_template, url_for, session, request
 from werkzeug.utils import redirect
 import models.users.decorators as user_decorators
 from models.chatboxs.chatbox import ChatBox
 from models.messages.message import Message
+from models.users.user import User
 
 chatbox_blueprint = Blueprint('chatboxs', __name__)
 
@@ -14,7 +17,6 @@ def chatbox(chatbox_id):
     messages = chatbox_.limit_find_messages()
     users = chatbox_.get_members()
     chatbox_.update_last_logined()
-    session['chatbox'] = chatbox_
     
     return render_template('chatboxs/chatbox.html', messages=messages, users=users)
 
@@ -22,10 +24,18 @@ def chatbox(chatbox_id):
 @chatbox_blueprint.route('/chat/chatbox_group/send_message/<string:chatbox_id>', methods=['POST'])
 @user_decorators.require_login
 def save_message(chatbox_id):
-    chatbox_ = session['chatbox']
+    chatbox_ = ChatBox.find_by_id(chatbox_id)
+    title = request.form['title']
+    content = request.form['content']
+
+    sender_id = User.find_by_email(session['email'])._id
     
-    message_ = Message()
+    message = Message(title=title, content=content,
+                      reciver_id=chatbox_id, sender_id=sender_id, is_a_noteOBJ=False)
+    message.save_to_mongo()
+    message.save_to_elastic()
     
-    chatbox_.messages.extend(request.form['message'])
+    chatbox_.messages.extend([message._id])
+    chatbox_.save_to_mongo()
     
     return redirect(url_for('chatbox', chatbox_id=chatbox_id))
