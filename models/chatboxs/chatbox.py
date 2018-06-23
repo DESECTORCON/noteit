@@ -3,6 +3,7 @@ import uuid
 from common.database import Database
 from models.chatboxs.constants import COLLECTION as ChatBoxConstants
 from models.messages.message import Message
+from models.users.user import User
 
 
 class ChatBox(object):
@@ -73,6 +74,13 @@ class ChatBox(object):
 
     def add_message(self, message_id):
         self.messages.extend([message_id])
+
+    def get_members(self):
+        members = []
+        for user in self.user_ids:
+            members.append(User.find_by_id(user))
+
+        return members
 
 
 

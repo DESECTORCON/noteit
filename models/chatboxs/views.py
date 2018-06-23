@@ -10,5 +10,6 @@ chatbox_blueprint = Blueprint('chatboxs', __name__)
 def chatbox(chatbox_id):
     chatbox_ = ChatBox.find_by_id(chatbox_id)
     messages = chatbox_.limit_find_messages()
+    users = chatbox_.get_members()
     
-    return render_template('chatboxs/chatbox.html', messages=messages)
+    return render_template('chatboxs/chatbox.html', messages=messages, users=users)
