@@ -27,7 +27,7 @@ def dismis_notifi(notification_id):
     notifi.save_to_mongo()
     if notifi.type == 'to_group':
         group_ = Group.find_by_id(notifi.target)
-        if notifi.dismis_to == group_.members:
+        if set(notifi.dismis_to) == set(group_.members):
             notifi.delete()
 
     return redirect(url_for('groups.group', group_id=session['group_id']))
