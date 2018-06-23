@@ -334,10 +334,3 @@ def send_note_radio(note_id):
 @user_decorators.require_login
 def choose():
     return render_template('messages/choose_message_type.html')
-
-#
-# @message_blueprint.route('/chat/chatbox_group/<string:chatbox_id>')
-# @user_decorators.require_login
-# def chatbox(chatbox_id):
-
-

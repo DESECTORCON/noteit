@@ -32,6 +32,13 @@ class ChatBox(object):
         except TypeError:
             return None
 
+    @classmethod
+    def limit_find_by_id(cls, chatbox_id):
+        try:
+            return cls(**Database.limit_find(ChatBoxConstants.COLLECTION, {'_id': chatbox_id}, 20))
+        except TypeError:
+            return None
+
     def delete_member(self, member_id):
         # returns false when error accorded
         try:

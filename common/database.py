@@ -29,3 +29,7 @@ class Database(object):
     @staticmethod
     def remove(collection, query):
         Database.DATABASE[collection].remove(query)
+
+    @staticmethod
+    def limit_find(collection, query, limit):
+        return Database.DATABASE[collection].find(query).limit(limit).sort('date',pymongo.DESCENDING)
