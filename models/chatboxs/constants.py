@@ -1,1 +1,1 @@
-COLLECTION = 'chatboxes'
+COLLECTION = 'chatboxs'
