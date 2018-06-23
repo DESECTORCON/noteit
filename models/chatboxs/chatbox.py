@@ -43,4 +43,19 @@ class ChatBox(object):
         # addes member by extending list
         self.user_ids.extend([user_id])
 
+    def delete_message(self, message_id):
+        """
+
+        :param message_id: message's _id
+        :return: returns false when error accorded
+        """
+        try:
+            self.messages.remove(message_id)
+        except ValueError:
+            return False
+
+    def add_message(self, message_id):
+        self.messages.extend([message_id])
+
+
 
