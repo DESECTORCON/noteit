@@ -9,6 +9,6 @@ chatbox_blueprint = Blueprint('chatboxs', __name__)
 @user_decorators.require_login
 def chatbox(chatbox_id):
     chatbox_ = ChatBox.find_by_id(chatbox_id)
-    messages = chatbox_.limit_find_by_id()
+    messages = chatbox_.limit_find_messages()
     
-    return render_template('chatboxs/chatbox.html', messages=None)
+    return render_template('chatboxs/chatbox.html', messages=messages)

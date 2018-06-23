@@ -27,16 +27,19 @@ class ChatBox(object):
         Database.insert(ChatBoxConstants, self.json())
 
     @classmethod
-    def find_by_id(cls, chatbox_id):
+    def find_by_id(cls, chatbox_id, limit=None):
         try:
-            return cls(**Database.find_one(ChatBoxConstants.COLLECTION, {'_id': chatbox_id}))
+            if limit is not None:
+                return cls(**Database.limit_find(ChatBoxConstants.COLLECTION, {'_id': chatbox_id}, limit=limit))
+            else:
+                return cls(**Database.find_one(ChatBoxConstants.COLLECTION, {'_id': chatbox_id}))
         except TypeError:
             return None
 
-    def limit_find_messages(self, chatbox_id):
+    def limit_find_messages(self):
         try:
             # return cls(**Database.limit_find(ChatBoxConstants.COLLECTION, {'_id': chatbox_id}, 20))
-            chatbox = self.find_by_id(chatbox_id)
+            chatbox = self.find_by_id(self._id, limit=25)
             messages = []
 
             for message in chatbox.messages:
