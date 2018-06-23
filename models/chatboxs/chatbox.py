@@ -2,6 +2,7 @@ import datetime
 import uuid
 from common.database import Database
 from models.chatboxs.constants import COLLECTION as ChatBoxConstants
+from models.messages.message import Message
 
 
 class ChatBox(object):
@@ -32,10 +33,16 @@ class ChatBox(object):
         except TypeError:
             return None
 
-    @classmethod
-    def limit_find_by_id(cls, chatbox_id):
+    def limit_find_messages(self, chatbox_id):
         try:
-            return cls(**Database.limit_find(ChatBoxConstants.COLLECTION, {'_id': chatbox_id}, 20))
+            # return cls(**Database.limit_find(ChatBoxConstants.COLLECTION, {'_id': chatbox_id}, 20))
+            chatbox = self.find_by_id(chatbox_id)
+            messages = []
+
+            for message in chatbox.messages:
+                messages.append(Message.find_by_id(message))
+            return messages
+
         except TypeError:
             return None
 

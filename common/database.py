@@ -16,7 +16,7 @@ class Database(object):
 
     @staticmethod
     def find(collection, query):
-        return Database.DATABASE[collection].find(query)
+        return Database.DATABASE[collection].find(query).sort('date', pymongo.DESCENDING)
 
     @staticmethod
     def find_one(collection, query):
@@ -32,4 +32,4 @@ class Database(object):
 
     @staticmethod
     def limit_find(collection, query, limit):
-        return Database.DATABASE[collection].find(query).limit(limit).sort('date',pymongo.DESCENDING)
+        return Database.DATABASE[collection].find(query).limit(limit).sort('date', pymongo.DESCENDING)

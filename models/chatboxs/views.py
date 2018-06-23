@@ -8,6 +8,7 @@ chatbox_blueprint = Blueprint('chatboxs', __name__)
 @chatbox_blueprint.route('/chat/chatbox_group/<string:chatbox_id>')
 @user_decorators.require_login
 def chatbox(chatbox_id):
-    messages = ChatBox.find_by_id()
+    chatbox_ = ChatBox.find_by_id(chatbox_id)
+    messages = chatbox_.limit_find_by_id()
     
     return render_template('chatboxs/chatbox.html', messages=None)
