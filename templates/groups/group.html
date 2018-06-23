@@ -181,7 +181,7 @@
                     {% for alert in group_alerts %}
                     <a class="dropdown-item dropdown-notification" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}">
                         <div class="notification-read">
-                            <i class="fa fa-times" aria-hidden="true"></i>
+                            <i class="fa fa-times"></i>
                         </div>
                         <i class="far fa-bell"></i>
                         <div class="notifications-body">
@@ -196,9 +196,9 @@
                 </div>
 
                 <!-- TOUTES -->
-                <a class="dropdown-item dropdown-notification-all" href="#">
+                <div     class="dropdown-item dropdown-notification-all" href="#">
                     SE.inc
-                </a>
+                </div>
             </div>
         </div>
     </div>
