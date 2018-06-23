@@ -330,25 +330,14 @@ def send_note_radio(note_id):
         return render_template('error_page.html', error_msgr='Crashed during sending message...')
 
 
-# @message_blueprint.route('/send_message/select', methods=['GET', 'POST'])
-# @user_decorators.require_login
-# def user_select():
-#     all_users = User.get_all()
-#
-#     if request.method == 'POST':
-#         if request.form.getlist("user") in [None, [], ""]:
-#             return render_template('messages/send_note.html',
-#                                    e="You hadn't selected an reciver. Please select at least ONE reciver.")
-#
-#         else:
-#
-#             recivers = request.form.getlist("user")
-#
-#         return redirect(url_for('.send_note', user_ids=recivers))
-#
-#     return render_template('messages/user_select.html', all_users=all_users)
 @message_blueprint.route('/choose/')
 @user_decorators.require_login
 def choose():
     return render_template('messages/choose_message_type.html')
+
+#
+# @message_blueprint.route('/chat/chatbox_group/<string:chatbox_id>')
+# @user_decorators.require_login
+# def chatbox(chatbox_id):
+
 
