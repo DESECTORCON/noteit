@@ -89,16 +89,67 @@
     <hr>
 
     {% if group_alerts %}
-    <div id="row">
-        <div class="error-notice">
-            {% for alert in group_alerts %}
-            <div class="oaerror info" role="alert">
-                <strong>{{ alert.title }}</strong> - {{ alert.content }}
-                <a href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}" class="close" data-dismiss="alert" aria-label="close" id="close" name="close"><a
-                        style="float: right;" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}" class="btn btn-xs btn- pull-right btn-outline-secondary">
-                    Dismiss</a></a>
-            </div>
-            {% endfor %}
+    <div id="">
+        <div class="">
+
+            <nav class="navbar fixed-top navbar-light bg-faded">
+
+                <!-- ICON -->
+                <div class="dropdown nav-button notifications-button hidden-sm-down">
+
+                    <a class="btn btn-secondary dropdown-toggle" href="#" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i id="notificationsIcon" class="fa fa-bell-o" aria-hidden="true"></i>
+                        <span id="notificationsBadge" class="badge badge-danger"><i class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i></span>
+                    </a>
+
+                    <!-- NOTIFICATIONS -->
+                    <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown">
+                        <h6 class="dropdown-header">Notifications</h6>
+
+                        <!--&lt;!&ndash; CHARGEMENT &ndash;&gt;-->
+                        <!--<a id="notificationsLoader" class="dropdown-item dropdown-notification" href="#">-->
+                        <!--<p class="notification-solo text-center"><i id="notificationsIcon" class="fa fa-spinner fa-pulse fa-fw" aria-hidden="true"></i> Loading notifications...</p>-->
+                        <!--</a>-->
+
+                        <div id="notificationsContainer" class="notifications-container"></div>
+
+                        <!-- AUCUNE NOTIFICATION -->
+                        <a id="notificationAucune" class="dropdown-item dropdown-notification" href="#">
+                            <p class="notification-solo text-center">Aucune nouvelle notification</p>
+                        </a>
+
+                        <!-- TOUTES -->
+                        <a class="dropdown-item dropdown-notification-all" href="#">
+                            SE.inc
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </nav>
+
+            <!-- TEMPLATE NOTIFICATION -->
+            <script id="notificationTemplate" type="text/html">
+                <!-- NOTIFICATION -->
+                {% for alert in group_alerts %}
+                <a class="dropdown-item dropdown-notification" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}">
+                    <div class="notification-read">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
+                    <img class="notification-img" src="https://placehold.it/48x48" alt="Icone Notification" />
+                    <div class="notifications-body">
+                        <p class="notification-texte">{{ alert.title }}</p>
+                        <p class="notification-date text-muted">
+                            {{ alert.content }}
+                            <i class="fa fa-clock-o" aria-hidden="true"></i> {{date}}
+                        </p>
+                    </div>
+                </a>
+                {% endfor %}
+            </script>
+
+
         </div>
     </div>
     {% endif %}
