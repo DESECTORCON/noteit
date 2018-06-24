@@ -8,7 +8,7 @@ from models.users.user import User
 
 class ChatBox(object):
 
-    def __init__(self, _id, user_ids=[], messages=[], created_date=datetime.datetime.now()):
+    def __init__(self, _id=None, user_ids=[], messages=[], created_date=datetime.datetime.now()):
         self._id = uuid.uuid4().hex if _id is None else _id
         self.user_ids = user_ids
         self.messages = messages
