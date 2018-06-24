@@ -37,7 +37,6 @@ def chatbox(chatbox_id):
     chatbox_ = ChatBox.find_by_id(chatbox_id)
     messages = chatbox_.limit_find_messages()
     users = chatbox_.get_members()
-    chatbox_.update_last_logined()
 
     return render_template('chatboxs/chatbox.html', messages=messages, users=users, chatbox_=chatbox_)
 
@@ -49,10 +48,12 @@ def save_message(chatbox_id):
     title = request.form['title']
     content = request.form['content']
 
-    sender_id = User.find_by_email(session['email'])._id
+    sender = User.find_by_email(session['email'])
+    sender_name = sender.nick_name
+    sender_id = sender._id
     
     message = Message(title=title, content=content,
-                      reciver_id=chatbox_id, sender_id=sender_id, is_a_noteOBJ=False)
+                      reciver_id=chatbox_id, sender_id=sender_id, is_a_noteOBJ=False, sender_name=sender_name)
     message.save_to_mongo()
     message.save_to_elastic()
     

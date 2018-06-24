@@ -24,7 +24,8 @@ class ChatBox(object):
             "user_ids": self.user_ids,
             "messages": self.messages,
             "created_date": self.created_date,
-            "last_logined": self.last_logined
+            "last_logined": self.last_logined,
+            "name": self.name
         }
 
     def save_to_mongo(self):
@@ -79,10 +80,6 @@ class ChatBox(object):
             members.append(User.find_by_id(user))
 
         return members
-
-    def update_last_logined(self):
-        self.last_logined = datetime.datetime.now()
-        self.save_to_mongo()
 
 
 

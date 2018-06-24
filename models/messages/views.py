@@ -132,11 +132,12 @@ def send_message(user_to_send=None):
             else:
 
                 recivers = request.form.getlist("user")
-
-            sender_id = User.find_by_email(session['email'])._id
+            sender = User.find_by_email(session['email'])
+            sender_name = sender.nick_name
+            sender_id = sender._id
 
             message = Message(title=title, content=content,
-                              reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False,)
+                              reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False, sender_name=sender_name)
             message.save_to_mongo()
             message.save_to_elastic()
 
@@ -254,9 +255,12 @@ def send_note():
 
                 recivers = request.form.getlist("user")
 
-            sender_id = User.find_by_email(session['email'])._id
+            sender = User.find_by_email(session['email'])
+            sender_name = sender.nick_name
+            sender_id = sender._id
 
-            message = Message(title=message_title, content=note._id, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True)
+            message = Message(title=message_title, content=note._id, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True,
+                              sender_name=sender_name)
             message.save_to_mongo()
             message.save_to_elastic()
 

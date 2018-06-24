@@ -39,7 +39,7 @@
                     </div>
                     <div class="right-header-detail">
                         <p>{{ chatbox_.name }}</p>
-                        <span>already 19 messages </span>
+                        <span>{{ chatbox_.messages|length }} messages</span>
                     </div>
                 </div>
             </div>
@@ -49,10 +49,8 @@
                         {% for message in messages %}
                         <li>
                             <div class="rightside-left-chat">
-                                <span><i class="fa fa-circle" aria-hidden="true"></i> <small>10:00 AM,Today</small> </span><br><br>
-                                <p>Lorem ipsum dolor sit ameeserunt mollit anim id est laborum.
-                                    Lorem ipsum dolor sit ameeserunt mollit anim mollit anim laborum.
-                                    Lorem ipsum dolor sit ameeserunt mollit anim id est laborum.</p>
+                                <span><i class="fa fa-circle" aria-hidden="true"></i> {{ message.sender_name }}<small>{{ message.created_date }}</small> </span><br><br>
+                                <p>{{ message.content }}</p>
                             </div>
                         </li>
                         {% endfor %}
