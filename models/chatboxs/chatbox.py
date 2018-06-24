@@ -1,5 +1,6 @@
 import datetime
 import uuid
+import shortid
 from common.database import Database
 from models.chatboxs.constants import COLLECTION as ChatBoxConstants
 from models.messages.message import Message
@@ -8,13 +9,15 @@ from models.users.user import User
 
 class ChatBox(object):
 
-    def __init__(self, _id=None, user_ids=[], messages=[], created_date=datetime.datetime.now()):
+    def __init__(self, _id=None, user_ids=[], messages=[], created_date=datetime.datetime.now(), name=None):
         self._id = uuid.uuid4().hex if _id is None else _id
         self.user_ids = user_ids
         self.messages = messages
         self.created_date = created_date
         self.max_exists_time = datetime.timedelta(days=100)
         self.last_logined = None
+        id_gen_sid = shortid.ShortId()
+        self.name = id_gen_sid.generate() if name is None else name
 
     def json(self):
         return {

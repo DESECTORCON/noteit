@@ -11,6 +11,19 @@
         <p>Create a chatbox with your friends!</p>
     </div>
 
+    <div class="shadow-sm p-3 mb-5 bg-white rounded">
+        <form method="POST">
+
+            <div class="form-group">
+                <label for="title">Chatbox Name</label>
+                <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="titleBlock" value="{{ title }}">
+
+                <small id="titleBlock" class="form-text text-muted">Your message's title</small>
+            </div>
+
+        </form>
+    </div>
+
 </div>
 
 {% endblock %}
