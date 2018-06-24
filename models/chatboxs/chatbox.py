@@ -14,7 +14,6 @@ class ChatBox(object):
         self.user_ids = user_ids
         self.messages = messages
         self.created_date = created_date
-        self.max_exists_time = datetime.timedelta(days=100)
         self.last_logined = None
         id_gen_sid = shortid.ShortId()
         self.name = id_gen_sid.generate() if name is None else name

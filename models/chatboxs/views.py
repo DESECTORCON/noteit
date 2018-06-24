@@ -20,10 +20,10 @@ def create_chatbox(default_members=[]):
         return render_template('chatboxs/create_chatbox.html', user_friends=user_friends)
         
     if request.method == 'POST':
-        chatbox_members = request.form.getlist('members')
+        chatbox_members = request.form.getlist('user')
         if chatbox_members == [] or chatbox_members is None:
             return render_template('chatboxs/create_chatbox.html', user_friends=user_friends
-                                   , error_msg='You havn\'t selected any friends!')
+                                   , error_msgc='You havn\'t selected any friends!')
         
         _id = uuid.uuid4().hex
         chatbox_ = ChatBox(user_ids=chatbox_members, _id=_id)
