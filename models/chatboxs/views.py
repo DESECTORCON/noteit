@@ -1,3 +1,4 @@
+import uuid
 from flask import Blueprint, render_template, url_for, session, request
 from werkzeug.utils import redirect
 import models.users.decorators as user_decorators
@@ -8,19 +9,23 @@ from models.users.user import User
 chatbox_blueprint = Blueprint('chatboxs', __name__)
 
 
-@chatbox_blueprint.route('/chat/create_chat', methods=['POST', 'GET'])
+@chatbox_blueprint.route('/chat/create_chat/<string:default_members>', methods=['POST', 'GET'])
 @user_decorators.require_login
-def create_chatbox():
-    current_user = User.find_by_id(session['_id'])
-    user_friends = current_user.get_friends()
-    
+def create_chatbox(default_members=None):
+    if request.method == 'GET':
+        current_user = User.find_by_id(session['_id'])
+        user_friends = current_user.get_friends()
+        if default_members is not None:
+            return render_template('chatboxs/create_chatbox.html', user_friends=user_friends, default_members=default_members)
+        return render_template('chatboxs/create_chatbox.html', user_friends=user_friends)
+        
     if request.method == 'POST':
         chatbox_members = request.form.getlist('members')
-        chatbox_ = ChatBox(user_ids=chatbox_members)
+        _id = uuid.uuid4().hex
+        chatbox_ = ChatBox(user_ids=chatbox_members, _id=_id)
         chatbox_.save_to_mongo()
-        
-    return render_template('chatboxs/create_chatbox.html', user_friends=user_friends)
-
+        return redirect(url_for('chatboxs.chatbox', chatbox_id=_id))
+                
 
 @chatbox_blueprint.route('/chat/chatbox_group/<string:chatbox_id>')
 @user_decorators.require_login
