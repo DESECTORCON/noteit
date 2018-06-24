@@ -1,4 +1,3 @@
-import uuid
 from flask import Blueprint, render_template, url_for, session, request
 from werkzeug.utils import redirect
 import models.users.decorators as user_decorators
