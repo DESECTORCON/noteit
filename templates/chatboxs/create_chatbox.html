@@ -10,6 +10,11 @@
         <h1 class="title"><i class="far fa-comment"></i> Create Chatbox</h1>
         <p>Create a chatbox with your friends!</p>
     </div>
+    {% if error_msg %}
+    <div class="oaerror warning">
+        <strong><i class="fas fa-binoculars"></i>  Error</strong> - {{ error_msg }}
+    </div>
+    {% endif %}
 
     <div class="shadow p-3 mb-5 bg-white rounded">
         <form method="POST">
@@ -45,8 +50,8 @@
             </div>
             {% endif %}
 
-        <br>
-        <button type="submit" class="btn btn-primary">Save</button>
+            <br>
+            <button type="submit" class="btn btn-primary">Save</button>
         </form>
     </div>
 

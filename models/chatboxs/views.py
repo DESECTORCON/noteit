@@ -12,15 +12,19 @@ chatbox_blueprint = Blueprint('chatboxs', __name__)
 @chatbox_blueprint.route('/chat/create_chat/<string:default_members>', methods=['POST', 'GET'])
 @user_decorators.require_login
 def create_chatbox(default_members=[]):
+    current_user = User.find_by_id(session['_id'])
+    user_friends = current_user.get_friends()
     if request.method == 'GET':
-        current_user = User.find_by_id(session['_id'])
-        user_friends = current_user.get_friends()
         if default_members is not []:
             return render_template('chatboxs/create_chatbox.html', user_friends=user_friends, default_members=default_members)
         return render_template('chatboxs/create_chatbox.html', user_friends=user_friends)
         
     if request.method == 'POST':
         chatbox_members = request.form.getlist('members')
+        if chatbox_members == [] or chatbox_members is None:
+            return render_template('chatboxs/create_chatbox.html', user_friends=user_friends
+                                   , error_msg='You havn\'t selected any friends!')
+        
         _id = uuid.uuid4().hex
         chatbox_ = ChatBox(user_ids=chatbox_members, _id=_id)
         chatbox_.save_to_mongo()
