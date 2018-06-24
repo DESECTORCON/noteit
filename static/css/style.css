@@ -410,19 +410,16 @@ section .section-title {
     background-color: #f7941d;
 
 }
-
+/*
 styling for checkbox
+*/
+
 .main-section{
   border: 1px solid #000;
 }
 .left-sidebar{
   background-color:#3A3A3A;
   padding: 0px;
-}
-.searchbox{
-  width: 100%;
-  padding:27px 10px;
-  border-bottom:2px solid #000;
 }
 .form-control,.search-icon,.search-icon:hover{
   background-color: #6A6C75;
