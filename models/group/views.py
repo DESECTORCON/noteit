@@ -91,6 +91,9 @@ def join_group(group_id):
     if len(group_.members) >= 30:
         flash('Sorry, this group\'s member amount has reached it\'s limit!')
         return redirect(url_for('groups.groups'))
+    if session['_id'] in group_.members:
+        flash('You\'ve already joined this group!')
+        return redirect(url_for('groups.group', group_id=group_id))
 
     group_.members.extend([session['_id']])
     group_.save_to_elastic()
