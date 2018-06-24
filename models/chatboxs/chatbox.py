@@ -9,12 +9,12 @@ from models.users.user import User
 
 class ChatBox(object):
 
-    def __init__(self, _id=None, user_ids=[], messages=[], created_date=datetime.datetime.now(), name=None):
+    def __init__(self, _id=None, user_ids=[], messages=[], created_date=datetime.datetime.now(), name=None, last_logined=None):
         self._id = uuid.uuid4().hex if _id is None else _id
         self.user_ids = user_ids
         self.messages = messages
         self.created_date = created_date
-        self.last_logined = None
+        self.last_logined = last_logined
         id_gen_sid = shortid.ShortId()
         self.name = id_gen_sid.generate() if name is None else name
 
@@ -34,9 +34,9 @@ class ChatBox(object):
     def find_by_id(cls, chatbox_id, limit=None):
         try:
             if limit is not None:
-                return cls(**Database.limit_find(ChatBoxConstants, {'_id': chatbox_id}, limit=limit))
+                return [cls(**elem) for elem in Database.limit_find(ChatBoxConstants, {'_id': chatbox_id}, limit=limit)]
             else:
-                return cls(**Database.find_one(ChatBoxConstants, {'_id': chatbox_id}))
+                return [cls(**elem) for elem in Database.find_one(ChatBoxConstants, {'_id': chatbox_id})]
         except TypeError:
             return None
 
