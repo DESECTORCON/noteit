@@ -42,11 +42,9 @@ class ChatBox(object):
 
     def limit_find_messages(self):
         try:
-            # return cls(**Database.limit_find(ChatBoxConstants.COLLECTION, {'_id': chatbox_id}, 20))
-            chatbox = self.find_by_id(self._id, limit=25)
             messages = []
 
-            for message in chatbox.messages:
+            for message in self.messages:
                 messages.append(Message.find_by_id(message))
             return messages
 

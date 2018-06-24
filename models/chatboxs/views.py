@@ -35,7 +35,7 @@ def create_chatbox(default_members=[]):
 @user_decorators.require_login
 def chatbox(chatbox_id):
     chatbox_ = ChatBox.find_by_id(chatbox_id, limit=10)
-    messages = chatbox_.limit_find_messages()
+    messages = chatbox_[0].limit_find_messages()
     users = chatbox_.get_members()
     chatbox_.update_last_logined()
     
