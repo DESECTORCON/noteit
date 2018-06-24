@@ -29,6 +29,7 @@ class ChatBox(object):
 
     def save_to_mongo(self):
         Database.update(ChatBoxConstants, {"_id": self._id}, self.json())
+
     @classmethod
     def find_by_id(cls, chatbox_id, limit=None):
         try:

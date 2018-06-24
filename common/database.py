@@ -32,4 +32,9 @@ class Database(object):
 
     @staticmethod
     def limit_find(collection, query, limit):
-        return Database.DATABASE[collection].find(query).limit(limit).sort('date', pymongo.DESCENDING)
+        return_value = Database.DATABASE[collection].find(query).limit(limit)
+        return_value = return_value.sort('date', pymongo.DESCENDING)
+        return_ = []
+        for doc in return_value:
+            return_.append(doc)
+        return return_
