@@ -41,11 +41,11 @@ def chatbox(chatbox_id):
     return render_template('chatboxs/chatbox.html', messages=messages, users=users, chatbox_=chatbox_)
 
 
-@chatbox_blueprint.route('/chat/chatbox_group/send_message/<string:chatbox_id>', methods=['POST'])
+@chatbox_blueprint.route('/chat/chatbox_group/send_message/<string:chatbox_id>', methods=['k'])
 @user_decorators.require_login
 def save_message(chatbox_id):
     chatbox_ = ChatBox.find_by_id(chatbox_id)
-    title = request.form['title']
+    title = None
     content = request.form['content']
 
     sender = User.find_by_email(session['email'])
@@ -60,4 +60,4 @@ def save_message(chatbox_id):
     chatbox_.messages.extend([message._id])
     chatbox_.save_to_mongo()
     
-    return redirect(url_for('chatbox', chatbox_id=chatbox_id))
+    return redirect(url_for('chatboxs.chatbox', chatbox_id=chatbox_id))
