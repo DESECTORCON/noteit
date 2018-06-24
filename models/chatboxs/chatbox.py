@@ -24,20 +24,18 @@ class ChatBox(object):
             "user_ids": self.user_ids,
             "messages": self.messages,
             "created_date": self.created_date,
-            "max_exists_time": self.max_exists_time,
             "last_logined": self.last_logined
         }
 
     def save_to_mongo(self):
-        Database.insert(ChatBoxConstants, self.json())
-
+        Database.update(ChatBoxConstants, {"_id": self._id}, self.json())
     @classmethod
     def find_by_id(cls, chatbox_id, limit=None):
         try:
             if limit is not None:
-                return cls(**Database.limit_find(ChatBoxConstants.COLLECTION, {'_id': chatbox_id}, limit=limit))
+                return cls(**Database.limit_find(ChatBoxConstants, {'_id': chatbox_id}, limit=limit))
             else:
-                return cls(**Database.find_one(ChatBoxConstants.COLLECTION, {'_id': chatbox_id}))
+                return cls(**Database.find_one(ChatBoxConstants, {'_id': chatbox_id}))
         except TypeError:
             return None
 
