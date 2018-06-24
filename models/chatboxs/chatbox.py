@@ -31,12 +31,9 @@ class ChatBox(object):
         Database.update(ChatBoxConstants, {"_id": self._id}, self.json())
 
     @classmethod
-    def find_by_id(cls, chatbox_id, limit=None):
+    def find_by_id(cls, chatbox_id):
         try:
-            if limit is not None:
-                return [cls(**elem) for elem in Database.limit_find(ChatBoxConstants, {'_id': chatbox_id}, limit=limit)]
-            else:
-                return [cls(**elem) for elem in Database.find_one(ChatBoxConstants, {'_id': chatbox_id})]
+            return cls(**Database.find_one(ChatBoxConstants, {'_id': chatbox_id}))
         except TypeError:
             return None
 
