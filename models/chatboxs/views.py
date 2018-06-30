@@ -45,7 +45,7 @@ def chatbox(chatbox_id):
     return render_template('chatboxs/chatbox.html', messages=messages, users=users, chatbox_=chatbox_)
 
 
-@chatbox_blueprint.route('/chat/chatbox_group/send_message/<string:chatbox_id>')
+@chatbox_blueprint.route('/chat/chatbox_group/send_message')
 @user_decorators.require_login
 def save_message(methods=['GET', 'POST']):
     chatbox_ = ChatBox.find_by_id(session['chatbox_id'])
@@ -69,12 +69,30 @@ def save_message(methods=['GET', 'POST']):
     return redirect(url_for('chatboxs.chatbox', chatbox_id=session['chatbox_id']))
 
 
-@socketio.on('send', namespace='/chat')
+@socketio.on('submit')
 def send(json, methods=['GET', 'POST']):
     print('received my event: ' + str(json))
-    socketio.emit('my response', json, callback=save_message)
+    chatbox_ = ChatBox.find_by_id(session['chatbox_id'])
+    title = None
+    content = json['content']
+    if content is '':
+        return redirect(url_for('chatboxs.chatbox', chatbox_id=session['chatbox_id']))
+
+    sender = User.find_by_email(session['email'])
+    sender_name = sender.nick_name
+    sender_id = sender._id
+
+    message = Message(title=title, content=content,
+                      reciver_id=session['chatbox_id'], sender_id=sender_id, is_a_noteOBJ=False,
+                      sender_name=sender_name)
+    message.save_to_mongo()
+    message.save_to_elastic()
+
+    chatbox_.messages.extend([message._id])
+    chatbox_.save_to_mongo()
+    socketio.emit('response', json, callback=save_message)
 
 
-@socketio.on('disconnect', namespace='/chat')
+@socketio.on('disconnect')
 def disconnect():
     pass
