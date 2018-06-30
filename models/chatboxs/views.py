@@ -71,7 +71,6 @@ def save_message(methods=['GET', 'POST']):
 
 @socketio.on('submit')
 def send(json, methods=['POST', 'GET']):
-    print('received my event: ' + str(json))
     chatbox_ = ChatBox.find_by_id(session['chatbox_id'])
     title = None
     content = json['content']
