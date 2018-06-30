@@ -70,17 +70,12 @@ def save_message(chatbox_id):
 
 @socketio.on('connect')
 def connect():
-    emit("response", {'data': 'Connected', 'username': session['username']})
-
-
-@socketio.on('disconnect')
-def disconnect():
-    pass
+    emit("response", {'data': 'Connected', 'username': session['email']})
 
 
 @socketio.on("request")
 def request(message):
-    emit("response", {'data': message['data'], 'username': session['username']}, broadcast=True)
+    emit("response", {'data': message['data'], 'username': session['email']}, broadcast=True)
 
 
 @socketio.on('send')
