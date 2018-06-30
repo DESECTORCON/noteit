@@ -90,7 +90,15 @@ def send(json, methods=['GET', 'POST']):
 
     chatbox_.messages.extend([message._id])
     chatbox_.save_to_mongo()
-    socketio.emit('response', json, callback=save_message)
+
+    # make response data for emit
+    response_data = {
+        "created_date": message.sended_date,
+        "content": message.content,
+        "sender_name": message.sender_name
+    }
+
+    socketio.emit('response', response_data,callback=save_message)
 
 
 @socketio.on('disconnect')

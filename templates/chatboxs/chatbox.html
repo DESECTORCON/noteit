@@ -87,5 +87,17 @@
     })
   })
 })
+      socket.on( 'response', function( msg ) {
+        console.log( msg )
+        if( typeof msg.user_name !== 'undefined' ) {
+          $( 'h3' ).remove()
+          $( 'div.message_holder' ).append( '                        <li>
+                            <div class="rightside-left-chat">
+                                <span><i class="fa fa-circle" aria-hidden="true"></i>'+ msg.sender_name +'<small>'+ msg.created_date +'</small> </span><br><br>
+                                <p>'+ msg.content +</p>
+                            </div>
+                        </li>' )
+        }
+      })
 </script>
 {% endblock %}
