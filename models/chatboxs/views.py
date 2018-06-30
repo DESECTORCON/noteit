@@ -70,7 +70,7 @@ def save_message(methods=['GET', 'POST']):
 
 
 @socketio.on('submit')
-def send(json, methods=['GET', 'POST']):
+def send(json, methods=['POST', 'GET']):
     print('received my event: ' + str(json))
     chatbox_ = ChatBox.find_by_id(session['chatbox_id'])
     title = None
@@ -93,12 +93,12 @@ def send(json, methods=['GET', 'POST']):
 
     # make response data for emit
     response_data = {
-        "created_date": message.sended_date,
+        "created_date": message.sended_date.strftime('%m/%d/%Y'),
         "content": message.content,
         "sender_name": message.sender_name
     }
 
-    socketio.emit('response', response_data,callback=save_message)
+    socketio.emit('chat response', response_data)
 
 
 @socketio.on('disconnect')

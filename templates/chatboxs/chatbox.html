@@ -39,7 +39,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 right-header-contentChat" id="chat_log">
-                    <ul>
+                    <ul class="chat_log">
                         {% for message in messages %}
                         <li>
                             <div class="rightside-left-chat">
@@ -72,8 +72,7 @@
     $("#submit").click(function() {
         $(".msg_container_base").stop().animate({ scrollTop: $(".msg_container_base")[0].scrollHeight}, 1000);
 });
-</script>
-<script>
+
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.on( 'connect', function() {
   socket.emit( 'send', {
@@ -87,17 +86,9 @@
     })
   })
 })
-      socket.on( 'response', function( msg ) {
-        console.log( msg )
-        if( typeof msg.user_name !== 'undefined' ) {
-          $( 'h3' ).remove()
-          $( 'div.message_holder' ).append( '                        <li>
-                            <div class="rightside-left-chat">
-                                <span><i class="fa fa-circle" aria-hidden="true"></i>'+ msg.sender_name +'<small>'+ msg.created_date +'</small> </span><br><br>
-                                <p>'+ msg.content +</p>
-                            </div>
-                        </li>' )
-        }
-      })
+socket.on( 'chat response', function( msg ) {
+            console.log( msg );
+            $( 'ul.chat_log' ).append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
+        console.log( msg );});
 </script>
 {% endblock %}
