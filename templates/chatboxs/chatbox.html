@@ -1,4 +1,4 @@
-{% extends "base4.html" %}
+{% extends "base3.html" %}
 {% block title %}
 
 {% endblock %}
@@ -54,7 +54,7 @@
             <div class="row">
                 <div class="col-md-12 right-chat-textbox">
                     <form method="POST">
-                        <input type="text" name="content" id="content" class="content"><button type="submit" class="fa fa-arrow-right" aria-hidden="true"></button>
+                        <input type="text" name="content" id="content" class="content" value=""><button type="submit" class="fa fa-arrow-right" aria-hidden="true"></button>
                     </form>
 
                 </div>
@@ -88,7 +88,7 @@
 })
 socket.on( 'chat response', function( msg ) {
             $( 'ul.chat_log' ).append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
-        console.log( msg );});
+        console.log( msg );document.getElementById("content").value = "";});
 
 </script>
 {% endblock %}
