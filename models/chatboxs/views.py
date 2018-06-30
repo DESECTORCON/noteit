@@ -6,9 +6,10 @@ from models.chatboxs.chatbox import ChatBox
 from models.messages.message import Message
 from models.users.user import User
 from flask_socketio import SocketIO, emit
+from app import app
 
 chatbox_blueprint = Blueprint('chatboxs', __name__)
-socketio = SocketIO(chatbox_blueprint)
+socketio = SocketIO(app)
 
 
 @chatbox_blueprint.route('/chat/create_chat/<string:default_members>', methods=['POST', 'GET'])
@@ -80,3 +81,9 @@ def disconnect():
 @socketio.on("request")
 def request(message):
     emit("response", {'data': message['data'], 'username': session['username']}, broadcast=True)
+
+
+@socketio.on('send')
+def send(json, methods=['GET', 'POST']):
+    print('received my event: ' + str(json))
+    socketio.emit('my response', json, callback=save_message)
