@@ -47,7 +47,7 @@ def chatbox(chatbox_id):
 
 @chatbox_blueprint.route('/chat/chatbox_group/send_message/<string:chatbox_id>')
 @user_decorators.require_login
-def save_message(chatbox_id):
+def save_message(methods=['GET', 'POST']):
     chatbox_ = ChatBox.find_by_id(session['chatbox_id'])
     title = None
     content = request.form['content']
@@ -66,10 +66,15 @@ def save_message(chatbox_id):
     chatbox_.messages.extend([message._id])
     chatbox_.save_to_mongo()
 
-    return redirect(url_for('chatboxs.chatbox', chatbox_id=chatbox_id))
+    return redirect(url_for('chatboxs.chatbox', chatbox_id=session['chatbox_id']))
 
 
-@socketio.on('send')
+@socketio.on('send', namespace='/chat')
 def send(json, methods=['GET', 'POST']):
     print('received my event: ' + str(json))
     socketio.emit('my response', json, callback=save_message)
+
+
+@socketio.on('disconnect', namespace='/chat')
+def disconnect():
+    pass

@@ -54,7 +54,7 @@
             <div class="row">
                 <div class="col-md-12 right-chat-textbox">
                     <form method="POST" enctype=multipart/form-data>
-                        <input type="text" name="content" id="content"><button type="submit" class="fa fa-arrow-right" aria-hidden="true"></button>
+                        <input type="text" name="content" id="content" class="content"><button type="submit" class="fa fa-arrow-right" aria-hidden="true"></button>
                     </form>
 
                 </div>
@@ -82,7 +82,7 @@
   var form = $( 'form' ).on( 'submit', function( e ) {
     e.preventDefault()
     let content = $( 'input.content' ).val()
-    socket.emit( 'submit', {
+    socket.emit( 'send', {
       content : content,
     })
   })
