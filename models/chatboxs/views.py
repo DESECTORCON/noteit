@@ -1,5 +1,5 @@
 import uuid
-from flask import Blueprint, render_template, url_for, session, request
+from flask import Blueprint, render_template, url_for, session, request, flash
 from werkzeug.utils import redirect
 import models.users.decorators as user_decorators
 from models.chatboxs.chatbox import ChatBox
@@ -47,6 +47,8 @@ def save_message(chatbox_id):
     chatbox_ = ChatBox.find_by_id(chatbox_id)
     title = None
     content = request.form['content']
+    if content is '':
+        return redirect(url_for('chatboxs.chatbox', chatbox_id=chatbox_id))
 
     sender = User.find_by_email(session['email'])
     sender_name = sender.nick_name

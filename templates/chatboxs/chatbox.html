@@ -1,15 +1,8 @@
-{% extends "base3.html" %}
+{% extends "base4.html" %}
 {% block title %}
 
 {% endblock %}
 {% block content %}
-<script>
-    $(document).ready(function(){
-    	var height = $(window).height();
-    	$('.left-chat').css('height', (height - 150) + 'px');
-    	$('.right-header-contentChat').css('height', (height - 200) + 'px');
-    });
-</script>
 <div class="container main-section">
     <div class="row">
         <div class="col-md-3 col-sm-3 col-xs-12 left-sidebar">
@@ -44,7 +37,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 right-header-contentChat">
+                <div class="col-md-12 right-header-contentChat" id="chat_log">
                     <ul>
                         {% for message in messages %}
                         <li>
@@ -68,4 +61,15 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function(){
+    	var height = $(window).height();
+    	$('.left-chat').css('height', (height - 100) + 'px');
+    	$('.right-header-contentChat').css('height', (height - 100) + 'px');
+    });
+    $("#submit").click(function() {
+        $(".msg_container_base").stop().animate({ scrollTop: $(".msg_container_base")[0].scrollHeight}, 1000);
+});
+</script>
 {% endblock %}
