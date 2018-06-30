@@ -20,18 +20,18 @@ def create_chatbox(default_members=[]):
         if default_members is not []:
             return render_template('chatboxs/create_chatbox.html', user_friends=user_friends, default_members=default_members)
         return render_template('chatboxs/create_chatbox.html', user_friends=user_friends)
-        
+
     if request.method == 'POST':
         chatbox_members = request.form.getlist('user')
         if chatbox_members == [] or chatbox_members is None:
             return render_template('chatboxs/create_chatbox.html', user_friends=user_friends
                                    , error_msgc='You havn\'t selected any friends!')
-        
+
         _id = uuid.uuid4().hex
         chatbox_ = ChatBox(user_ids=chatbox_members, _id=_id)
         chatbox_.save_to_mongo()
         return redirect(url_for('chatboxs.chatbox', chatbox_id=_id))
-                
+
 
 @chatbox_blueprint.route('/chat/chatbox_group/<string:chatbox_id>')
 @user_decorators.require_login
@@ -55,13 +55,28 @@ def save_message(chatbox_id):
     sender = User.find_by_email(session['email'])
     sender_name = sender.nick_name
     sender_id = sender._id
-    
+
     message = Message(title=title, content=content,
                       reciver_id=chatbox_id, sender_id=sender_id, is_a_noteOBJ=False, sender_name=sender_name)
     message.save_to_mongo()
     message.save_to_elastic()
-    
+
     chatbox_.messages.extend([message._id])
     chatbox_.save_to_mongo()
-    
+
     return redirect(url_for('chatboxs.chatbox', chatbox_id=chatbox_id))
+
+
+@socketio.on('connect')
+def connect():
+    emit("response", {'data': 'Connected', 'username': session['username']})
+
+
+@socketio.on('disconnect')
+def disconnect():
+    pass
+
+
+@socketio.on("request")
+def request(message):
+    emit("response", {'data': message['data'], 'username': session['username']}, broadcast=True)
