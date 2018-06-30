@@ -1,12 +1,14 @@
 import uuid
-from flask import Blueprint, render_template, url_for, session, request, flash
+from flask import Blueprint, render_template, url_for, session, request
 from werkzeug.utils import redirect
 import models.users.decorators as user_decorators
 from models.chatboxs.chatbox import ChatBox
 from models.messages.message import Message
 from models.users.user import User
+from flask_socketio import SocketIO, emit
 
 chatbox_blueprint = Blueprint('chatboxs', __name__)
+socketio = SocketIO(chatbox_blueprint)
 
 
 @chatbox_blueprint.route('/chat/create_chat/<string:default_members>', methods=['POST', 'GET'])
