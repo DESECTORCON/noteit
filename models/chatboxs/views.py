@@ -41,7 +41,7 @@ def chatbox(chatbox_id):
     return render_template('chatboxs/chatbox.html', messages=messages, users=users, chatbox_=chatbox_)
 
 
-@chatbox_blueprint.route('/chat/chatbox_group/send_message/<string:chatbox_id>', methods=['k'])
+@chatbox_blueprint.route('/chat/chatbox_group/send_message/<string:chatbox_id>', methods=['POST'])
 @user_decorators.require_login
 def save_message(chatbox_id):
     chatbox_ = ChatBox.find_by_id(chatbox_id)
