@@ -50,6 +50,13 @@ class ChatBox(object):
             return None
 
     @classmethod
+    def get_user_chatboxs(cls, user_id):
+        try:
+            return cls(**Database.find_one(ChatBoxConstants, {'members': [user_id]}))
+        except TypeError:
+            return None
+
+    @classmethod
     def latest_message_(cls):
         try:
             return cls(**Database.get_latest_data(ChatBoxConstants, {}))

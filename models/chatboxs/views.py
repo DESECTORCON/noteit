@@ -72,7 +72,10 @@ def save_message(methods=['GET', 'POST']):
 @chatbox_blueprint.route('/chat/chatboxs')
 @user_decorators.require_login
 def chatboxs():
-    chatboxes = ChatBox
+    chatboxes = ChatBox.get_user_chatboxs(session['user_id'])
+    user_ = User.find_by_id(session['user_id'])
+
+    return render_template('chatboxs/user_chatboxs', chatboxs=chatboxs)
 
 
 @socketio.on('submit')
