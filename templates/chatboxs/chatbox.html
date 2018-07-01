@@ -62,13 +62,14 @@
         </div>
     </div>
 </div>
-
 <script>
     $(document).ready(function(){
     	var height = $(window).height();
-    	$('.left-chat').css('height', (height - 100) + 'px');
-    	$('.right-header-contentChat').css('height', (height - 100) + 'px');
+    	$('.left-chat').css('height', (height - 300) + 'px');
+    	$('.right-header-contentChat').css('height', (height - 300) + 'px');
     });
+</script>
+<script>
     $("#submit").click(function() {
         $(".msg_container_base").stop().animate({ scrollTop: $(".msg_container_base")[0].scrollHeight}, 1000);
 });

@@ -112,6 +112,7 @@ def disconnect():
 
 
 @socketio.on("request")
-def request(message):
-    emit("response", {'data': message['data'], 'username': session['username']}, broadcast=True)
+def request():
+    latest_message_ = ChatBox.latest_message_()
+    emit("response", {'data': latest_message_, 'email': session['email']}, broadcast=True)
 

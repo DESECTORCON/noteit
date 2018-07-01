@@ -49,6 +49,13 @@ class ChatBox(object):
         except TypeError:
             return None
 
+    @classmethod
+    def latest_message_(cls):
+        try:
+            return cls(**Database.get_latest_data(ChatBoxConstants, {}))
+        except TypeError:
+            return None
+
     def delete_member(self, member_id):
         # returns false when error accorded
         try:
@@ -87,6 +94,3 @@ class ChatBox(object):
     #                                                   {'reciver_id': })]
     #     except TypeError:
     #         return None
-
-
-
