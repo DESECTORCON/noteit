@@ -24,6 +24,7 @@ def create_chatbox(default_members=[]):
 
     if request.method == 'POST':
         chatbox_members = request.form.getlist('user')
+        chatbox_members.append(session['_id'])
         if chatbox_members == [] or chatbox_members is None:
             return render_template('chatboxs/create_chatbox.html', user_friends=user_friends
                                    , error_msgc='You havn\'t selected any friends!')
