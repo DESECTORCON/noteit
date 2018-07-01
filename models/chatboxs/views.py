@@ -109,3 +109,9 @@ def send(json, methods=['POST', 'GET']):
 @socketio.on('disconnect')
 def disconnect():
     pass
+
+
+@socketio.on("request")
+def request(message):
+    emit("response", {'data': message['data'], 'username': session['username']}, broadcast=True)
+

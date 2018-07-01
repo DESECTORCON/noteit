@@ -38,3 +38,7 @@ class Database(object):
         for doc in return_value:
             return_.append(doc)
         return return_
+
+    @staticmethod
+    def get_latest_data(collection, query):
+        Database.DATABASE[collection].find(query).sort({"$natural": -1})
