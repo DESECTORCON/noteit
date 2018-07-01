@@ -91,5 +91,14 @@ socket.on( 'chat response', function( msg ) {
             $( 'ul.chat_log' ).append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
         console.log( msg );document.getElementById("content").value = "";});
 
+socket.on( 'response', function( data ) {
+
+	if (data['data'].sender_name === $('ul li')) {
+	    $( 'ul.chat_log' ).append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
+	    	console.log( msg );document.getElementById("content").value = "";
+	 	}
+
+    });
+
 </script>
 {% endblock %}
