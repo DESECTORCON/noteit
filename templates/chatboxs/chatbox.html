@@ -1,6 +1,6 @@
 {% extends "base4.html" %}
 {% block title %}
-
+<title></title>
 {% endblock %}
 {% block content %}
 
@@ -33,7 +33,10 @@
                     </div>
                     <div class="right-header-detail">
                         <p>{{ chatbox_.name }}</p>
-                        <span>{{ chatbox_.messages|length }} messages</span>
+                        <!--<div class="" id="">-->
+                            <!--<span id="message_length">{{ chatbox_.messages|length }} messages</span>-->
+                        <!--</div>-->
+
                     </div>
                 </div>
             </div>
@@ -70,9 +73,6 @@
     });
 </script>
 <script>
-    $("#submit").click(function() {
-        $(".msg_container_base").stop().animate({ scrollTop: $(".msg_container_base")[0].scrollHeight}, 1000);
-});
 
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.on( 'connect', function() {
@@ -85,6 +85,8 @@
     socket.emit( 'submit', {
       content : content,
     })
+    $("#message_length").empty()
+   $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
   })
 })
 socket.on( 'chat response', function( msg ) {
@@ -96,6 +98,8 @@ socket.on( 'response', function( data ) {
 	if (data['data'].sender_name === $('ul li')) {
 	    $( 'ul.chat_log' ).append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
 	    	console.log( msg );document.getElementById("content").value = "";
+	    $("#message_length").empty()
+	    $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
 	 	}
 
     });
