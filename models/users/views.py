@@ -126,8 +126,7 @@ def register_user():
 @user_blueprint.route('/logout')
 @user_decorators.require_login
 def logout_user():
-    session['email'] = None
-    session['_id'] = None
+    session.clear()
 
     return redirect(url_for('home'))
 

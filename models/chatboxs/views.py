@@ -75,7 +75,7 @@ def chatboxs():
     chatboxes = ChatBox.get_user_chatboxs(session['user_id'])
     user_ = User.find_by_id(session['user_id'])
 
-    return render_template('chatboxs/user_chatboxs', chatboxs=chatboxs)
+    return render_template('chatboxs/user_chatboxs.html', chatboxs=chatboxes, user_=user_)
 
 
 @socketio.on('submit')
