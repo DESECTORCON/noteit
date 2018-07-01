@@ -127,10 +127,10 @@
       border-radius: 4px;
       background: #fff url(http://www.ebpaidrev.com/systemerror/block.gif) no-repeat 0 51px;
   }
-  #block_error div{
+  #block_error {
       padding: 100px 40px 0 186px;
   }
-  #block_error div h2{
+  #block_error h2{
       color: #218bdc;
       font-size: 24px;
       display: block;
@@ -169,13 +169,13 @@
         <!-- ICON -->
         <div class="dropdown notifications-button hidden-sm-down">
 
-            <a class="btn btn-secondary dropdown-toggle" href="#" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="btn btn-secondary dropdown-toggle" href="" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell"></i>
                 <span id="notificationsBadge" class="badge badge-danger">{{ group_alerts|length }}</span>
             </a>
 
             <!-- NOTIFICATIONS -->
-            <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown">
+            <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown" id="">
                 <h6 class="dropdown-header">Notifications</h6>
                 <div class="notifications-container" id="notificationsContainer">
                     {% for alert in group_alerts %}
@@ -355,7 +355,4 @@
     </div>
 </div>
 {% endif %}
-
-</div>
-
 {% endblock %}
