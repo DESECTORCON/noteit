@@ -7,6 +7,7 @@ import models.users.decorators as user_decorators
 from models.notes.note import Note
 from models.users.user import User
 import traceback
+from flask import make_response
 
 message_blueprint = Blueprint('message', __name__)
 
@@ -22,6 +23,13 @@ def label_maker(messages, user_id):
         #     raise Exception(message.sender_id + ' ' + user_id + ' ' + str(message.reciver_id))
 
     return labels
+#
+#
+# @message_blueprint.route('/set_cookie/set/<is_invtation>')
+# def cookie_maker(is_invtation):
+#     resp = make_response()
+#     resp.set_cookie('is_invtation', is_invtation)
+#     return resp
 
 
 @message_blueprint.route('/all_messages/<string:user_id>', methods=['GET', 'POST'])
@@ -180,9 +188,11 @@ def message(message_id, is_sended=False):
                 note = None
         else:
             note = None
+        resp = make_response(render_template('messages/message.html', message=message, sender_nickname=sender_nickname,
+                               reciver_nickname=reciver_nickname, is_a_note=message.is_a_noteOBJ, note=note,
+                                             join_group_redirect_info=','.join([message_id, message.is_invtation])))
 
-        return render_template('messages/message.html', message=message, sender_nickname=sender_nickname,
-                               reciver_nickname=reciver_nickname, is_a_note=message.is_a_noteOBJ, note=note)
+        return resp
 
     except:
         error_msg = traceback.format_exc().split('\n')

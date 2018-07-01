@@ -63,6 +63,7 @@ def init():
     Database.initialize()
     session['_id'] = None
     session['email'] = None
+    flash('Do not like the new Note-it™? Time travel back to the old Note-it™! 49.236.135.247:5000')
 
 
 def get_read_messages(session_id):
@@ -108,6 +109,11 @@ def home2():
     return render_template('home2.html')
 
 
+@app.route('/groups')
+def home3():
+    return render_template('home3.html')
+
+
 @app.route('/loading')
 def loading():
     return render_template('loading.html')
@@ -122,8 +128,12 @@ from models.users.views import user_blueprint
 from models.notes.views import note_blueprint
 from models.messages.views import message_blueprint
 from models.boxes.views import box_blueprint
+from models.group.views import group_blueprint
+from models.notification.views import notification_blueprint
 
 app.register_blueprint(user_blueprint, url_prefix="/users")
 app.register_blueprint(note_blueprint, url_prefix="/notes")
 app.register_blueprint(message_blueprint, url_prefix='/messages')
 app.register_blueprint(box_blueprint, url_prefix='/boxs')
+app.register_blueprint(group_blueprint, url_prefix='/groups')
+app.register_blueprint(notification_blueprint, url_prefix='/notifications')

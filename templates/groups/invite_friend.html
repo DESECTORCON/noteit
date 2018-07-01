@@ -1,0 +1,75 @@
+{% extends "base3.html" %}
+{% block title %}
+<title>Groups.io | Adding Users to Group {{ group_name }}</title>
+{% endblock %}
+{% block content %}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1><i class="fas fa-plus"></i><i class="fas fa-user-friends"></i>  Add friends to Group {{ group_name }}</h1>
+        </div>
+
+        <!--<div class="form-group">-->
+        <!--<form action="{{ url_for('users.search_for_above') }}" method="POST">-->
+        <!--{% if form %}-->
+        <!--<input class="form-control mr-sm-2" type="search" placeholder="Search Users" aria-label="Search" id="Search_users" name="Search_users" value="{{ form }}">-->
+        <!--{% else %}-->
+        <!--<input class="form-control mr-sm-2" type="search" placeholder="Search Users" aria-label="Search" id="Search_users" name="Search_users" value="{{ form }}">-->
+        <!--{% endif %}-->
+        <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+        <!--</form>-->
+        <!--</div>-->
+        <hr>
+
+        <form method="POST" action="{{ url_for('groups.invite_friend') }}">
+            {% if error_msg %}
+            <div class="oaerror warning">
+                <strong><i class="fas fa-binoculars"></i>  Error</strong> - {{ error_msg }}
+            </div>
+            {% endif %}
+            <br><br>
+
+            <div class="form-group">
+                <div class="list-group">
+                    {% for user in friends %}
+
+                    <label class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class=" justify-content-between">
+
+                            <h5 class="mb-1"><a href="{{ url_for('users.user_page', user_id=user['user_id']) }}">
+                                <img src="{{ user['url'] }}" id="img" class="tumbnailimgSmaller" />   {{ user['nickname'] }}
+                            </a></h5>
+                            {% if user._id in selected %}
+                            <input type="checkbox" value="{{ user['user_id'] }}" name="users" id="users" checked>
+                            {% else %}
+                            <input type="checkbox" value="{{ user['user_id'] }}" name="users" id="users" />
+                            {% endif %}
+                            <small class="text-muted">Last logined at {{ user['last_logined'].strftime("%Y-%m-%d at %H:%M") }}</small>
+                            <small class="text-muted">Email: {{ user['email'] }}</small>
+                        </div>
+                    </label>
+
+                    {% endfor %}
+                    {% if friends == [] %}
+
+                    <div class="oaerror info">
+                        <strong><i class="fas fa-meh"></i> Umm...</strong> - Seems like you have no more friends to add! <a href="{{ url_for('users.add_friend') }}">Add friends</a>
+                    </div>
+
+                    {% endif %}
+                </div>
+                <br>
+                <div class="card">
+                    <div class="card-body">
+                        <button type="submit" class="btn btn-outline-success">Invite</button>
+                        <a href="{{ url_for('groups.group', group_id=group_id) }}" class="btn btn-outline-secondary" role="button">Go back</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

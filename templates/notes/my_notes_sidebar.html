@@ -1,0 +1,377 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Note-it™ | My Notes</title>
+{% endblock %}
+{% block content %}
+
+<style>
+    body, html {
+    height: 100%;
+}
+</style>
+
+<div class="container-fluid container">
+    <div class="row">
+        <aside class="col-2 px-0 col-xs-12" id="left">
+            <h1><i class="fas fa-box"></i> Box <small class="text-muted">{{ box_name }}</small></h1>
+            <div class="list-group w-100">
+                {% for box in boxs %}
+
+                <a href="{{ url_for('notes.user_notes', box_id=box._id) }}" class="list-group-item">{{ box.name }}</a>
+
+                {% endfor %}
+            </div>
+            <br>
+            <a href="{{ url_for('boxs.boxs') }}" class="btn btn-outline-success" role="button">Go to boxes page</a>
+
+        </aside>
+        <main class="col h-100">
+            <div class="row bg-white">
+                <div class="col-12 py-4">
+                    <div class="page-header">
+
+                        <h1><i class="fas fa-archive"></i> <strong>{{ user_name.split('@')[0] }}</strong>'s Notes</h1>
+
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="list-group">
+
+                        {% if user_notes == [] or user_notes == None %}
+
+                        <div class="alert alert-primary" role="alert"><i class="fas fa-info-circle"></i>
+                            There are no notes!You can make a note by clicking the button below.
+                        </div>
+
+                        {% endif %}
+
+                        <form class="form-inline my-2 my-lg-0" method="POST">
+                            {% if form %}
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="form" name="form" value="{{ form }}">
+                            {% else %}
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="form" name="form" value="{{ form }}">
+                            {% endif %}
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        </form>
+
+                        <br>
+                        {% for note in user_notes %}
+
+                        <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start card">
+
+                            <div class="d-flex w-100 justify-content-between">
+                                <h4 class="mb-1"><i class="far fa-sticky-note"></i>
+                                    {{ note.title }}</h4>
+
+                                <p class="list-group-item-text">Created date <strong>{{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</strong></p>
+
+                            </div>
+                            <p class="mb-1"><span class="badge badge-pill badge-secondary">{{ note.share_label }}</span></p>
+
+                        </a>
+
+                        {% endfor %}
+                    </div>
+
+                    <br>
+                    <!--{{ url_for('notes.create_note') }}-->
+                    <a href="deletenotelink__dds_javascript" class="btn btn-outline-success" role="button"  data-toggle="modal" data-target="#exampleModal">Make a new note</a>
+                    <a href="{{ url_for('notes.delete_note_multiple') }}" class="btn btn-outline-warning" role="button">Delete notes</a>
+                    <a href="{{ url_for('notes.add_to_group') }}" class="btn btn-outline-info" role="button">Add notes to group</a>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-trash-alt"></i>  Create note</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    {% if error_msg %}
+                                    <div class="alert alert-danger" role="alert">
+                                        <i class="fas fa-exclamation-triangle"></i> {{ error_msg }}
+                                    </div>
+                                    {% endif %}
+
+                                    <div class="jumbotron form-sizer">
+
+                                        <h1><i class="fas fa-plus-square"></i> Create a Note</h1>
+
+                                        <p>Fill in the blanks, and submit!</p>
+
+                                    </div>
+
+                                    <br>
+                                    <!--<div class="hidden jumbotron container form-size" id="myDIV">-->
+
+                                    <!--<h1><i class="fas fa-spinner fa-pulse"></i> Processing...</h1>-->
+                                    <!--<p>Please wait. This will take a few minutes</p>-->
+                                    <!--<div class="progress">-->
+                                    <!--<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>-->
+                                    <!--</div>-->
+
+                                    <!--</div>-->
+                                    <div class="container" id="myDIV">
+                                        <div class="row">
+                                            <div class="">
+                                                <h1><i class="fas fa-spinner fa-pulse"></i> Processing...</h1>
+                                                <p>Please wait. This will take a few minutes</p>
+                                            </div>
+                                            <div class="animationload">
+                                                <div class="osahanloading"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <script type="text/javascript">
+
+                                    function myFunction() {
+                                        $('#MAINDIV').hide();
+                                        var x = document.getElementById("#myDIV");
+                                        if (x.style.display === "none") {
+                                            x.style.display = "block";
+                                        } else {
+                                            x.style.display = "none";
+                                    }
+                                }
+                                    $(document).ready(function() {
+                                       $('#myDIV').hide();
+                                    });
+                                    </script>
+
+                                    <div class="form-size jumbotron" id="MAINDIV">
+                                        <form method="POST" enctype=multipart/form-data action="{{ url_for('notes.create_note', box_id=box_id) }}">
+
+
+                                            <div class="form-group">
+
+                                                <label for="title">Title</label>
+                                                <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="titleBlock" value="{{ title }}">
+
+                                                <small id="titleBlock" class="form-text text-muted">Here, you can put your note's title.</small>
+
+                                            </div>
+
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text" for="inputGroupSelect01">Share label</label>
+                                                </div>
+                                                <select class="custom-select" id="inputGroupSelect01" name="inputGroupSelect01" required>
+
+                                                    {% if share %}
+
+                                                    {% if share == 0 %}
+                                                    <option selected value="0">Choose...</option>
+                                                    {% elif share == 1 %}
+                                                    <option value="1">Share with all </option>
+                                                    {% elif share == 2 %}
+                                                    <option value="2">Share with only Note-it™ users</option>
+                                                    {% else %}
+                                                    <option value="3">Don't Share</option>
+                                                    {% endif %}
+
+                                                    {% else %}
+
+                                                    <option selected value="0">Choose...</option>
+                                                    <option value="1">Share with all </option>
+                                                    <option value="2">Share with only Note-it™ users</option>
+                                                    <option value="3">Don't Share</option>
+
+                                                    {% endif %}
+
+                                                </select>
+                                            </div>
+
+
+
+                                            <div class="input-group mb-3">
+
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text" for="inputGroupSelect01">Content</label>
+                                                </div>
+                                                <textarea class="form-control text_box_big" name="content_" id="content_" placeholder="Example content" aria-describedby="contentBlock">
+                                                    {{ content }}
+                                                </textarea>
+                                            </div>
+
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text" for="inputGroupSelect01">file attach</label>
+                                                </div>
+                                                <input type="file" name="file" id="file" value="Image here!" placeholder="File here!" multiple>
+
+                                            </div>
+
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text" for="inputGroupSelect01">Share with group</label>
+                                                </div>
+
+                                                <label for="share_with_group">
+                                                    <input type="checkbox" name="share_with_group" id="share_with_group">
+                                                </label>
+                                            </div>
+
+                                            <br>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-outline-primary" style="" onclick="myFunction()">Save Note</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--add note to group-->
+                        </div>
+                        <div class="modal fade" id="addnotestogroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-sticky-note"></i> <i class="fas fa-plus fa-xs"></i>  Add note to Group</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {% if error_msg %}
+                                        <div class="alert alert-danger" role="alert">
+                                            <i class="fas fa-exclamation-triangle"></i> {{ error_msg }}
+                                        </div>
+                                        {% endif %}
+
+                                        <div class="jumbotron form-sizer">
+
+                                            <h1><i class="fas fa-plus-square"></i> Create a Note</h1>
+
+                                            <p>Fill in the blanks, and submit!</p>
+
+                                        </div>
+
+                                        <br>
+                                        <div class="hidden jumbotron container form-size" id="myDIV">
+
+                                            <h1><i class="fas fa-spinner fa-pulse"></i> Processing...</h1>
+                                            <p>Please wait. This will take a few minutes</p>
+                                            <div class="progress">
+                                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+                                            </div>
+
+                                        </div>
+
+
+                                        <script type="text/javascript">
+
+                                    function myFunction() {
+                                        $('#MAINDIV').hide();
+                                        var x = document.getElementById("myDIV");
+                                        if (x.style.display === "none") {
+                                            x.style.display = "block";
+                                        } else {
+                                            x.style.display = "none";
+                                    }
+                                }
+                                    $(document).ready(function() {
+                                       $('#myDIV').hide();
+                                    });
+                                    </script>
+
+                                        <div class="form-size jumbotron" id="MAINDIV">
+                                            <form method="POST" enctype=multipart/form-data action="{{ url_for('notes.create_note', box_id=box_id) }}">
+
+
+                                                <div class="form-group">
+
+                                                    <label for="title">Title</label>
+                                                    <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="titleBlock" value="{{ title }}">
+
+                                                    <small id="titleBlock" class="form-text text-muted">Here, you can put your note's title.</small>
+
+                                                </div>
+
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <label class="input-group-text" for="inputGroupSelect01">Share label</label>
+                                                    </div>
+                                                    <select class="custom-select" id="inputGroupSelect01" name="inputGroupSelect01" required>
+
+                                                        {% if share %}
+
+                                                        {% if share == 0 %}
+                                                        <option selected value="0">Choose...</option>
+                                                        {% elif share == 1 %}
+                                                        <option value="1">Share with all </option>
+                                                        {% elif share == 2 %}
+                                                        <option value="2">Share with only Note-it™ users</option>
+                                                        {% else %}
+                                                        <option value="3">Don't Share</option>
+                                                        {% endif %}
+
+                                                        {% else %}
+
+                                                        <option selected value="0">Choose...</option>
+                                                        <option value="1">Share with all </option>
+                                                        <option value="2">Share with only Note-it™ users</option>
+                                                        <option value="3">Don't Share</option>
+
+                                                        {% endif %}
+
+                                                    </select>
+                                                </div>
+
+
+
+                                                <div class="input-group mb-3">
+
+                                                    <div class="input-group-prepend">
+                                                        <label class="input-group-text" for="inputGroupSelect01">Content</label>
+                                                    </div>
+                                                    <textarea class="form-control text_box_big" name="content_" id="content_" placeholder="Example content" aria-describedby="contentBlock">
+                                                    {{ content }}
+                                                </textarea>
+                                                </div>
+
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <label class="input-group-text" for="inputGroupSelect01">file attach</label>
+                                                    </div>
+                                                    <input type="file" name="file" id="file" value="Image here!" placeholder="File here!" multiple>
+
+                                                </div>
+
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <label class="input-group-text" for="inputGroupSelect01">Share with group</label>
+                                                    </div>
+
+                                                    <label for="share_with_group">
+                                                        <input type="checkbox" name="share_with_group" id="share_with_group">
+                                                    </label>
+                                                </div>
+
+                                                <br>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-outline-primary" style="" onclick="myFunction()">Save Note</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+
+
+{% endblock %}

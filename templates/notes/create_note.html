@@ -57,22 +57,37 @@ $(document).ready(function() {
 
                 {% if share %}
 
-                    {% if share == 0 %}
-                        <option selected value="0">Choose...</option>
-                    {% elif share == 1 %}
-                        <option value="1">Share with all </option>
-                    {% elif share == 2 %}
-                        <option value="2">Share with only Note-it™ users</option>
-                    {% else %}
-                        <option value="3">Don't Share</option>
-                    {% endif %}
+                {% if share == 0 %}
+                <option selected value="0">Choose...</option>
+                <option value="1">Share with all </option>
+                <option value="2">Share with only Note-it™ users</option>
+                <option value="3">Don't Share</option>
+
+                {% elif share == 1 %}
+                <option selected value="1">Share with all </option>
+                <option value="2">Share with only Note-it™ users</option>
+                <option value="3">Don't Share</option>
+                <option selected value="0">Choose...</option>
+
+                {% elif share == 2 %}
+                <option selected value="2">Share with only Note-it™ users</option>
+                <option value="3">Don't Share</option>
+                <option selected value="0">Choose...</option>
+                <option value="1">Share with all </option>
+
+                {% else %}
+                <option selected value="3">Don't Share</option>
+                <option selected value="0">Choose...</option>
+                <option value="1">Share with all </option>
+                <option value="2">Share with only Note-it™ users</option>
+                {% endif %}
 
                 {% else %}
 
-                    <option selected value="0">Choose...</option>
-                    <option value="1">Share with all </option>
-                    <option value="2">Share with only Note-it™ users</option>
-                    <option value="3">Don't Share</option>
+                <option selected value="0">Choose...</option>
+                <option value="1">Share with all </option>
+                <option value="2">Share with only Note-it™ users</option>
+                <option value="3">Don't Share</option>
 
                 {% endif %}
 

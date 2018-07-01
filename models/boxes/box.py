@@ -34,7 +34,17 @@ class Box(object):
 
     @classmethod
     def find_by_id(cls, box_id):
-        return cls(**Database.find_one(BoxConstants.COLLECTION, {'_id': box_id}))
+        try:
+            return cls(**Database.find_one(BoxConstants.COLLECTION, {'_id': box_id}))
+        except:
+            return None
+
+    @classmethod
+    def find_by_maker_id(cls, maker_id):
+        try:
+            return cls(**Database.find_one(BoxConstants.COLLECTION, {'maker_id': maker_id}))
+        except:
+            return None
 
     def save_to_mongo(self):
         Database.update(BoxConstants.COLLECTION, {"_id": self._id}, self.json())
@@ -150,3 +160,10 @@ class Box(object):
                 boxes.append(Box.find_by_id(box['_source']['query']['match']['box_id']))
         del el
         return boxes
+
+    def get_notes(self):
+        notes = []
+        for note in self.notes:
+            notes.append(Note.find_by_id(note))
+
+        return notes

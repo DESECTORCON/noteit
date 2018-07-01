@@ -1,0 +1,213 @@
+{% extends "base3.html" %}
+{% block title %}
+{% if group %}
+<title>Groups.io | Group {{ group.name }}</title>
+{% else %}
+<title>Groups.io | Error</title>
+{% endif %}
+{% endblock %}
+<style>
+      html{
+  }
+  body{
+      margin: 0;
+      padding: 0;
+      background: #e7ecf0;
+      font-family: Arial, Helvetica, sans-serif;
+  }
+  *{
+      margin: 0;
+      padding: 0;
+  }
+  p{
+      font-size: 12px;
+      color: #373737;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 18px;
+  }
+  p a{
+      color: #218bdc;
+      font-size: 12px;
+      text-decoration: none;
+  }
+  a{
+      outline: none;
+  }
+  .f-left{
+      float:left;
+  }
+  .f-right{
+      float:right;
+  }
+  .clear{
+      clear: both;
+      overflow: hidden;
+  }
+  #block_error{
+      width: 845px;
+      height: 384px;
+      border: 1px solid #cccccc;
+      margin: 72px auto 0;
+      -moz-border-radius: 4px;
+      -webkit-border-radius: 4px;
+      border-radius: 4px;
+      background: #fff url(http://www.ebpaidrev.com/systemerror/block.gif) no-repeat 0 51px;
+  }
+  #block_error div{
+      padding: 100px 40px 0 186px;
+  }
+  #block_error div h2{
+      color: #218bdc;
+      font-size: 24px;
+      display: block;
+      padding: 0 0 14px 0;
+      border-bottom: 1px solid #cccccc;
+      margin-bottom: 12px;
+      font-weight: normal;
+  }
+</style>
+{% block content %}
+
+<div class="container-fluid">
+
+    {% if error_msg %}
+    <div id="block_error">
+        <div>
+            <h2>Error 404. &nbspOops you've have encountered an error</h2>
+            <p>
+                It apperrs that Either something went wrong or the page doesn't exist anymore..<br />
+                This website is temporarily unable to service your request as it has exceeded it’s resource limit. Please check back shortly.
+            </p>
+        </div>
+    </div>
+    {% else %}
+
+    {% if group_alerts %}
+    <div id="row">
+        <div class="error-notice">
+            {% for alert in group_alerts %}
+                <div class="oaerror info">
+                    <strong>{{ alert.title }}</strong> - {{ alert.content }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="page-header">
+        <h1><i class="far fa-object-group"></i> Group <small class="">{{ group.name }}</small></h1>
+    </div>
+
+    <hr>
+
+    <div class="container">
+        <h3 class="text-monospace"><i class="fas fa-users"></i> Members <small>total: {{ group.members|length }}</small></h3>
+    </div>
+
+    <br>
+
+    <div class="container">
+        <div class="list-group">
+
+            {% if members != [] %}
+            {% for user in members %}
+
+            <div class="hoverdiv">
+                <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start hover_">
+                    <div class="d-flex w-100 justify-content-between">
+                        {% if session_id == user._id %}
+                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
+                        {% else %}
+                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }}</h5>
+                        {% endif %}
+
+                    </div>
+                    <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                </a>
+            </div>
+
+            {% endfor %}
+            {% else %}
+            <h4 class="text-muted"><i class="fas fa-question"></i> There are no members!</h4>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <br>
+
+    <div class="container">
+        <h3 class="text-monospace"><i class="fas fa-sticky-note"></i> Notes <small>total: {{ shared_notes|length }}</small></h3>
+    </div>
+
+    <br>
+
+    <div class="container">
+
+        <div class="list-group">
+            {% if shared_notes != [] %}
+            {% for note in shared_notes %}
+
+            <div class="group">
+                <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><i class="fas fa-sticky-note"></i> {{ note.title }}</h5>
+                        <small class="text-muted">Made by: {{ note.author_nickname }}</small>
+                        <small class="text-muted">Created at {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                    </div>
+                </a>
+            </div>
+
+            {% endfor %}
+            {% else %}
+            <h4 class="text-muted"><i class="fas fa-question"></i> There are no shared notes!</h4>
+            {% endif %}
+
+        </div>
+    </div>
+    <hr class="my-4">
+
+    <div class="card">
+
+        <div class="card-body">
+            {% if is_in_group %}
+            <a href="" class="btn btn-outline-warning" role="button" data-toggle="modal" data-target="#exampleModal">Secession</a>
+            <a href="{{ url_for('groups.invite_friend') }}" class="btn btn-outline-secondary" role="button">Invite friend</a>
+            <a href="{{ url_for('notes.add_to_group') }}" class="btn btn-outline-info" role="button">Add Notes</a>
+            <a href="{{ url_for('groups.delete_note_from_group', group_id=group._id) }}" class="btn btn-outline-warning" role="button">Delete notes</a>
+            {% else %}
+            <a href="{{ url_for('groups.join_group', group_id=group._id) }}" class="btn btn-outline-secondary" role="button">Join group</a>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-trash-alt"></i>  Secession Group: {{ group.name }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i>
+                    Do you really want to secession?
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                <a href="{{ url_for('groups.get_out_group', group_id=group._id) }}" class="btn btn-outline-warning" role="button">Secession</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+</div>
+
+{% endblock %}

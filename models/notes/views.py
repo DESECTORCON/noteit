@@ -1,8 +1,12 @@
 import os
+import uuid
 import shortid
+import werkzeug
 from elasticsearch import Elasticsearch
 from flask import Blueprint, request, session, url_for, render_template, flash
 from werkzeug.utils import redirect
+from models.boxes.box import Box
+from models.group.group import Group
 from models.notes.note import Note
 import models.users.decorators as user_decorators
 from models.users.user import User
@@ -43,25 +47,40 @@ def share_bool_function(share):
     return share, share_only_with_users
 
 
-@note_blueprint.route('/my_notes/', methods=['POST', 'GET'])
+@note_blueprint.route('/my_notes/', defaults={'box_id': None}, methods=['POST', 'GET'])
+@note_blueprint.route('/my_notes/<string:box_id>', methods=['POST', 'GET'])
 @user_decorators.require_login
-def user_notes():
+def user_notes(box_id=None):
     try:
 
+        boxs = Box.get_user_boxes(session['_id'])
         user = User.find_by_email(session['email'])
-        user_notes = User.get_notes(user)
         user_name = user.email
 
-        if request.method == 'POST':
-                form_ = request.form['Search_note']
-                notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
-
-                return render_template('/notes/my_notes.html', user_notes=notes, user_name=user_name,
-                                       form=form_)
+        if box_id is None:
+            user_notes = User.get_notes(user)
+            box_name = ''
+            search = True
 
         else:
+            box = Box.find_by_id(box_id)
+            user_notes = box.get_notes()
+            box_name = box.name
+            search = False
 
-            return render_template('/notes/my_notes.html', user_name=user_name, user_notes=user_notes)
+        if request.method == 'POST':
+            form_ = request.form['form']
+            if box_id is None:
+                notes = Note.search_with_elastic(form_, user_nickname=user.nick_name, box_id=False)
+            else:
+                notes = Note.search_with_elastic(form_, user_nickname=user.nick_name, box_id=box_id)
+
+            return render_template('/notes/my_notes_sidebar.html', user_notes=notes, user_name=user_name,
+                                   form=form_, boxs=boxs, box_name=box_name, search=search, box_id=box_id)
+
+        else:
+            return render_template('/notes/my_notes_sidebar.html', user_name=user_name
+                                   , user_notes=user_notes, boxs=boxs, box_name=box_name, search=search, box_id=box_id)
 
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -74,6 +93,7 @@ def user_notes():
 @note_blueprint.route('/note/<string:note_id>')
 def note(note_id):
     try:
+        all_boxs = Box.get_user_boxes(session['_id'])
         note = Note.find_by_id(note_id)
         user = User.find_by_email(note.author_email)
         filenames = note.file_name
@@ -127,7 +147,7 @@ def note(note_id):
 
             return render_template('/notes/note.html', note=note,
                                    author_email_is_session=author_email_is_session, msg_=False, user=user
-                                   , url=urls)
+                                   , url=urls,all_boxs=all_boxs)
 
     except:
         error_msg = traceback.format_exc().split('\n')
@@ -142,25 +162,33 @@ def note(note_id):
         return render_template('error_page.html', error_msgr='Crashed during reading your note...')
 
 
-@note_blueprint.route('/add_note', methods=['GET', 'POST'])
+@note_blueprint.route('/add_note', defaults={'box_id': None}, methods=['POST', 'GET'])
+@note_blueprint.route('/add_note/<string:box_id>', methods=['GET', 'POST'])
 @user_decorators.require_login
-def create_note():
+def create_note(box_id):
     try:
         if request.method == 'POST':
+            # getting forms
             share = request.form['inputGroupSelect01']
 
+            # share label error handler
             try:
                 share, share_only_with_users = share_bool_function(share)
             except ValueError:
                 return render_template('/notes/create_note.html',
                                        error_msg="You did not selected an Share label. Please select an Share label.")
 
+            # getting title content and email
             title = request.form['title']
-            content = request.form['content'].strip('\n').strip('\r')
+            content = request.form['content_'].strip('\n').strip('\r')
             author_email = session['email']
+
+            # getting files and saving
             try:
+                # getting files
                 files = request.files.getlist('file')
 
+                # file length checker
                 if len(files) > 5:
                     flash("Too much files!")
                     return render_template('/notes/create_note.html'
@@ -169,14 +197,18 @@ def create_note():
                 filenames = []
                 for file in files:
                     if files and Note.allowed_file(file):
+                        # create name for file
                         sid = shortid.ShortId()
+                        # create path for file
                         file_path, file_extenstion = os.path.splitext(file.filename)
                         filename = secure_filename(sid.generate()) + file_extenstion
 
                         # os.chdir("static/img/file/")
+                        # save file and add file to filenames list
                         file.save(os.path.join(filename))
                         filenames.append(filename)
 
+                    # if extenstion is not supported
                     elif file is not None:
                         flash("Sorry; your file's extension is supported.")
                         return render_template('/notes/create_note.html'
@@ -188,22 +220,60 @@ def create_note():
                 # file = None
                 filenames = []
 
+            # getting author nickname, label and user notes
             author_nickname = User.find_by_email(author_email).nick_name
 
             label = is_shared_validator(share, share_only_with_users)
 
             user_notes = Note.get_user_notes(session['email'])
 
+            # if too much notes, then redirect
             if len(user_notes) > 20:
                 flash("You have the maximum amount of notes. Please delete your notes")
-                return redirect(url_for(".user_notes"))
+                return redirect(url_for(".user_notes", box_id=box_id))
 
-            note_for_save = Note(title=title, content=content, author_email=author_email, shared=share,
+            # saving note
+            all_box_id = box_id
+            note_id = uuid.uuid4().hex
+
+            try:
+                share_with_group = request.form['share_with_group']
+
+                if share_with_group == 'on':
+                    try:
+                        user = User.find_by_id(session['_id'])
+                        share_with_group = True
+                        group = Group.find_by_id(user.group_id)
+                        group.shared_notes.append({'note_id': note_id, 'author': user._id})
+                        group.save_to_mongo()
+                        group.update_to_elastic()
+                    except:
+                        flash("You aren't in a group. Please join a group to share with group users.")
+                        return render_template('/notes/create_note.html'
+                                        , title=title, content=content, share=share)
+
+                else:
+                    share_with_group = False
+
+            except werkzeug.exceptions.BadRequestKeyError:
+                share_with_group = False
+
+            else:
+                share_with_group = False
+
+            note_for_save = Note(_id=note_id, title=title, content=content, author_email=author_email, shared=share,
                                  author_nickname=author_nickname, share_only_with_users=share_only_with_users,
-                                 share_label=label, file_name=filenames)
+                                 share_label=label, file_name=filenames, box_id=all_box_id
+                                 , share_with_group=share_with_group)
             note_for_save.save_to_mongo()
             note_for_save.save_to_elastic()
+            if box_id is not None:
+                box_for_save = Box.find_by_id(all_box_id)
+                box_for_save.notes.append(note_id)
+                box_for_save.save_to_mongo()
+                box_for_save.update_to_elastic()
 
+            # flash message and redirect
             flash('Your note has successfully created.')
 
             return redirect(url_for('.user_notes'))
@@ -240,7 +310,7 @@ def delete_note(note_id, redirect_to='.user_notes'):
 @note_blueprint.route('/pub_notes/', methods=['GET', 'POST'])
 def notes():
     try:
-
+        all_boxs = Box.get_user_boxes(session['_id'])
         if request.method == 'POST':
             form_ = request.form['Search_note']
 
@@ -373,7 +443,17 @@ def delete_multiple():
                 note = Note.find_by_id(note_id)
                 note.delete_on_elastic()
                 note.delete_img()
-                note.delete()
+
+                my_group = Group.find_by_id(user.group_id)
+                del my_group.shared_notes[note._id]
+                my_group.save_to_mongo()
+                my_group.save_to_elastic()
+
+                try:
+                    box = Box.find_by_id(note.box_id)
+                    box.notes.remove(note._id)
+                except:
+                    note.delete()
 
             flash('Your notes has successfully deleted.')
             return redirect(url_for('.user_notes'))
@@ -388,13 +468,62 @@ def delete_multiple():
         return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
 
 
-@note_blueprint.route('/search_notes/', methods=['POST'])
+@note_blueprint.route('/search_notes', methods=['POST'])
 @user_decorators.require_login
-def search_notes():
+def search_notes(box_id):
     user = User.find_by_email(session['email'])
     user_name = user.email
     form_ = request.form['Search_note']
-    notes = Note.search_with_elastic(form_, user_nickname=user.nick_name)
+    notes = Note.search_with_elastic(form_, user_nickname=user.nick_name, box_id=box_id)
 
     return render_template('/notes/delete_multiple.html', user_notes=notes, user_name=user_name,
-                           form=form_)
+                               form=form_)
+
+
+@note_blueprint.route('/add_to_box/<string:note_id>', methods=['POST'])
+@user_decorators.require_login
+def add_to_box(note_id):
+    box_id = request.form['box']
+
+    note_for_save = Note.find_by_id(note_id)
+    box_for_save  = Box.find_by_id(box_id)
+
+    note_for_save.box_id = box_id
+    box_for_save.notes.append(note_id)
+    note_for_save.save_to_mongo()
+    note_for_save.update_to_elastic()
+    box_for_save.save_to_mongo()
+    box_for_save.update_to_elastic()
+    return redirect(url_for('.user_notes', box_id=box_id))
+
+
+@note_blueprint.route('/add_to_group/', methods=['POST', 'GET'])
+@user_decorators.require_login
+def add_to_group():
+
+    # getting all user's notes
+    notes = Note.get_user_notes(session['email'])
+
+    if request.method == 'POST':
+        user = User.find_by_id(session['_id'])
+        if user.group_id is None:
+            flash("You aren't in a group. Please join a group to share notes to friends.")
+            return redirect(url_for('groups.groups'))
+
+        group_ = Group.find_by_id(user.group_id)
+        add_notes = request.form.getlist('selected_notes')
+
+        for note in add_notes:
+            note = Note.find_by_id(note)
+            if {'author': user._id, 'note_id': note._id} in group_.shared_notes:
+                pass
+            else:
+                group_.shared_notes.extend([{'author': user._id, 'note_id': note._id}])
+                group_.shared_notes = group_.shared_notes
+        # saving to database
+        group_.save_to_elastic()
+        group_.save_to_mongo()
+
+        return redirect(url_for('groups.group', group_id=group_._id))
+
+    return render_template('notes/add_to_group.html', notes=notes)
