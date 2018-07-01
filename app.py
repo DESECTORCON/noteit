@@ -114,6 +114,11 @@ def home3():
     return render_template('home3.html')
 
 
+@app.route('/chatbox')
+def home4():
+    return render_template('home4.html')
+
+
 @app.route('/loading')
 def loading():
     return render_template('loading.html')
