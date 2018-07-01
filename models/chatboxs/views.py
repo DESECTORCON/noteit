@@ -72,8 +72,8 @@ def save_message(methods=['GET', 'POST']):
 @chatbox_blueprint.route('/chat/chatboxs')
 @user_decorators.require_login
 def chatboxs():
-    chatboxes = ChatBox.get_user_chatboxs(session['user_id'])
-    user_ = User.find_by_id(session['user_id'])
+    chatboxes = ChatBox.get_user_chatboxs(session['_id'])
+    user_ = User.find_by_id(session['_id'])
 
     return render_template('chatboxs/user_chatboxs.html', chatboxs=chatboxes, user_=user_)
 
