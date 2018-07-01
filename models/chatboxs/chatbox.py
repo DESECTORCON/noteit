@@ -80,6 +80,13 @@ class ChatBox(object):
             members.append(User.find_by_id(user))
 
         return members
+    #
+    # def get_user_chatboxs(self):
+    #     try:
+    #         return [cls(**elem) for elem in Database.find(ChatBoxConstants,
+    #                                                   {'reciver_id': })]
+    #     except TypeError:
+    #         return None
 
 
 

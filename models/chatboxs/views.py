@@ -69,6 +69,12 @@ def save_message(methods=['GET', 'POST']):
     return redirect(url_for('chatboxs.chatbox', chatbox_id=session['chatbox_id']))
 
 
+@chatbox_blueprint.route('/chat/chatboxs')
+@user_decorators.require_login
+def chatboxs():
+    chatboxes = ChatBox
+
+
 @socketio.on('submit')
 def send(json, methods=['POST', 'GET']):
     chatbox_ = ChatBox.find_by_id(session['chatbox_id'])
