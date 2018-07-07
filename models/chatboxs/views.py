@@ -117,7 +117,7 @@ def send(json, methods=['POST', 'GET']):
     socketio.emit('chat response', response_data, broadcast=True)
 
 
-@socketio.on('left', namespace='/chat')
+@socketio.on('left')
 def left(message):
     """Sent by clients when they leave a room.
     A status message is broadcast to all people in the room."""

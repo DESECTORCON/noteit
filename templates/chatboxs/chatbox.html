@@ -1,6 +1,6 @@
 {% extends "base4.html" %}
 {% block title %}
-<title></title>
+<title>Chatbox | {{ chatbox_.name }}</title>
 {% endblock %}
 {% block content %}
 
@@ -10,9 +10,9 @@
             <br><br><br>
             <hr>
             <div class="left-chat">
-                <ul>
+                <ul class="">
                     {% for user in users %}
-                    <li class="">
+                    <li>
                         <div class="chat-left-img">
                             <img src="/demo/businessman.png">
                         </div>
@@ -22,6 +22,7 @@
                         </div>
                     </li>
                     {% endfor %}
+                    <br>
                 </ul>
             </div>
         </div>
@@ -44,17 +45,11 @@
                 <div class="col-md-12 right-header-contentChat">
                     <ul class="chat_log" id="my_list" style="overflow-y: auto;">
                         {% for message in messages %}
-                        <!--<li>-->
-                            <!--<div class="rightside-left-chat">-->
-                                <!--<span><i class="fa fa-circle" aria-hidden="true"></i> {{ message.sender_name }}<small>  {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</small> </span><br><br>-->
-                                <!--<p>{{ message.content }}</p>-->
-                            <!--</div>-->
-                        <!--</li>-->
-                        {% if message.sender_id != session['_id'] %}
+                        {% if message.sender_id == session['_id'] %}
                         <li>
                             <div class="rightside-right-chat">
-                                <span class=""><i class="fa fa-circle" aria-hidden="true"></i> {{ message.sender_name }}<small>  {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</small> </span><br><br>
-                                <p class="  ">{{ message.content }}</p>
+                                <span class="text-right"><i class="fa fa-circle" aria-hidden="true"></i> {{ message.sender_name }}<small>  {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</small> </span><br><br>
+                                <p class="text-right">{{ message.content }}</p>
                             </div>
                         </li>
                         {% else %}
