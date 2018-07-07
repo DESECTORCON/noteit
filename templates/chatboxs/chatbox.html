@@ -12,7 +12,7 @@
             <div class="left-chat">
                 <ul>
                     {% for user in users %}
-                    <li>
+                    <li class="">
                         <div class="chat-left-img">
                             <img src="/demo/businessman.png">
                         </div>
@@ -118,6 +118,14 @@ socket.on( 'response', function( data ) {
 	    $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
 	 	}
     });
+
+function leave_room() {
+                socket.emit('left', {}, function() {
+                    socket.disconnect();
+                    // go back to the login page
+                    window.location.href = "{{ url_for('chatboxs.chatboxs') }}";
+                });
+            }
 
 </script>
 {% endblock %}

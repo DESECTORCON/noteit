@@ -95,7 +95,7 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 }
 
 .group:hover {
-    color: #1abc9c !important;
+    color: #76d6ff !important;
 }
 
 .group:hover {
@@ -427,7 +427,7 @@ styling for checkbox
   padding: 0px;
 }
 .form-control,.search-icon,.search-icon:hover{
-  background-color: #6A6C75;
+  background-color: #ffffff;
   border:1px solid #fff;
   color:#fff;
   box-shadow: none !important;

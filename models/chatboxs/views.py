@@ -114,12 +114,14 @@ def send(json, methods=['POST', 'GET']):
         "sender_name": message.sender_name
     }
 
-    socketio.emit('chat response', response_data)
+    socketio.emit('chat response', response_data, broadcast=True)
 
 
-@socketio.on('disconnect')
-def disconnect():
-    pass
+@socketio.on('left', namespace='/chat')
+def left(message):
+    """Sent by clients when they leave a room.
+    A status message is broadcast to all people in the room."""
+    emit('status', {'msg': session['email'] + ' has left the room.'})
 
 
 @socketio.on("request")
