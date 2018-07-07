@@ -88,11 +88,16 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 }
 
 .group {
-    border: 10px solid;
+    border: 10px transparent;
     margin-bottom: 5px;
     border-color: #f1f1f1;
 
 }
+
+.group:hover {
+    color: #1abc9c !important;
+}
+
 .group:hover {
     border-color: #f1f1f1;
 }

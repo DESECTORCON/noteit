@@ -13,7 +13,7 @@
 
     <div class="list-group">
         {% if chatboxes == [] %}
-        <p class="text-muted"><i class="far fa-frown"></i>  No groups created.</p>
+        <p class="text-muted"><i class="far fa-frown"></i>  No Chatboxes created.</p>
         {% else %}
 
         {% for chatbox in chatboxs %}
@@ -24,7 +24,7 @@
                 <h4 class="mb-1"><i class="fas fa-object-group"></i> {{ chatbox.name }}</h4>
 
                 <p class="list-group-item-text">Created date {{ chatbox.created_date.strftime("%Y-%m-%d at %H:%M") }}<strong></strong></p>
-                <p class="list-group-item-text">{{ chatbox.members|length }} Members</p>
+                <p class="list-group-item-text">{{ chatbox.user_ids|length }} Members</p>
 
             </div>
             <p class="mb-1"><span class="badge badge-pill badge-secondary"></span></p>
