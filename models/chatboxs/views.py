@@ -7,6 +7,7 @@ from models.messages.message import Message
 from models.users.user import User
 from flask_socketio import SocketIO, emit
 from app import app
+import ast
 
 chatbox_blueprint = Blueprint('chatboxs', __name__)
 socketio = SocketIO(app)
@@ -14,18 +15,18 @@ socketio = SocketIO(app)
 
 @chatbox_blueprint.route('/chat/create_chat/<string:default_members>', methods=['POST', 'GET'])
 @user_decorators.require_login
-def create_chatbox(default_members=[]):
+def create_chatbox(default_members):
     current_user = User.find_by_id(session['_id'])
     user_friends = current_user.get_friends()
     if request.method == 'GET':
         if default_members is not []:
             default_members_obj = []
-            for member in default_members:
+            for member in ast.literal_eval(default_members):
                 member_obj = User.find_by_id(member)
                 if member_obj is not None:
                     default_members_obj.append(member_obj)
 
-            return render_template('chatboxs/create_chatbox.html', user_friends=default_members_obj)
+            return render_template('chatboxs/create_chatbox.html', user_friends=default_members_obj, default=True)
         return render_template('chatboxs/create_chatbox.html', user_friends=user_friends)
 
     if request.method == 'POST':
