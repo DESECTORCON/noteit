@@ -508,6 +508,13 @@ styling for checkbox
   width:80%;
   position: relative;
 }
+
+.rightside-left-chat-exr,.rightside-right-chat{
+  float:right;
+  width:80%;
+  position: relative;
+}
+
 .rightside-right-chat{
   float:right;
   margin-right:35px;

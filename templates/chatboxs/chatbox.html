@@ -52,9 +52,9 @@
                         <!--</li>-->
                         {% if message.sender_id != session['_id'] %}
                         <li>
-                            <div class="rightside-left-chat">
-                                <span class="ml-3"><i class="fa fa-circle" aria-hidden="true"></i> {{ message.sender_name }}<small>  {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</small> </span><br><br>
-                                <p class="  ml-3">{{ message.content }}</p>
+                            <div class="rightside-right-chat">
+                                <span class=""><i class="fa fa-circle" aria-hidden="true"></i> {{ message.sender_name }}<small>  {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</small> </span><br><br>
+                                <p class="  ">{{ message.content }}</p>
                             </div>
                         </li>
                         {% else %}
