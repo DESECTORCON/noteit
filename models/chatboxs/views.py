@@ -19,7 +19,10 @@ def create_chatbox(default_members=[]):
     user_friends = current_user.get_friends()
     if request.method == 'GET':
         if default_members is not []:
-            return render_template('chatboxs/create_chatbox.html', user_friends=user_friends, default_members=default_members)
+            default_members_obj = []
+            for member in default_members:
+                default_members_obj.append(User.find_by_id(member))
+            return render_template('chatboxs/create_chatbox.html', user_friends=default_members_obj)
         return render_template('chatboxs/create_chatbox.html', user_friends=user_friends)
 
     if request.method == 'POST':
