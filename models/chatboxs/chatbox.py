@@ -51,10 +51,7 @@ class ChatBox(object):
 
     @classmethod
     def get_user_chatboxs(cls, user_id):
-        try:
-            return [cls(**elem) for elem in Database.find(ChatBoxConstants,  {'user_ids': [user_id]})]
-        except TypeError:
-            return None
+            return [cls(**elem) for elem in Database.find(ChatBoxConstants,  {'user_ids': {"$in": [user_id]}})]
 
     @classmethod
     def latest_message_(cls):
