@@ -171,7 +171,10 @@ class User(object):
 
     @classmethod
     def find_by_id(cls, id):
-        return cls(**Database.find_one(UserConstants.COLLECTION, {'_id': id}))
+        try:
+            return cls(**Database.find_one(UserConstants.COLLECTION, {'_id': id}))
+        except TypeError:
+            return None
 
     def get_friends(self):
         return_data = []

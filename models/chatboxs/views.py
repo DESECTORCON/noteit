@@ -21,7 +21,10 @@ def create_chatbox(default_members=[]):
         if default_members is not []:
             default_members_obj = []
             for member in default_members:
-                default_members_obj.append(User.find_by_id(member))
+                member_obj = User.find_by_id(member)
+                if member_obj is not None:
+                    default_members_obj.append(member_obj)
+
             return render_template('chatboxs/create_chatbox.html', user_friends=default_members_obj)
         return render_template('chatboxs/create_chatbox.html', user_friends=user_friends)
 

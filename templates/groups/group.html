@@ -1,6 +1,7 @@
 {% extends "base3.html" %}
 {% block title %}
 {% if group %}
+<!--suppress XmlDuplicatedId -->
 <title>Groups.io | Group {{ group.name }}</title>
 {% else %}
 <title>Groups.io | Error</title>
@@ -161,81 +162,82 @@
     </div>
 
     <hr>
+    {% if session['_id'] in group.members %}
+        {% if group_alerts %}
 
-    {% if group_alerts %}
+        <div class="">
+
+            <!-- ICON -->
+            <div class="dropdown notifications-button hidden-sm-down">
+
+                <a class="btn btn-secondary dropdown-toggle" href="" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bell"></i>
+                    <span id="notificationsBadge" class="badge badge-danger">{{ group_alerts|length }}</span>
+                </a>
+
+                <!-- NOTIFICATIONS -->
+                <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown" id="">
+                    <h6 class="dropdown-header">Notifications</h6>
+                    <div class="notifications-container" id="notificationsContainer">
+                        {% for alert in group_alerts %}
+                        <a class="dropdown-item dropdown-notification" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}">
+                            <div class="notification-read">
+                                <i class="fa fa-times"></i>
+                            </div>
+                            <i class="far fa-bell"></i>
+                            <div class="notifications-body">
+                                <p class="notification-texte">{{ alert.title }}</p>
+                                <p class="notification-date text-muted">
+                                    {{ alert.content }}
+                                    <i class="fa fa-clock-o" aria-hidden="true"></i> {{ alert.created_date }}
+                                </p>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+
+                    <!-- TOUTES -->
+                    <div class="dropdown-item dropdown-notification-all" href="#">
+                        SE.inc
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+
 
     <div class="">
 
         <!-- ICON -->
         <div class="dropdown notifications-button hidden-sm-down">
 
-            <a class="btn btn-secondary dropdown-toggle" href="" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="btn btn-secondary dropdown-toggle" href="#" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-bell"></i>
-                <span id="notificationsBadge" class="badge badge-danger">{{ group_alerts|length }}</span>
+                <span id="notificationsBadge" class="badge badge-danger"></span>
             </a>
 
             <!-- NOTIFICATIONS -->
-            <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown" id="">
+            <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown">
                 <h6 class="dropdown-header">Notifications</h6>
                 <div class="notifications-container" id="notificationsContainer">
-                    {% for alert in group_alerts %}
-                    <a class="dropdown-item dropdown-notification" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}">
-                        <div class="notification-read">
-                            <i class="fa fa-times"></i>
-                        </div>
-                        <i class="far fa-bell"></i>
-                        <div class="notifications-body">
-                            <p class="notification-texte">{{ alert.title }}</p>
-                            <p class="notification-date text-muted">
-                                {{ alert.content }}
-                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ alert.created_date }}
-                            </p>
-                        </div>
-                    </a>
-                    {% endfor %}
-                </div>
 
-                <!-- TOUTES -->
-                <div class="dropdown-item dropdown-notification-all" href="#">
-                    SE.inc
+                    <div class="dropdown-item dropdown-notification-all">
+                        No new notifications!
+                    </div>
+
+                    <!-- TOUTES -->
+                    <div class="dropdown-item dropdown-notification-all">
+                        SE.inc
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-{% else %}
 
 
-<div class="">
-
-    <!-- ICON -->
-    <div class="dropdown notifications-button hidden-sm-down">
-
-        <a class="btn btn-secondary dropdown-toggle" href="#" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-bell"></i>
-            <span id="notificationsBadge" class="badge badge-danger"></span>
-        </a>
-
-        <!-- NOTIFICATIONS -->
-        <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown">
-            <h6 class="dropdown-header">Notifications</h6>
-            <div class="notifications-container" id="notificationsContainer">
-
-                <div class="dropdown-item dropdown-notification-all">
-                    No new notifications!
-                </div>
-
-                <!-- TOUTES -->
-                <div class="dropdown-item dropdown-notification-all">
-                    SE.inc
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
+    {% endif %}
 {% endif %}
 <hr>
 
