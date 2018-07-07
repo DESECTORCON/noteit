@@ -27,10 +27,10 @@ def create_chatbox(default_members=[]):
         chatbox_members.append(session['_id'])
         if chatbox_members == [] or chatbox_members is None:
             return render_template('chatboxs/create_chatbox.html', user_friends=user_friends
-                                   , error_msgc='You havn\'t selected any friends!')
+                                   , error_msg='You havn\'t selected any friends!')
 
         _id = uuid.uuid4().hex
-        chatbox_ = ChatBox(user_ids=chatbox_members, _id=_id)
+        chatbox_ = ChatBox(user_ids=chatbox_members, _id=_id, name=request.form['title'])
         chatbox_.save_to_mongo()
         return redirect(url_for('chatboxs.chatbox', chatbox_id=_id))
 
