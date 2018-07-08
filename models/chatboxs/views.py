@@ -1,5 +1,5 @@
 import uuid
-from flask import Blueprint, render_template, url_for, session, request
+from flask import Blueprint, render_template, url_for, session, request, flash
 from werkzeug.utils import redirect
 import models.users.decorators as user_decorators
 from models.chatboxs.chatbox import ChatBox
@@ -53,11 +53,19 @@ def chatbox(chatbox_id):
     return render_template('chatboxs/chatbox.html', messages=messages, users=users, chatbox_=chatbox_)
 
 
-@chatbox_blueprint.route('/chat/chatbox/delete', methods=['POST', 'GET'])
+@chatbox_blueprint.route('/chat/chatbox/delete', defaults={'secession_chatbox_id': None}, methods=['POST', 'GET'])
+@chatbox_blueprint.route('/chat/chatbox/delete/<string:secession_chatbox_id>', methods=['POST', 'GET'])
 @user_decorators.require_login
-def secession_chatbox():
+def secession_chatbox(secession_chatbox_id=None):
     user_chatboxs = ChatBox.get_user_chatboxs(session['_id'])
     if request.method == 'POST':
+        if secession_chatbox_id is not None:
+            chatbox_obj = ChatBox.find_by_id(secession_chatbox_id)
+            chatbox_obj.user_ids.remove(session['_id'])
+            chatbox_obj.save_to_mongo()
+
+            flash('Sucefully secessioned chatbox '+ chatbox_obj.name)
+            return redirect(url_for('chatboxs.chatboxs'))
         secession_chatboxes = request.form.getlist('secession_chatboxes')
         chatbox_objs = []
         for _id in secession_chatboxes:
