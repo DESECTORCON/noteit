@@ -92,30 +92,30 @@ def send(json, methods=['POST', 'GET']):
     title = None
     content = json['content']
     if content is '':
-        return redirect(url_for('chatboxs.chatbox', chatbox_id=session['chatbox_id']))
+        return
+    else:
+        sender = User.find_by_email(session['email'])
+        sender_name = sender.nick_name
+        sender_id = sender._id
 
-    sender = User.find_by_email(session['email'])
-    sender_name = sender.nick_name
-    sender_id = sender._id
+        message = Message(title=title, content=content,
+                          reciver_id=session['chatbox_id'], sender_id=sender_id, is_a_noteOBJ=False,
+                          sender_name=sender_name)
+        message.save_to_mongo()
+        message.save_to_elastic()
 
-    message = Message(title=title, content=content,
-                      reciver_id=session['chatbox_id'], sender_id=sender_id, is_a_noteOBJ=False,
-                      sender_name=sender_name)
-    message.save_to_mongo()
-    message.save_to_elastic()
+        chatbox_.messages.extend([message._id])
+        chatbox_.save_to_mongo()
 
-    chatbox_.messages.extend([message._id])
-    chatbox_.save_to_mongo()
+        # make response data for emit
+        response_data = {
+            "created_date": message.sended_date.strftime('%m/%d/%Y'),
+            "content": message.content,
+            "sender_name": message.sender_name,
+            "sender_id": message.sender_id
+        }
 
-    # make response data for emit
-    response_data = {
-        "created_date": message.sended_date.strftime('%m/%d/%Y'),
-        "content": message.content,
-        "sender_name": message.sender_name,
-        "sender_id": message.sender_id
-    }
-
-    socketio.emit('chat response', response_data, broadcast=True)
+        socketio.emit('chat response', response_data, broadcast=True)
 
 
 @socketio.on('left')

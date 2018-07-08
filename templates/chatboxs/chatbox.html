@@ -3,6 +3,7 @@
 <title>Chatbox | {{ chatbox_.name }}</title>
 {% endblock %}
 {% block content %}
+<%@page pageEncoding="UTF-8"%>
 
 <div class="container-fluid" style="width: 100vw;" id="row-full">
     <div class="row">
@@ -66,7 +67,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 right-chat-textbox">
-                    <form method="POST">
+                    <form method="POST" autocomplete="off" accept-charset="UTF-8">
                         <input type="text" name="content" id="content" class="content" value=""><button type="submit" class="fa fa-arrow-right" aria-hidden="true"></button>
                     </form>
 
