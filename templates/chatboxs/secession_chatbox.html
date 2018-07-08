@@ -66,9 +66,9 @@
             <div class="list-group-item list-group-item-action flex-column align-items-start card group">
 
                 <label class="d-flex w-100 justify-content-between" id="{{ chatbox._id }}">
-                    <label><h1 class="page-header"><a style="text-decoration:none; color: inherit;" href="{{ url_for('chatboxs.chatbox', chatbox_id=chatbox._id) }}">{{ chatbox.name }}</a></h1></label>
+                    <label><i class="far fa-comments"></i> <h1 class="page-header"><a style="text-decoration:none; color: inherit;" href="{{ url_for('chatboxs.chatbox', chatbox_id=chatbox._id) }}">{{ chatbox.name }}</a></h1></label>
 
-                    <input type="checkbox" value="chatbox._id" name="secession_chatboxes">
+                    <input type="checkbox" value="{{ chatbox._id }}" name="secession_chatboxes">
                     <p class="list-group-item-text">Created date {{ chatbox.created_date.strftime("%Y-%m-%d at %H:%M") }}<strong></strong></p>
                     <p class="list-group-item-text">{{ chatbox.user_ids|length }} Members</p>
 
