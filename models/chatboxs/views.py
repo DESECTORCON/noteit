@@ -53,6 +53,17 @@ def chatbox(chatbox_id):
     return render_template('chatboxs/chatbox.html', messages=messages, users=users, chatbox_=chatbox_)
 
 
+@chatbox_blueprint.route('/chat/chatbox/delete', methods=['POST', 'GET'])
+@user_decorators.require_login
+def secession_chatbox():
+    user_chatboxs = ChatBox.get_user_chatboxs(session['_id'])
+    if request.method == 'POST':
+        secession_chatboxes = request.form['secession_chatboxes']
+
+
+    return render_template('secession_chatbox.html', user_chatboxs=user_chatboxs)
+
+
 @chatbox_blueprint.route('/chat/chatbox_group/send_message')
 @user_decorators.require_login
 def save_message(methods=['GET', 'POST']):

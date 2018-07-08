@@ -44,11 +44,11 @@
             </div>
             <div class="row">
                 <div class="col-md-12 right-header-contentChat">
-                    <ul class="chat_log" id="my_list" style="overflow-y: auto;">
+                    <ul class="chat_log" id="my_list" style="overflow: hidden">
                         {% for message in messages %}
                         {% if message.sender_id == session['_id'] %}
                         <li>
-                            <div class="rightside-right-chat">
+                            <div class="rightside-right-chat" style="overflow: hidden">
                                 <span class="text-right"><i class="fa fa-circle" aria-hidden="true"></i> {{ message.sender_name }}<small>  {{ message.sended_date.strftime("%Y-%m-%d at %H:%M") }}</small> </span><br><br>
                                 <p class="text-right">{{ message.content }}</p>
                             </div>
@@ -100,7 +100,7 @@
   })
 })
 socket.on( 'chat response', function( msg ) {
-            $( 'ul.chat_log' ).append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
+            $( 'ul.chat_log' ).append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p class="text-right">'+ msg.content +'</p></div> </li>');
         console.log( msg );document.getElementById("content").value = "";
        $('chat_log').last().addClass('active-li').focus();});
 
