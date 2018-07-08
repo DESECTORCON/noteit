@@ -148,7 +148,7 @@ def send(json, methods=['POST', 'GET']):
 def left(message):
     """Sent by clients when they leave a room.
     A status message is broadcast to all people in the room."""
-    emit('status', {'msg': session['email'] + ' has left the room.'})
+    emit('status', {'msg': session['email'] + ' has left the room.'}, room=None)
 
 
 @socketio.on("request")
