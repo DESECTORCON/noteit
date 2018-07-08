@@ -76,7 +76,7 @@ def secession_chatbox(secession_chatbox_id=None):
             chatbox.save_to_mongo()
         return redirect(url_for('chatboxs.chatboxs'))
 
-    return render_template('secession_chatbox.html', user_chatboxs=user_chatboxs)
+    return render_template('chatboxs/secession_chatbox.html', user_chatboxs=user_chatboxs)
 
 
 @chatbox_blueprint.route('/chat/chatbox_group/send_message')
