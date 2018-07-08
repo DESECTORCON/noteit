@@ -3,6 +3,55 @@
 <title>Chatboxes | User Chatboxes</title>
 {% endblock %}
 {% block content %}
+<style>
+.section {
+  text-align: center;
+  height: 100%;
+  margin: 0 auto;
+  padding: 6em 0; }
+  .section__title {
+    font-size: 1.1em;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #fff;
+    margin-bottom: 3em; }
+  .section--aava {
+    background: #2994B2; }
+  .section--tuuli {
+    background: #474744; }
+  .section--vesi {
+    background: #54567A; }
+  .section--sade {
+    background: #2D4659; }
+  .section--ilma {
+    background: #095062; }
+  .section--tuli {
+    background: #068B78; }
+
+    .toggle-button {
+  margin: 0 20px; }
+
+  .toggle-button {
+  position: relative;
+  display: inline-block;
+  color: #fff; }
+  .toggle-button label {
+    display: inline-block;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-align: left; }
+  .toggle-button input {
+    display: none; }
+  .toggle-button__icon {
+    cursor: pointer;
+    pointer-events: none; }
+    .toggle-button__icon:before, .toggle-button__icon:after {
+      content: "";
+      position: absolute;
+      top: 45%;
+      left: 35%;
+      transition: 0.2s ease-out; }
+</style>
 <br><br>
 <div class="container">
 
@@ -13,16 +62,20 @@
     </div>
     <form method="POST">
         <div class="list-group">
-            {% if chatboxes == [] %}
+            {% if user_chatboxs == [] %}
             <p class="text-muted"><i class="far fa-frown"></i>  No Chatboxes created.</p>
             {% else %}
 
-            {% for chatbox in chatboxs %}
+            {% for chatbox in user_chatboxs %}
 
             <a href="{{ url_for('chatboxs.chatbox', chatbox_id=chatbox._id) }}" class="list-group-item list-group-item-action flex-column align-items-start card group">
 
                 <div class="d-flex w-100 justify-content-between">
-                    <h4 class="mb-1"><input type="checkbox" value="chatbox._id" name="secession_chatboxes"><i class="fas fa-object-group"></i> {{ chatbox.name }}</h4>
+                    <div class="toggle-button toggle-button--tuli">
+                        <input type="checkbox" value="chatbox._id" name="secession_chatboxes" id="{{ chatbox._id }}">
+                        <label for="{{ chatbox._id }}"><h1 class="page-header">{{ chatbox.name }}</h1></label>
+                        <div class="toggle-button__icon"></div>
+                    </div>
 
                     <p class="list-group-item-text">Created date {{ chatbox.created_date.strftime("%Y-%m-%d at %H:%M") }}<strong></strong></p>
                     <p class="list-group-item-text">{{ chatbox.user_ids|length }} Members</p>
