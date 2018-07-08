@@ -59,7 +59,14 @@ def secession_chatbox():
     user_chatboxs = ChatBox.get_user_chatboxs(session['_id'])
     if request.method == 'POST':
         secession_chatboxes = request.form['secession_chatboxes']
-
+        chatbox_objs = []
+        for _id in secession_chatboxes:
+            if ChatBox.find_by_id(_id) is not None:
+                chatbox_objs.append(ChatBox.find_by_id(_id))
+        for chatbox in chatbox_objs:
+            chatbox.user_ids.remove(session['_id'])
+            chatbox.save_to_mongo()
+        return redirect(url_for('chatboxs.chatboxs'))
 
     return render_template('secession_chatbox.html', user_chatboxs=user_chatboxs)
 
