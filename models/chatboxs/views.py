@@ -58,7 +58,7 @@ def chatbox(chatbox_id):
 def secession_chatbox():
     user_chatboxs = ChatBox.get_user_chatboxs(session['_id'])
     if request.method == 'POST':
-        secession_chatboxes = request.form['secession_chatboxes']
+        secession_chatboxes = request.form.getlist('secession_chatboxes')
         chatbox_objs = []
         for _id in secession_chatboxes:
             if ChatBox.find_by_id(_id) is not None:
