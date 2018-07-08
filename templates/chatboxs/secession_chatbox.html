@@ -1,15 +1,46 @@
 {% extends "base4.html" %}
 {% block title %}
-<title>Chatbox | Secession Chatbox</title>
+<title>Chatboxes | User Chatboxes</title>
 {% endblock %}
 {% block content %}
+<br><br>
+<div class="container">
 
-<div class="container-fluid">
-    <div class="container-fluid page-header">
-        <h1 class="page-header">Secession Chatboxes</h1>
-        <p>Please select Chatboxes you want to secession</p>
+    <div class="page-header">
+        <h1><i class="fab fa-rocketchat"></i> Your Chatboxes <small class="text-muted">total: {{ chatboxes|length }}</small></h1>
+        <p>Select Chatboxes you want to secession.</p>
+        <hr>
     </div>
-    <hr>
-</div>
+    <form method="POST">
+        <div class="list-group">
+            {% if chatboxes == [] %}
+            <p class="text-muted"><i class="far fa-frown"></i>  No Chatboxes created.</p>
+            {% else %}
 
+            {% for chatbox in chatboxs %}
+
+            <a href="{{ url_for('chatboxs.chatbox', chatbox_id=chatbox._id) }}" class="list-group-item list-group-item-action flex-column align-items-start card group">
+
+                <div class="d-flex w-100 justify-content-between">
+                    <h4 class="mb-1"><input type="checkbox" value="chatbox._id" name=""><i class="fas fa-object-group"></i> {{ chatbox.name }}</h4>
+
+                    <p class="list-group-item-text">Created date {{ chatbox.created_date.strftime("%Y-%m-%d at %H:%M") }}<strong></strong></p>
+                    <p class="list-group-item-text">{{ chatbox.user_ids|length }} Members</p>
+
+                </div>
+                <p class="mb-1"><span class="badge badge-pill badge-secondary"></span></p>
+
+            </a>
+
+            {% endfor %}
+
+            {% endif %}
+            <div class="card">
+                <div class="card-body">
+                    <a href="{{ url_for('chatboxs.create_chatbox', default_members=[]) }}" class="btn btn-outline-secondary" role="button">Create new Chatbox</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 {% endblock %}
