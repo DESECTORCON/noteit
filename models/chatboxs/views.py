@@ -64,7 +64,7 @@ def secession_chatbox(secession_chatbox_id=None):
             chatbox_obj.user_ids.remove(session['_id'])
             chatbox_obj.save_to_mongo()
 
-            flash('Sucefully secessioned chatbox '+ chatbox_obj.name)
+            flash('Succefully secessioned chatbox '+ chatbox_obj.name)
             return redirect(url_for('chatboxs.chatboxs'))
         secession_chatboxes = request.form.getlist('secession_chatboxes')
         chatbox_objs = []
