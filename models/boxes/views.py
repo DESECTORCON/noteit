@@ -26,7 +26,7 @@ def search_boxes():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='boxes box searching')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during searching your boxes...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during searching your boxes...')
 
 
 @box_blueprint.route('/boxs')
@@ -70,7 +70,7 @@ def create_box():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='user box creating USER:' + session['email'])
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during creating your box...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during creating your box...')
 
 
 @box_blueprint.route('/delete/<string:box_id>')
@@ -86,7 +86,7 @@ def delete_box(box_id):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='user box creating USER:' + session['email'])
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during creating your box...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during creating your box...')
 
 
 @box_blueprint.route('/delete_notes_inbox_/<string:box_id>', methods=['GET', 'POST'])
@@ -110,7 +110,7 @@ def delete_notes_inbox_(box_id):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='user box creating USER:' + session['email'])
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during creating your box...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during creating your box...')
 
 
 @box_blueprint.route('/delete_box_mutiple', methods=['POST', 'GET'])
@@ -140,4 +140,4 @@ def delete_box_mutiple():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='boxes delete mutiple')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr="Crashed during deleting user's boxes...")
+        return render_template('base_htmls/error_page.html', error_msgr="Crashed during deleting user's boxes...")

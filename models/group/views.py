@@ -146,7 +146,7 @@ def group(group_id):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='group getting group')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during getting your group info...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during getting your group info...')
 
 
 @group_blueprint.route('/groups', methods=['GET', 'POST'])
@@ -166,7 +166,7 @@ def groups():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='groups shared_groups')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during getting groups...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during getting groups...')
 
 
 def gen_all_friends_diclist():
@@ -264,7 +264,7 @@ def create_group():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='create_group creating group')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during creating your group...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during creating your group...')
 
 
 @group_blueprint.route('/my_group')

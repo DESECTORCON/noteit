@@ -87,7 +87,7 @@ def user_notes(box_id=None):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='user note reading USER:' + session['email'])
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading your notes...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading your notes...')
 
 
 @note_blueprint.route('/note/<string:note_id>')
@@ -159,7 +159,7 @@ def note(note_id):
             Error_obj = Error_(error_msg=''.join(error_msg), error_location='note reading NOTE:NONE')
 
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading your note...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading your note...')
 
 
 @note_blueprint.route('/add_note', defaults={'box_id': None}, methods=['POST', 'GET'])
@@ -285,7 +285,7 @@ def create_note(box_id):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='create_note creating note')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during saving your note...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during saving your note...')
 
 
 @note_blueprint.route('/delete_note/<string:note_id>')
@@ -304,7 +304,7 @@ def delete_note(note_id, redirect_to='.user_notes'):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes deleting note')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during deleting your note...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during deleting your note...')
 
 
 @note_blueprint.route('/pub_notes/', methods=['GET', 'POST'])
@@ -373,7 +373,7 @@ def notes():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes public note reading')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading users notes...')
 
 
 @note_blueprint.route('/edit_note/<string:note_id>', methods=['GET', 'POST'])
@@ -415,7 +415,7 @@ def edit_note(note_id):
         Error_obj = Error_(error_msg=''.join(error_msg),
                            error_location='edit_note saveing and getting input from html file')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during saving your note...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during saving your note...')
 
 
 @note_blueprint.route('/delete_note_multiple/')
@@ -465,7 +465,7 @@ def delete_multiple():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes public note reading')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading users notes...')
 
 
 @note_blueprint.route('/search_notes', methods=['POST'])
