@@ -105,12 +105,13 @@ socket.on('chat response', function(msg) {
                 $('ul.chat_log').append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-right">' + msg.content + '</p></div> </li>');
                 console.log(msg);
                 document.getElementById("content").value = "";
-                $('chat_log').last().addClass('active-li').focus();
+                $('#my_list').last().addClass('active-li').focus();
+                $('#my_list').animate({scrollTop: $('#mylist').prop("scrollHeight")}, 500);
             } else {
                 $('ul.chat_log').append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-left">' + msg.content + '</p></div> </li>');
                 console.log(msg);
                 document.getElementById("content").value = "";
-                $('chat_log').last().addClass('active-li').focus();
+                $('#my_list').last().addClass('active-li').focus();
             }
         });
 
@@ -128,6 +129,7 @@ socket.on( 'response', function( data ) {
         $("#message_length").empty()
         $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
     }
+     $('#my_list').last().addClass('active-li').focus();
 
    }
 })
