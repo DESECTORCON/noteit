@@ -43,6 +43,12 @@ def join_group_(list_):
 
     if session['_id'] in group_.members:
         flash('You\'ve already joined this group!')
+        return redirect(url_for('groups.group', group_id=group_._id))
+
+    if user_.group_id is not None or user_.group_id == '':
+        flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
+        return redirect(url_for('groups.group', group_id=group_._id))
+
     else:
 
         if len(group_.members) >= 30:
@@ -83,6 +89,7 @@ def join_group_(list_):
 @user_decorators.require_login
 def join_group(group_id):
     # saving group with user id
+    user_ = User.find_by_id(session['_id'])
     group_ = Group.find_by_id(group_id)
     if group_ is None:
         flash('The group you want to join does not exist!')
@@ -94,6 +101,10 @@ def join_group(group_id):
     if session['_id'] in group_.members:
         flash('You\'ve already joined this group!')
         return redirect(url_for('groups.group', group_id=group_id))
+
+    if user_.group_id is not None or user_.group_id == '':
+        flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
+        return redirect(url_for('groups.group', group_id=group_._id))
 
     group_.members.extend([session['_id']])
     group_.save_to_elastic()
