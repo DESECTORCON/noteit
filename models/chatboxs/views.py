@@ -46,6 +46,10 @@ def create_chatbox(default_members):
 @user_decorators.require_login
 def chatbox(chatbox_id):
     chatbox_ = ChatBox.find_by_id(chatbox_id)
+    if chatbox_ is None:
+        flash('The chatbox you requested don\'t exists.')
+        return redirect(url_for('chatboxs.chatboxs'))
+
     messages = chatbox_.limit_find_messages()
     users = chatbox_.get_members()
     session['chatbox_id'] = chatbox_._id

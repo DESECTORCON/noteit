@@ -15,10 +15,15 @@
                     {% for user in users %}
                     <li>
                         <div class="chat-left-img">
-                            <img src="{{ url_for('static', filename='user.picture') }}">
+                            {% if user.picture == '' %}
+                                <img src="{{ url_for('static', filename='img/index.jpg') }}">
+                            {% else %}
+                                <img src="{{ url_for('static', filename=user.picture) }}">
+                            {% endif %}
+
                         </div>
                         <div class="chat-left-detail">
-                            <p>{{ user.nick_name }}</p>
+                            <a href="{{ url_for('users.user_page', user_id=user._id) }}" style=""><p>{{ user.nick_name }}</p></a>
                             <small class="text-muted">{{ user.email }}</small>
                         </div>
                     </li>
@@ -69,7 +74,13 @@
             <div class="row">
                 <div class="col-md-12 right-chat-textbox">
                     <form method="POST" autocomplete="off" accept-charset="UTF-8">
-                        <input type="text" name="content" id="content" class="content" value=""><button type="submit" class="fa fa-arrow-right" aria-hidden="true"></button>
+                        <input type="text" name="content" id="content" class="content" value="">  <button type="submit" class="fa fa-arrow-right" aria-hidden="true" style="    border: none;
+    padding: 14px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;border-radius: 50%;"></button>
                     </form>
 
                 </div>

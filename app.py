@@ -126,7 +126,7 @@ def loading():
 
 @app.errorhandler(404)
 def http_error_404(e):
-    return render_template('base.htmls/error.html'), 404
+    return render_template('base_htmls/error.html'), 404
 
 
 from models.users.views import user_blueprint
