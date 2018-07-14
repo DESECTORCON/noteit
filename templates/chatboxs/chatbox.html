@@ -11,7 +11,7 @@
             <br><br><br>
             <hr>
             <div class="left-chat">
-                <ul class="">
+                <ul>
                     {% for user in users %}
                     <li>
                         <div class="chat-left-img">
@@ -22,8 +22,9 @@
                             <small class="text-muted">{{ user.email }}</small>
                         </div>
                     </li>
+                    <br><br><br><br>
+                    <hr>
                     {% endfor %}
-                    <br>
                 </ul>
             </div>
         </div>
@@ -31,7 +32,7 @@
             <div class="row">
                 <div class="col-md-12 right-header">
                     <div class="right-header-img">
-                        <img src="/demo/businessman.png">
+                        <img src="{{ url_for('static' , filename='img/comments-regular.svg') }}">
                     </div>
                     <div class="right-header-detail">
                         <p>{{ chatbox_.name }}</p>

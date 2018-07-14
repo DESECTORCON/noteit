@@ -417,7 +417,7 @@ section .section-title {
 
 }
 /*
-styling for checkbox
+styling for chatbox
 */
 
 .main-section{
@@ -493,6 +493,7 @@ styling for checkbox
   border-radius: 50%;
   border:3px solid #61BC71;
   margin-right: 10px;
+  background-color: #61BC71;
 }
 .right-header{
   padding:20px;
