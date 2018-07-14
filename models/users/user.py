@@ -38,7 +38,10 @@ class User(object):
         self.last_logined = last_logined
         self.friends = friends
         self.group_id = group_id
-        self.picture = picture
+        if picture is None:
+            self.picture = 'img/index.jpg'
+        else:
+            self.picture = picture
 
     def __repr__(self):
         return "<User {} with nick name {}>".format(self.email, self.nick_name)

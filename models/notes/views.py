@@ -192,7 +192,7 @@ def create_note(box_id):
                 if len(files) > 5:
                     flash("Too much files!")
                     return render_template('/notes/create_note.html'
-                                           , title=title, content=content, share=share)
+                                           , title=title, content_=content, share=share)
 
                 filenames = []
                 for file in files:
@@ -296,6 +296,12 @@ def delete_note(note_id, redirect_to='.user_notes'):
         note.delete_on_elastic()
         note.delete_img()
         note.delete()
+        user_ = User.find_by_id(session['_id'])
+        user_group = Group.find_by_id(user_.group_id)
+        user_group.shared_notes.remove(note_id)
+        user_group.save_to_mongo()
+        user_group.save_to_elastic()
+
         flash('Your note has successfully deleted.')
         return redirect(url_for(redirect_to))
 

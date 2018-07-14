@@ -15,7 +15,7 @@
                     {% for user in users %}
                     <li>
                         <div class="chat-left-img">
-                            <img src="/demo/businessman.png">
+                            <img src="{{ url_for('static', filename='user.picture') }}">
                         </div>
                         <div class="chat-left-detail">
                             <p>{{ user.nick_name }}</p>
