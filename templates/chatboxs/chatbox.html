@@ -8,7 +8,18 @@
 <div class="container-fluid" style="width: 100%;" id="row-full">
     <div class="row">
         <div class="col-md-3 col-sm-3 col-xs-12 left-sidebar">
-            <br><br><br>
+            <br>
+            <div class="dropdown">
+                <button style="padding: 5px; color: inherit;" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-cog"></i> settings
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="color: gray;">
+                    <form action="{{ url_for('chatboxs.secession_chatbox', secession_chatbox_id=chatbox_._id) }}">
+                        <button class="dropdown-item" type="submit">Secession</button>
+                    </form>
+                </div>
+            </div>
+            <a href="{{ url_for('chatboxs.chatboxs') }}" class="card-link" style="padding: 10px;"><i class="fas fa-long-arrow-alt-left"></i>  Go back</a>
             <hr>
             <div class="left-chat">
                 <ul>
@@ -16,9 +27,9 @@
                     <li>
                         <div class="chat-left-img">
                             {% if user.picture == '' %}
-                                <img src="{{ url_for('static', filename='img/index.jpg') }}">
+                            <img src="{{ url_for('static', filename='img/index.jpg') }}">
                             {% else %}
-                                <img src="{{ url_for('static', filename=user.picture) }}">
+                            <img src="{{ url_for('static', filename=user.picture) }}">
                             {% endif %}
 
                         </div>
@@ -154,5 +165,10 @@ function leave_room() {
                 });
             }
 
+</script>
+<script>
+function goBack() {
+    window.history.back();
+}
 </script>
 {% endblock %}
