@@ -84,43 +84,52 @@
     });
 </script>
 <script>
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
-    socket.on( 'connect', function() {
-  socket.emit( 'send', {
-    data: 'User Connected'
-  })
-  var form = $( 'form' ).on( 'submit', function( e ) {
-    e.preventDefault();
-    let content = $( 'input.content' ).val();
-    socket.emit( 'submit', {
-      content : content,
-    });
-    $("#message_length").empty();
-   $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
-  })
+var session = "{{ session['_id'] }}";
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+socket.on('connect', function() {
+    socket.emit('send', {
+        data: 'User Connected'
+    })
+    var form = $('form').on('submit', function(e) {
+        e.preventDefault();
+        let content = $('input.content').val();
+        socket.emit('submit', {
+            content: content,
+        });
+        $("#message_length").empty();
+        $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
+    })
 })
-socket.on( 'chat response', function( msg ) {
-            $( 'ul.chat_log' ).append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p class="text-right">'+ msg.content +'</p></div> </li>');
-        console.log( msg );document.getElementById("content").value = "";
-       $('chat_log').last().addClass('active-li').focus();});
-
+socket.on('chat response', function(msg) {
+            if (session === msg['sender_id']) {
+                $('ul.chat_log').append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-right">' + msg.content + '</p></div> </li>');
+                console.log(msg);
+                document.getElementById("content").value = "";
+                $('chat_log').last().addClass('active-li').focus();
+            } else {
+                $('ul.chat_log').append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-left">' + msg.content + '</p></div> </li>');
+                console.log(msg);
+                document.getElementById("content").value = "";
+                $('chat_log').last().addClass('active-li').focus();
+            }
+        });
 
 socket.on( 'response', function( data ) {
 
-	if (data['data'].sender_name === $('ul li')) {
-		if ('{{ session['_id'] }}' === data['data'].sender_id) {
-			$( 'ul.chat_log' ).append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
-	    	console.log( msg );document.getElementById("content").value = "";
-	    $("#message_length").empty()
-	    $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
-		}else{
-			$( 'ul.chat_log' ).append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
-	    	console.log( msg );document.getElementById("content").value = "";
-	    $("#message_length").empty()
-	    $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
-		}
+  if (data['data'].sender_name === $('ul li')) {
+    if ( session === data['data'].sender_id ) {
+      $( 'ul.chat_log' ).append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
+        console.log( msg );document.getElementById("content").value = "";
+      $("#message_length").empty()
+      $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
+    }else{
+      $( 'ul.chat_log' ).append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
+        console.log( msg );document.getElementById("content").value = "";
+        $("#message_length").empty()
+        $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
+    }
 
-	 }
+   }
 })
 
 function leave_room() {
