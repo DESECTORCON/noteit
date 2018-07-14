@@ -130,7 +130,12 @@ def group(group_id):
             members.append(User.find_by_id(member))
 
         for note in group_.shared_notes:
-            shared_notes.append(Note.find_by_id(note['note_id']))
+            append_data = Note.find_by_id(note['note_id'])
+            if append_data is not None:
+                shared_notes.append({"data": append_data, "error_note": False})
+            else:
+                shared_notes.append({"error_note": True, "data": None})
+                group_.shared_notes.remove(note)
 
         if session['_id'] in group_.members:
             is_in_group = True
@@ -138,7 +143,8 @@ def group(group_id):
             is_in_group = False
 
         group_alerts = Notification.find_by_type('to_group', group_._id, session['_id'])
-
+        group_.save_to_elastic()
+        group_.save_to_mongo()
         return render_template('groups/group.html', group=group_, members=members, shared_notes=shared_notes,
                                is_in_group=is_in_group, session_id=session['_id'], group_alerts=group_alerts)
     except:
