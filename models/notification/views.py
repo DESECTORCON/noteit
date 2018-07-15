@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, url_for, session
+from flask_socketio import SocketIO
 from werkzeug.utils import redirect
+import app
 from models.group.group import Group
 from models.notification.notification import Notification
-from models.chatboxs.views import socketio
 
+socketio = SocketIO(app)
 notification_blueprint = Blueprint('notification', __name__)
 
 
@@ -23,7 +25,12 @@ def delete_notifi(notifi_id, redirect_to):
 @socketio.on('delete notifi')
 def delete_notifi_socket(json, methods=['POST', 'GET']):
     Notification.find_by_id(json['notifi_id']).delete()
-    socketio.emit('delete notifi response', {"success": True}, broadcast=True)
+    socketio.emit('delete notifi response', {"success": True, "notifi_id": json['notifi_id']}, broadcast=True)
+
+
+@socketio.on('connect_notifi')
+def connect():
+    pass
 
 
 @notification_blueprint.route('/notifi/dismis/dismis_notifi/<string:notification_id>')
