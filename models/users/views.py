@@ -172,9 +172,8 @@ def users_page():
 def user_page(user_id):
 
     try:
-        try:
-            user = User.find_by_id(user_id)
-        except:
+        user = User.find_by_id(user_id)
+        if user is None:
             user = User.find_by_email(user_id)
         user_notes = Note.find_shared_notes_by_user(user.email)
         try:

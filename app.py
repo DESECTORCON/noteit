@@ -64,7 +64,6 @@ def init():
     Database.initialize()
     session['_id'] = None
     session['email'] = None
-    flash('Do not like the new Note-it™? Time travel back to the old Note-it™! 49.236.135.247:5000')
     flash('Heads up! service user finding and service Message Centre has been closed.')
 
 
