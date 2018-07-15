@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon3.ico') }}">
+    {% block title %}
+
+    {% endblock %}
+
+    <!--<script>-->
+
+    <!--var myVar = setInterval(myTimer, 1000);-->
+
+    <!--function myTimer() {-->
+    <!--$(document).ready(function(){-->
+    <!--$('#close').trigger('click');-->
+    <!--});-->
+    <!--}-->
+    <!--</script>-->
+
+    {% include 'base_htmls/html_dependencies.html' %}
+</head>
+<style>
+    html, body {margin: 0; height: 100%; overflow: hidden}
+</style>
+<body id="BODY_BASE" style="background-color:black;">
+<div class="container" id="myDIV">
+        <div class="row">
+            <div class="">
+                <h1><i class="fas fa-spinner fa-pulse"></i> Processing...</h1>
+                <p>Please wait. This will take a few minutes</p>
+            </div>
+            <div class="animationload">
+                <div class="osahanloading"></div>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript">
+
+    function myFunction() {
+        $('#BODY_BASE').hide();
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+    }
+}
+$(document).ready(function() {
+   $('#myDIV').hide();
+});
+</script>
+<br><br>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+    <div class="container">
+
+        <div class="navbar-header">
+
+            <a href="{{ url_for('home4') }}" class="navbar-brand" title="Home"><i class="fas fa-comments"></i>  Chatbox <small class="text-muted">for note-it™</small></a>
+        </div>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div id="navbarSupportedContent" class="collapse navbar-collapse">
+
+            {% if session['email'] %}
+
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active"><a href="{{ url_for('chatboxs.chatboxs') }}" class="nav-link"><i class="fab fa-rocketchat"></i> Go back</a></li>
+            </ul>
+
+            {% else %}
+
+            {% endif %}
+        </div>
+
+    </div>
+
+</nav>
+<div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close" id="close" name="close">&times;</a>
+        <i class="fas fa-info-circle"></i>  {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}
+
+    {% endblock %}
+</div>
+
+<footer id="footer">
+
+    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
+
+        <h7><span class="glyphicon glyphicon-console"></span> Made by <a href="https://www.jetbrains.com/pycharm/">Pycharm</a>
+            and
+            <a href="http://flask.pocoo.org/">Flask</a> and <i class="fab fa-python"></i> <a href="https://www.python.org/">Python</a></h7>
+
+    </div>
+
+</footer>
+</body>
+</html>
