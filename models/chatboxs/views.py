@@ -58,10 +58,18 @@ def chatbox(chatbox_id):
 
 
 @chatbox_blueprint.route('/chat/chatbox/delete', defaults={'secession_chatbox_id': None}, methods=['POST', 'GET'])
-@chatbox_blueprint.route('/chat/chatbox/delete/<string:secession_chatbox_id>', methods=['POST'])
+@chatbox_blueprint.route('/chat/chatbox/delete/<string:secession_chatbox_id>', methods=['GET'])
 @user_decorators.require_login
 def secession_chatbox(secession_chatbox_id):
     user_chatboxs = ChatBox.get_user_chatboxs(session['_id'])
+    if secession_chatbox_id is not None:
+        chatbox_obj = ChatBox.find_by_id(secession_chatbox_id)
+        chatbox_obj.user_ids.remove(session['_id'])
+        chatbox_obj.save_to_mongo()
+
+        flash('Succefully secessioned chatbox ' + chatbox_obj.name)
+        return redirect(url_for('chatboxs.chatboxs'))
+
     if request.method == 'POST':
         if secession_chatbox_id is not None:
             chatbox_obj = ChatBox.find_by_id(secession_chatbox_id)
