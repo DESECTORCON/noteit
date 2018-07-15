@@ -509,9 +509,18 @@ def add_to_group():
 
     # getting all user's notes
     notes = Note.get_user_notes(session['email'])
+    # getting user object
+    user = User.find_by_id(session['_id'])
+    # getting group notes
+    group_notes = Group.find_by_id(user.group_id).get_user_shared_notes(session['email'])
+    group_notes_ = []
+    for note in group_notes:
+        note_object = Note.find_by_id(note)
+        if note_object is not None:
+            group_notes_.append(note_object)
+
 
     if request.method == 'POST':
-        user = User.find_by_id(session['_id'])
         if user.group_id is None:
             flash("You aren't in a group. Please join a group to share notes to friends.")
             return redirect(url_for('groups.groups'))
