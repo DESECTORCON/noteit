@@ -189,7 +189,7 @@
                             <p class="notification-texte">{{ alert.title }}</p>
                             <p class="notification-date text-muted">
                                 {{ alert.content }}
-                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ alert.created_date }}
+                                <i class="far fa-clock" aria-hidden="true"></i> {{ alert.created_date }}
                             </p>
                         </div>
                     </a>
@@ -387,5 +387,25 @@ $('div.are').on('click', function(event){
     event.stopPropagation(); //Always stop propagation
 });
 </script>
+<script>
+var session = "{{ session['_id'] }}";
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+socket.on('connect', function() {
+    socket.emit('send', {
+        data: 'User Connected'
+    })
+    var form = $('form').on('submit', function(e) {
+        e.preventDefault();
+        let content = $('input.content').val();
+        socket.emit('submit', {
+            content: content,
+        });
+        $("#message_length").empty();
+        $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
+    })
+})
+</script>
+
 {% endif %}
 {% endblock %}
