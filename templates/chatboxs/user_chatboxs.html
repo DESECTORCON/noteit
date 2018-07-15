@@ -12,8 +12,11 @@
     </div>
 
     <div class="list-group">
-        {% if chatboxes == [] %}
-        <p class="text-muted"><i class="far fa-frown"></i>  No Chatboxes created.</p>
+        {% if chatboxs == [] %}
+        <div class="oaerror info">
+            <p class=""><strong><i class="far fa-frown"></i> Umm...</strong> - No Chatboxes created.</p>
+        </div>
+        <br>
         {% else %}
 
         {% for chatbox in chatboxs %}
