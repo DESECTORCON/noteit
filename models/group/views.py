@@ -37,21 +37,22 @@ def join_group_(list_):
 
     group_ = Group.find_by_id(list__[1])
 
+    # checking if user can join group
     if group_ is None:
         flash('The group you want to join does not exist!')
         return redirect(url_for('groups.groups'))
-
+    # checking if user had alerady joined group
     if session['_id'] in group_.members:
         flash('You\'ve already joined this group!')
         return redirect(url_for('groups.group', group_id=group_._id))
 
-    if user_.group_id is not None or user_.group_id == '':
+    if user_.group_id is not None:
         flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
         return redirect(url_for('groups.group', group_id=group_._id))
 
     else:
 
-        if len(group_.members) >= 30:
+        if len(group_.members) >= 25:
             flash('Sorry, this group\'s member amount has reached it\'s limit!')
             return redirect(url_for('groups.groups'))
 
@@ -95,14 +96,14 @@ def join_group(group_id):
         flash('The group you want to join does not exist!')
         return redirect(url_for('groups.groups'))
 
-    if len(group_.members) >= 30:
+    if len(group_.members) >= 25:
         flash('Sorry, this group\'s member amount has reached it\'s limit!')
         return redirect(url_for('groups.groups'))
     if session['_id'] in group_.members:
         flash('You\'ve already joined this group!')
         return redirect(url_for('groups.group', group_id=group_id))
 
-    if user_.group_id is not None or user_.group_id == '':
+    if user_.group_id is not None:
         flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
         return redirect(url_for('groups.group', group_id=group_._id))
 
