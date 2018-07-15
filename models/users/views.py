@@ -34,6 +34,7 @@ def login_user():
                     user.last_logined = datetime.datetime.now()
                     user.save_to_mongo()
                     flash('You were successfully logged in')
+                    session['group_id'] = user.group_id
                     return redirect(url_for("home"))
 
             except UserErrors.UserError as e:
@@ -46,7 +47,7 @@ def login_user():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='login_user while logining user')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during login...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during login...')
 
 
 @user_blueprint.route('/register', methods=['GET', 'POST'])
@@ -85,16 +86,18 @@ def register_user():
             try:
                 try:
                     if User.register_user(email, password, nick_name, filename):
-                        user_id = User.find_by_email(email)._id
+                        user = User.find_by_email(email)
                         session['email'] = email
-                        session['_id'] = user_id
+                        session['_id'] = user._id
+                        session['group_id'] = user.group_id
 
                         return redirect(url_for("home"))
                 except UnboundLocalError:
                     if User.register_user(email, password, nick_name):
-                        user_id = User.find_by_email(email)._id
+                        user = User.find_by_email(email)
                         session['email'] = email
-                        session['_id'] = user_id
+                        session['_id'] = user._id
+                        session['group_id'] = user.group_id
 
                         return redirect(url_for("home"))
 
@@ -108,7 +111,7 @@ def register_user():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='register_user while registering user')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during registering you...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during registering you...')
 
 
 # @user_blueprint.route('/alerts')
@@ -123,8 +126,7 @@ def register_user():
 @user_blueprint.route('/logout')
 @user_decorators.require_login
 def logout_user():
-    session['email'] = None
-    session['_id'] = None
+    session.clear()
 
     return redirect(url_for('home'))
 
@@ -163,7 +165,7 @@ def users_page():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='users_page while loading users info and posting to html')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading information...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading information...')
 
 
 @user_blueprint.route('/user/<string:user_id>')
@@ -189,7 +191,7 @@ def user_page(user_id):
         Error_obj = Error_(error_msg=''.join(error_msg),
                            error_location='user_page while loading user{} info'.format(user_id))
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading information...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading information...')
 
 
 @user_blueprint.route('/delete_user/<string:user_id>', methods=['GET', 'POST'])
@@ -214,7 +216,7 @@ def delete_user(user_id):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='delete_user while removing user from database')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during deleting your account...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during deleting your account...')
 
 
 @user_blueprint.route('/edit_user/<string:user_id>', methods=['GET', 'POST'])
@@ -241,7 +243,7 @@ def edit_user(user_id):
         Error_obj = Error_(error_msg=''.join(error_msg),
                            error_location='edit_user while finding user/saving changes to database')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during saving changes...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during saving changes...')
 
 
 @user_blueprint.route('/add_friend', methods=['GET', 'POST'])

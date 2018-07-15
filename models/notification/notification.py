@@ -6,7 +6,8 @@ from models.notification.constants import COLLECTION as NotificationCollection
 
 class Notification(object):
 
-    def __init__(self, title, content, target=None, type='to_all_users', created_date=datetime.datetime.now(), _id=None):
+    def __init__(self, title, content, target=None, type='to_all_users', created_date=datetime.datetime.now()
+                 , _id=None, dismis_to=[]):
         self._id = uuid.uuid4().hex if _id is None else _id
         self.title = title
         self.content = content
@@ -15,6 +16,7 @@ class Notification(object):
         if type not in ['to_all_users', 'to_group', 'to_user']:
             raise Exception("type invalid. Type has to be ['to_all_users', 'to_group', 'to_user']")
         self.created_date = created_date
+        self.dismis_to = dismis_to
 
     def __repr__(self):
         return "<Notification {}, target: {}, type: {}>".format(self.title, self.target, self.type)
@@ -26,7 +28,8 @@ class Notification(object):
             "content": self.content,
             "target": self.target,
             "type": self.type,
-            "created_date": self.created_date
+            "created_date": self.created_date,
+            "dismis_to": self.dismis_to
         }
 
     def save_to_db(self):
@@ -46,9 +49,25 @@ class Notification(object):
         return {'title': self.title, 'content': self.content, 'target': self.target, 'type': self.type}
 
     @classmethod
-    def find_by_type(cls, type, target):
+    def find_by_type(cls, type, target, session_id):
         try:
-            return [cls(**Database.find_one(NotificationCollection, {'type': type, 'target': target}))]
+            return [cls(**Database.find_one(NotificationCollection
+                                            , {'type': type, 'target': target, 'dismis_to': { "$nin":[session_id] }}))]
+        except TypeError:
+            return None
+
+    @classmethod
+    def dismis_find(cls, type, target, session_id):
+        try:
+            finded_by_type = [cls(**Database.find_one(NotificationCollection, {'type': type, 'target': target}))]
+
+            return_ = []
+            for notifi in finded_by_type:
+                if session_id not in notifi.dismis_to:
+                    return_.append(notifi)
+
+            return return_
+
         except TypeError:
             return None
 

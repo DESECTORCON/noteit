@@ -58,7 +58,7 @@ def all_messages(user_id):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='my_recived_messages-during message finding')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading your messages')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading your messages')
 
 
 @message_blueprint.route('/recived_messages/<string:user_id>', methods=['GET', 'POST'])
@@ -93,7 +93,7 @@ def my_recived_messages(user_id):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='my_recived_messages-during message finding')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading your messages')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading your messages')
 
 
 @message_blueprint.route('/sended_messages/<string:user_id>')
@@ -110,7 +110,7 @@ def my_sended_messages(user_id):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='my_sended_messages-during message finding')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading your messages')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading your messages')
 
 
 @message_blueprint.route('/send_message', methods=['GET', 'POST'])
@@ -132,11 +132,12 @@ def send_message(user_to_send=None):
             else:
 
                 recivers = request.form.getlist("user")
-
-            sender_id = User.find_by_email(session['email'])._id
+            sender = User.find_by_email(session['email'])
+            sender_name = sender.nick_name
+            sender_id = sender._id
 
             message = Message(title=title, content=content,
-                              reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False,)
+                              reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False, sender_name=sender_name)
             message.save_to_mongo()
             message.save_to_elastic()
 
@@ -152,7 +153,7 @@ def send_message(user_to_send=None):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='send_message message sending')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during sending your message...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during sending your message...')
 
 
 @message_blueprint.route('/message/<string:message_id>')
@@ -200,7 +201,7 @@ def message(message_id, is_sended=False):
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='message message reading')
         Error_obj.save_to_mongo()
 
-        return render_template('error_page.html', error_msgr='Crashed during reading message...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading message...')
 
 
 @message_blueprint.route('/delete_message/<string:message_id>')
@@ -220,7 +221,7 @@ def delete_message(message_id):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='delete_message message deleting')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during deleteing your message...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during deleteing your message...')
 
 
 @message_blueprint.route('/send_note', methods=['GET', 'POST'])
@@ -241,7 +242,7 @@ def send_note():
                 Error_obj = Error_(error_msg=''.join(error_msg), error_location='send_note note finding/reading')
                 Error_obj.save_to_mongo()
 
-                return render_template('error_page.html', error_msgr='Crashed during preparing page...')
+                return render_template('base_htmls/error_page.html', error_msgr='Crashed during preparing page...')
 
             message_title = request.form['title']
 
@@ -254,9 +255,12 @@ def send_note():
 
                 recivers = request.form.getlist("user")
 
-            sender_id = User.find_by_email(session['email'])._id
+            sender = User.find_by_email(session['email'])
+            sender_name = sender.nick_name
+            sender_id = sender._id
 
-            message = Message(title=message_title, content=note._id, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True)
+            message = Message(title=message_title, content=note._id, reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=True,
+                              sender_name=sender_name)
             message.save_to_mongo()
             message.save_to_elastic()
 
@@ -273,7 +277,7 @@ def send_note():
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='message message sending')
         Error_obj.save_to_mongo()
 
-        return render_template('error_page.html', error_msgr='Crashed during sending message...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during sending message...')
 
 
 @message_blueprint.route('/send_note_<string:note_id>', methods=['GET', 'POST'])
@@ -295,7 +299,7 @@ def send_note_radio(note_id):
                 Error_obj = Error_(error_msg=''.join(error_msg), error_location='send_note note finding/reading')
                 Error_obj.save_to_mongo()
 
-                return render_template('error_page.html', error_msgr='Crashed during preparing page...')
+                return render_template('base_htmls/error_page.html', error_msgr='Crashed during preparing page...')
 
             message_title = request.form['title']
 
@@ -327,28 +331,10 @@ def send_note_radio(note_id):
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='message message sending')
         Error_obj.save_to_mongo()
 
-        return render_template('error_page.html', error_msgr='Crashed during sending message...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during sending message...')
 
 
-# @message_blueprint.route('/send_message/select', methods=['GET', 'POST'])
-# @user_decorators.require_login
-# def user_select():
-#     all_users = User.get_all()
-#
-#     if request.method == 'POST':
-#         if request.form.getlist("user") in [None, [], ""]:
-#             return render_template('messages/send_note.html',
-#                                    e="You hadn't selected an reciver. Please select at least ONE reciver.")
-#
-#         else:
-#
-#             recivers = request.form.getlist("user")
-#
-#         return redirect(url_for('.send_note', user_ids=recivers))
-#
-#     return render_template('messages/user_select.html', all_users=all_users)
 @message_blueprint.route('/choose/')
 @user_decorators.require_login
 def choose():
     return render_template('messages/choose_message_type.html')
-

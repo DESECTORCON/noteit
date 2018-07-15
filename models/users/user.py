@@ -38,7 +38,10 @@ class User(object):
         self.last_logined = last_logined
         self.friends = friends
         self.group_id = group_id
-        self.picture = picture
+        if picture is None:
+            self.picture = 'img/index.jpg'
+        else:
+            self.picture = picture
 
     def __repr__(self):
         return "<User {} with nick name {}>".format(self.email, self.nick_name)
@@ -171,7 +174,10 @@ class User(object):
 
     @classmethod
     def find_by_id(cls, id):
-        return cls(**Database.find_one(UserConstants.COLLECTION, {'_id': id}))
+        try:
+            return cls(**Database.find_one(UserConstants.COLLECTION, {'_id': id}))
+        except TypeError:
+            return None
 
     def get_friends(self):
         return_data = []

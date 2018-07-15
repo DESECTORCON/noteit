@@ -1,12 +1,87 @@
-{% extends "base3.html" %}
+{% extends "base_htmls/base3.html" %}
 {% block title %}
 {% if group %}
+<!--suppress XmlDuplicatedId -->
 <title>Groups.io | Group {{ group.name }}</title>
 {% else %}
 <title>Groups.io | Error</title>
 {% endif %}
 {% endblock %}
 <style>
+.dropdown-item.dropdown-notification:active, .dropdown-item.dropdown-notification.active {
+  color: #1d1e1f;
+  text-decoration: none;
+  background-color: #f7f7f9;
+}
+
+.dropdown-notification:hover .notification-read {
+  color: #34495E;
+}
+
+.dropdown-notification-all {
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-style: oblique;
+  background-color: #34495E;
+  color: white;
+}
+
+.dropdown-notification-all:hover {
+  background-color: #34495E;
+  color: white;
+}
+
+.notifications-container {
+  max-height: 300px;
+  overflow: auto;
+}
+
+.notification-dropdown-menu {
+  padding-bottom: 0;
+  min-width: 528px;
+}
+
+.notification-img {
+  width: 48px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.notifications-body {
+  display: inline-block;
+}
+
+.notification-texte {
+  text-align: left;
+  margin: 0;
+}
+
+.notification-read {
+  margin: 0;
+  height: 48px;
+  vertical-align: top;
+  line-height: 48px;
+  padding-left: 15px;
+  color: white;
+  float: right;
+}
+
+.notification-date {
+  text-align: left;
+  color: #2980b9;
+  margin: 0;
+}
+
+.notification-solo {
+  margin-top: 1rem;
+}
+
+.notification-unread {
+  text-decoration: none;
+  background-color: #f7f7f9;
+}
+
       html{
   }
   body{
@@ -53,10 +128,10 @@
       border-radius: 4px;
       background: #fff url(http://www.ebpaidrev.com/systemerror/block.gif) no-repeat 0 51px;
   }
-  #block_error div{
+  #block_error {
       padding: 100px 40px 0 186px;
   }
-  #block_error div h2{
+  #block_error h2{
       color: #218bdc;
       font-size: 24px;
       display: block;
@@ -82,22 +157,88 @@
     </div>
     {% else %}
 
-    {% if group_alerts %}
-    <div id="row">
-        <div class="error-notice">
-            {% for alert in group_alerts %}
-                <div class="oaerror info">
-                    <strong>{{ alert.title }}</strong> - {{ alert.content }}
-                </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-
     <div class="page-header">
         <h1><i class="far fa-object-group"></i> Group <small class="">{{ group.name }}</small></h1>
     </div>
 
+    <hr>
+    {% if session['_id'] in group.members %}
+    {% if group_alerts %}
+
+    <div class="are">
+
+        <!-- ICON -->
+        <div class="dropdown notifications-button hidden-sm-down">
+
+            <a class="btn btn-secondary dropdown-toggle" href="" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell"></i>
+                <span id="notificationsBadge" class="badge badge-danger">{{ group_alerts|length }}</span>
+            </a>
+
+            <!-- NOTIFICATIONS -->
+            <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown" id="">
+                <h6 class="dropdown-header">Notifications</h6>
+                <div class="notifications-container" id="notificationsContainer">
+                    {% for alert in group_alerts %}
+                    <a class="dropdown-item dropdown-notification" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}">
+                        <div class="notification-read">
+                            <i class="fa fa-times"></i>
+                        </div>
+                        <i class="far fa-bell"></i>
+                        <div class="notifications-body">
+                            <p class="notification-texte">{{ alert.title }}</p>
+                            <p class="notification-date text-muted">
+                                {{ alert.content }}
+                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ alert.created_date }}
+                            </p>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <!-- TOUTES -->
+                <div class="dropdown-item dropdown-notification-all" href="#">
+                    SE.inc
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+
+<div class="are">
+
+    <!-- ICON -->
+    <div class="dropdown notifications-button hidden-sm-down">
+
+        <a class="btn btn-secondary dropdown-toggle" href="#" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-bell"></i>
+            <span id="notificationsBadge" class="badge badge-danger"></span>
+        </a>
+
+        <!-- NOTIFICATIONS -->
+        <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown">
+            <h6 class="dropdown-header">Notifications</h6>
+            <div class="notifications-container" id="notificationsContainer">
+
+                <div class="dropdown-item dropdown-notification-all">
+                    No new notifications!
+                </div>
+
+                <!-- TOUTES -->
+                <div class="dropdown-item dropdown-notification-all">
+                    SE.inc
+                </div>
+            </div>
+        </div>
+    </div>
+    </ul>
+
+
+    {% endif %}
+    {% endif %}
     <hr>
 
     <div class="container">
@@ -116,9 +257,17 @@
                 <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start hover_">
                     <div class="d-flex w-100 justify-content-between">
                         {% if session_id == user._id %}
-                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
+                        {% if user.picture == None %}
+                        <h5 class="mb-1"><img src="{{ url_for('static', filename='img/index.png' , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
                         {% else %}
-                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }}</h5>
+                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
+                        {% endif %}
+                        {% else %}
+                        {% if user.picture == None %}
+                        <h5 class="mb-1"><img src="{{ url_for('static', filename='img/index.png' , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }}</h5>
+                        {% else %}
+                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }}</h5>
+                        {% endif %}
                         {% endif %}
 
                     </div>
@@ -147,16 +296,25 @@
         <div class="list-group">
             {% if shared_notes != [] %}
             {% for note in shared_notes %}
-
-            <div class="group">
-                <a href="{{ url_for('notes.note', note_id=note._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+            {% if note['error_note'] %}
+            <div class="group hoverdiv">
+                <a href="" class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1"><i class="fas fa-sticky-note"></i> {{ note.title }}</h5>
-                        <small class="text-muted">Made by: {{ note.author_nickname }}</small>
-                        <small class="text-muted">Created at {{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                        <h5 class="mb-1" style="color:red;"><i class="fas fa-exclamation-triangle"></i>  this note has been deleted.</h5>
                     </div>
                 </a>
             </div>
+            {% else %}
+            <div class="group hoverdiv">
+                <a href="{{ url_for('notes.note', note_id=note['data']._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><i class="fas fa-sticky-note"></i> {{ note['data'].title }}</h5>
+                        <small class="text-muted">Made by: {{ note['data'].author_nickname }}</small>
+                        <small class="text-muted">Created at {{ note['data'].created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                    </div>
+                </a>
+            </div>
+            {% endif %}
 
             {% endfor %}
             {% else %}
@@ -175,6 +333,7 @@
             <a href="{{ url_for('groups.invite_friend') }}" class="btn btn-outline-secondary" role="button">Invite friend</a>
             <a href="{{ url_for('notes.add_to_group') }}" class="btn btn-outline-info" role="button">Add Notes</a>
             <a href="{{ url_for('groups.delete_note_from_group', group_id=group._id) }}" class="btn btn-outline-warning" role="button">Delete notes</a>
+            <a href="{{ url_for('chatboxs.create_chatbox', default_members=group.members) }}" class="btn btn-outline-secondary" role="button">Start Chat <small>With group members</small></a>
             {% else %}
             <a href="{{ url_for('groups.join_group', group_id=group._id) }}" class="btn btn-outline-secondary" role="button">Join group</a>
             {% endif %}
@@ -206,8 +365,27 @@
         </div>
     </div>
 </div>
+<script>
+$('div.are').on('click', function(event){
+    var events = $._data(document, 'events') || {};
+    events = events.click || [];
+    for(var i = 0; i < events.length; i++) {
+        if(events[i].selector) {
+
+            //Check if the clicked element matches the event selector
+            if($(event.target).is(events[i].selector)) {
+                events[i].handler.call(event.target, event);
+            }
+
+            // Check if any of the clicked element parents matches the
+            // delegated event selector (Emulating propagation)
+            $(event.target).parents(events[i].selector).each(function(){
+                events[i].handler.call(this, event);
+            });
+        }
+    }
+    event.stopPropagation(); //Always stop propagation
+});
+</script>
 {% endif %}
-
-</div>
-
 {% endblock %}

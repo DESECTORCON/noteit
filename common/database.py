@@ -16,7 +16,7 @@ class Database(object):
 
     @staticmethod
     def find(collection, query):
-        return Database.DATABASE[collection].find(query)
+        return Database.DATABASE[collection].find(query).sort('date', pymongo.DESCENDING)
 
     @staticmethod
     def find_one(collection, query):
@@ -29,3 +29,16 @@ class Database(object):
     @staticmethod
     def remove(collection, query):
         Database.DATABASE[collection].remove(query)
+
+    @staticmethod
+    def limit_find(collection, query, limit):
+        return_value = Database.DATABASE[collection].find(query).limit(limit)
+        return_value = return_value.sort('date', pymongo.DESCENDING)
+        return_ = []
+        for doc in return_value:
+            return_.append(doc)
+        return return_
+
+    @staticmethod
+    def get_latest_data(collection, query):
+        Database.DATABASE[collection].find(query).sort({"$natural": -1})

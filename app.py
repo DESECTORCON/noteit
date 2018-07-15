@@ -114,6 +114,11 @@ def home3():
     return render_template('home3.html')
 
 
+@app.route('/chatbox')
+def home4():
+    return render_template('home4.html')
+
+
 @app.route('/loading')
 def loading():
     return render_template('loading.html')
@@ -121,7 +126,7 @@ def loading():
 
 @app.errorhandler(404)
 def http_error_404(e):
-    return render_template('error.html'), 404
+    return render_template('base_htmls/error.html'), 404
 
 
 from models.users.views import user_blueprint
@@ -130,6 +135,7 @@ from models.messages.views import message_blueprint
 from models.boxes.views import box_blueprint
 from models.group.views import group_blueprint
 from models.notification.views import notification_blueprint
+from models.chatboxs.views import chatbox_blueprint
 
 app.register_blueprint(user_blueprint, url_prefix="/users")
 app.register_blueprint(note_blueprint, url_prefix="/notes")
@@ -137,3 +143,4 @@ app.register_blueprint(message_blueprint, url_prefix='/messages')
 app.register_blueprint(box_blueprint, url_prefix='/boxs')
 app.register_blueprint(group_blueprint, url_prefix='/groups')
 app.register_blueprint(notification_blueprint, url_prefix='/notifications')
+app.register_blueprint(chatbox_blueprint, url_prefix='/chatbox')

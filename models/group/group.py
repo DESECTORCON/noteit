@@ -6,6 +6,7 @@ from config import ELASTIC_PORT as port, ALLOWED_EXTENSIONS, UPLOAD_FOLDER
 from elasticsearch import Elasticsearch
 from common.database import Database
 from models.group import constants as GroupConstants
+from models.notes.note import Note
 
 
 class Group(object):
@@ -54,6 +55,21 @@ class Group(object):
 
     def delete(self):
         Database.remove(GroupConstants.COLLECTION, {'_id': self._id})
+
+    def get_user_shared_notes(self, user_email):
+        """
+        This method returns user's shared notes. This method requires class Note
+        :param user_email: user's email comes here. in views, you can just input session['email']
+        :return: user notes(objcet)
+        """
+        user_notes = []
+        for note in self.shared_notes:
+            note_object = Note.find_by_id(note)
+            if note_object is not None:
+                if note_object.author_email == user_email:
+                    user_notes.append(note_object)
+
+        return user_notes
 
     def delete_on_elastic(self):
         el = Elasticsearch(port=port)

@@ -32,6 +32,7 @@ group_blueprint = Blueprint('groups', __name__)
 @user_decorators.require_login
 def join_group_(list_):
     list__ = list_.split(',')
+    user_ = User.find_by_id(session['_id'])
     # saving group with user id
 
     group_ = Group.find_by_id(list__[1])
@@ -42,26 +43,44 @@ def join_group_(list_):
 
     if session['_id'] in group_.members:
         flash('You\'ve already joined this group!')
+        return redirect(url_for('groups.group', group_id=group_._id))
+
+    if user_.group_id is not None or user_.group_id == '':
+        flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
+        return redirect(url_for('groups.group', group_id=group_._id))
+
     else:
+
+        if len(group_.members) >= 30:
+            flash('Sorry, this group\'s member amount has reached it\'s limit!')
+            return redirect(url_for('groups.groups'))
 
         group_.members.extend([session['_id']])
         group_.save_to_elastic()
         group_.save_to_mongo()
 
-    # saving to user database
-    user_ = User.find_by_id(session['_id'])
-    user_.group_id = group_._id
-    user_.save_to_mongo()
+        # saving to user database
+        user_.group_id = group_._id
+        user_.save_to_mongo()
+        flash('Joined group successfully')
 
     # if invatation, then remove the message and flash a message
     message = Message.find_by_id(list__[0])
     message.delete_on_elastic()
     message.delete()
 
+    # adding to group alerts - to alert users that someone joined
+
+    notifi = Notification(title='User {} has joined'.format(user_.nick_name), content='', target=group_._id, type='to_group')
+    notifi.save_to_mongo()
+
+    # adding group _id to session
+    session['group_id'] = group_._id
+
+    # flashing
     flash('Your invitation has expired.')
 
     # redirecting
-    flash('Joined group successfully')
 
     return redirect(url_for('.group', group_id=list__[1]))
 
@@ -70,10 +89,22 @@ def join_group_(list_):
 @user_decorators.require_login
 def join_group(group_id):
     # saving group with user id
+    user_ = User.find_by_id(session['_id'])
     group_ = Group.find_by_id(group_id)
     if group_ is None:
         flash('The group you want to join does not exist!')
         return redirect(url_for('groups.groups'))
+
+    if len(group_.members) >= 30:
+        flash('Sorry, this group\'s member amount has reached it\'s limit!')
+        return redirect(url_for('groups.groups'))
+    if session['_id'] in group_.members:
+        flash('You\'ve already joined this group!')
+        return redirect(url_for('groups.group', group_id=group_id))
+
+    if user_.group_id is not None or user_.group_id == '':
+        flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
+        return redirect(url_for('groups.group', group_id=group_._id))
 
     group_.members.extend([session['_id']])
     group_.save_to_elastic()
@@ -86,8 +117,11 @@ def join_group(group_id):
 
     # adding to group alerts - to alert users that someone joined
 
-    notifi = Notification(title='User {} has joined', content='', target=group_._id, type='to_group')
+    notifi = Notification(title='User {} has joined'.format(user_.nick_name), content='', target=group_._id, type='to_group')
     notifi.save_to_mongo()
+
+    # adding group _id to session
+    session['group_id'] = group_._id
 
     # redirecting
     flash('Joined group successfully')
@@ -107,15 +141,21 @@ def group(group_id):
             members.append(User.find_by_id(member))
 
         for note in group_.shared_notes:
-            shared_notes.append(Note.find_by_id(note['note_id']))
+            append_data = Note.find_by_id(note['note_id'])
+            if append_data is not None:
+                shared_notes.append({"data": append_data, "error_note": False})
+            else:
+                shared_notes.append({"error_note": True, "data": None})
+                group_.shared_notes.remove(note)
 
         if session['_id'] in group_.members:
             is_in_group = True
         else:
             is_in_group = False
 
-        group_alerts = Notification.find_by_type('to_group', group_._id)
-
+        group_alerts = Notification.find_by_type('to_group', group_._id, session['_id'])
+        group_.save_to_elastic()
+        group_.save_to_mongo()
         return render_template('groups/group.html', group=group_, members=members, shared_notes=shared_notes,
                                is_in_group=is_in_group, session_id=session['_id'], group_alerts=group_alerts)
     except:
@@ -123,7 +163,7 @@ def group(group_id):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='group getting group')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during getting your group info...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during getting your group info...')
 
 
 @group_blueprint.route('/groups', methods=['GET', 'POST'])
@@ -143,7 +183,7 @@ def groups():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='groups shared_groups')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during getting groups...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during getting groups...')
 
 
 def gen_all_friends_diclist():
@@ -232,8 +272,7 @@ def create_group():
                 message.save_to_mongo()
 
             # redirecting
-            flash('Successfully saved to database!')
-            flash('Sended invitations to users')
+            flash('Successfully created group! | Sended invitations to users')
             return redirect(url_for('groups.groups'))
 
 
@@ -242,7 +281,7 @@ def create_group():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='create_group creating group')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during creating your group...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during creating your group...')
 
 
 @group_blueprint.route('/my_group')
@@ -278,7 +317,10 @@ def get_out_group(group_id):
         note_.save_to_elastic()
 
         # removing note from group
-        group_notes.remove({'author': user._id, 'note_id': note['note_id']})
+        try:
+            group_notes.remove({'author': user._id, 'note_id': note['note_id']})
+        except ValueError:
+            pass
 
     if not group_.members:
         group_.delete_on_elastic()
@@ -335,9 +377,15 @@ def invite_friend():
                                    error_msg='You havn\'t submitted anything!', group_id=group_._id)
         else:
 
-            group_.members.extend(users)
-            group_.save_to_mongo()
-            group_.save_to_elastic()
+            for member in users:
+                message = Message(title='Do you want to join my group?', content='''
+                    Join me on group {}!
+                    If you want to join, please click the link below.
+                '''.format(group_.name), is_invtation=group_._id, reciver_id=member, sender_id=user_._id)
+                message.save_to_elastic()
+                message.save_to_mongo()
+
+            flash('Successfully sended invitations to friends!')
 
         return redirect(url_for('groups.group', group_id=group_._id))
 

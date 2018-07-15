@@ -87,7 +87,7 @@ def user_notes(box_id=None):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='user note reading USER:' + session['email'])
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading your notes...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading your notes...')
 
 
 @note_blueprint.route('/note/<string:note_id>')
@@ -159,7 +159,7 @@ def note(note_id):
             Error_obj = Error_(error_msg=''.join(error_msg), error_location='note reading NOTE:NONE')
 
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading your note...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading your note...')
 
 
 @note_blueprint.route('/add_note', defaults={'box_id': None}, methods=['POST', 'GET'])
@@ -192,7 +192,7 @@ def create_note(box_id):
                 if len(files) > 5:
                     flash("Too much files!")
                     return render_template('/notes/create_note.html'
-                                           , title=title, content=content, share=share)
+                                           , title=title, content_=content, share=share)
 
                 filenames = []
                 for file in files:
@@ -285,7 +285,7 @@ def create_note(box_id):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='create_note creating note')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during saving your note...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during saving your note...')
 
 
 @note_blueprint.route('/delete_note/<string:note_id>')
@@ -296,6 +296,12 @@ def delete_note(note_id, redirect_to='.user_notes'):
         note.delete_on_elastic()
         note.delete_img()
         note.delete()
+        user_ = User.find_by_id(session['_id'])
+        user_group = Group.find_by_id(user_.group_id)
+        user_group.shared_notes.remove(note_id)
+        user_group.save_to_mongo()
+        user_group.save_to_elastic()
+
         flash('Your note has successfully deleted.')
         return redirect(url_for(redirect_to))
 
@@ -304,7 +310,7 @@ def delete_note(note_id, redirect_to='.user_notes'):
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes deleting note')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during deleting your note...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during deleting your note...')
 
 
 @note_blueprint.route('/pub_notes/', methods=['GET', 'POST'])
@@ -373,7 +379,7 @@ def notes():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes public note reading')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading users notes...')
 
 
 @note_blueprint.route('/edit_note/<string:note_id>', methods=['GET', 'POST'])
@@ -415,7 +421,7 @@ def edit_note(note_id):
         Error_obj = Error_(error_msg=''.join(error_msg),
                            error_location='edit_note saveing and getting input from html file')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during saving your note...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during saving your note...')
 
 
 @note_blueprint.route('/delete_note_multiple/')
@@ -465,7 +471,7 @@ def delete_multiple():
 
         Error_obj = Error_(error_msg=''.join(error_msg), error_location='notes public note reading')
         Error_obj.save_to_mongo()
-        return render_template('error_page.html', error_msgr='Crashed during reading users notes...')
+        return render_template('base_htmls/error_page.html', error_msgr='Crashed during reading users notes...')
 
 
 @note_blueprint.route('/search_notes', methods=['POST'])
@@ -501,11 +507,15 @@ def add_to_box(note_id):
 @user_decorators.require_login
 def add_to_group():
 
-    # getting all user's notes
-    notes = Note.get_user_notes(session['email'])
+    # # getting all user's notes
+    # notes = Note.get_user_notes(session['email'])
+    # getting user object
+    user = User.find_by_id(session['_id'])
+    # getting user group notes
+    group_notes = Group.find_by_id(user.group_id).get_user_shared_notes(session['email'])
+
 
     if request.method == 'POST':
-        user = User.find_by_id(session['_id'])
         if user.group_id is None:
             flash("You aren't in a group. Please join a group to share notes to friends.")
             return redirect(url_for('groups.groups'))
@@ -526,4 +536,4 @@ def add_to_group():
 
         return redirect(url_for('groups.group', group_id=group_._id))
 
-    return render_template('notes/add_to_group.html', notes=notes)
+    return render_template('notes/add_to_group.html', notes=group_notes)

@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_htmls/base.html" %}
 {% block title %}
 <title>Note-it™ | Create Note</title>
 {% endblock %}
@@ -101,8 +101,8 @@ $(document).ready(function() {
             <div class="input-group-prepend">
                 <label class="input-group-text" for="inputGroupSelect01">Content</label>
             </div>
-            <textarea class="form-control text_box_big" name="content" id="content" placeholder="Example content" aria-describedby="contentBlock">
-                    {{ content }}
+            <textarea class="form-control text_box_big" name="content_" id="content_" placeholder="Example content" aria-describedby="contentBlock">
+                    {{ content_ }}
                 </textarea>
         </div>
 

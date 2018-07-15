@@ -1,4 +1,4 @@
-{% extends "base3.html" %}
+{% extends "base_htmls/base3.html" %}
 {% block title %}
 <title>Groups.io | Shared Groups</title>
 {% endblock %}
@@ -48,6 +48,10 @@
 
 </div>
 <br>
-<a href="{{ url_for('groups.create_group') }}" class="btn btn-outline-success" role="button">Make a Group</a>
+<div class="card">
+    <div class="card-body">
+        <a href="{{ url_for('groups.create_group') }}" class="btn btn-outline-success" role="button">Make a Group</a>
+    </div>
+</div>
 
 {% endblock %}

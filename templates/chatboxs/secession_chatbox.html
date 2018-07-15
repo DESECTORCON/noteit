@@ -1,0 +1,91 @@
+{% extends "base_htmls/base4.html" %}
+{% block title %}
+<title>Chatboxes | User Chatboxes</title>
+{% endblock %}
+{% block content %}
+<style>
+
+.toggle-button--tuli label {
+  line-height: 20px;
+  text-indent: 30px; }
+
+.toggle-button--tuli input[type=checkbox]:checked ~ .toggle-button__icon {
+  background: #fff; }
+  .toggle-button--tuli input[type=checkbox]:checked ~ .toggle-button__icon:before, .toggle-button--tuli input[type=checkbox]:checked ~ .toggle-button__icon:after {
+    opacity: 1; }
+
+.toggle-button--tuli .toggle-button__icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  transition: all 0.2s;
+  border: 2px solid #fff;
+  border-radius: 1px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1); }
+  .toggle-button--tuli .toggle-button__icon:before, .toggle-button--tuli .toggle-button__icon:after {
+    top: 5px;
+    left: 2px;
+    width: 12px;
+    height: 2px;
+    border-radius: 3px;
+    background: #fff;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    top: 35%;
+    background: #61B136;
+    opacity: 0;
+    transform-origin: left center; }
+  .toggle-button--tuli .toggle-button__icon:before {
+    transform: translate(0, 0) rotate(45deg) scale(0.6, 1); }
+  .toggle-button--tuli .toggle-button__icon:after {
+    transform: translate(4px, 6px) rotate(-45deg); }
+
+.toggle-button--tuli:hover input[type=checkbox]:not(:checked) ~ .toggle-button__icon {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); }
+
+</style>
+<br><br>
+<div class="container">
+
+    <div class="page-header">
+        <h1><i class="fab fa-rocketchat"></i> Your Chatboxes <small class="text-muted">total: {{ chatboxes|length }}</small></h1>
+        <p>Select Chatboxes you want to secession.</p>
+        <hr>
+    </div>
+    <form method="POST">
+        <div class="list-group">
+            {% if user_chatboxs == [] %}
+            <p class="text-muted"><i class="far fa-frown"></i>  No Chatboxes created.</p>
+            {% else %}
+
+            {% for chatbox in user_chatboxs %}
+
+            <div class="list-group-item list-group-item-action flex-column align-items-start card group">
+
+                <label class="d-flex w-100 justify-content-between" id="{{ chatbox._id }}">
+                    <label><i class="far fa-comments"></i> <h1 class="page-header"><a style="text-decoration:none; color: inherit;" href="{{ url_for('chatboxs.chatbox', chatbox_id=chatbox._id) }}">{{ chatbox.name }}</a></h1></label>
+
+                    <input type="checkbox" value="{{ chatbox._id }}" name="secession_chatboxes">
+                    <p class="list-group-item-text">Created date {{ chatbox.created_date.strftime("%Y-%m-%d at %H:%M") }}<strong></strong></p>
+                    <p class="list-group-item-text">{{ chatbox.user_ids|length }} Members</p>
+
+                </label>
+                <p class="mb-1"><span class="badge badge-pill badge-secondary"></span></p>
+
+            </div>
+
+            {% endfor %}
+
+            {% endif %}
+            <div class="card">
+                <div class="card-body">
+                    <button type="submit" class="btn btn-outline-danger">Secession</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
