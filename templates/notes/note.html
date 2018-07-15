@@ -38,10 +38,35 @@ if (video.canPlayType('video/mp4')) {
   });
 
 </script>
+<script type="text/javascript">
+
+    function myFunction() {
+        $('#main').hide();
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+    }
+}
+$(document).ready(function() {
+   $('#myDIV').hide();
+});
+</script>
 
 
 <div class="jumbotron" id="main">
-
+    <div class="container" id="myDIV">
+        <div class="row">
+            <div class="">
+                <h1><i class="fas fa-spinner fa-pulse"></i> Processing...</h1>
+                <p>Please wait. This will take a few minutes</p>
+            </div>
+            <div class="animationload">
+                <div class="osahanloading"></div>
+            </div>
+        </div>
+    </div>
     <div class="container" id="loader">
         <p class="text-center font-weight-bold"><bold>{{ note.content }}</bold></p>
     </div>
