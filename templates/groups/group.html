@@ -179,27 +179,25 @@
             <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown" id="">
                 <h6 class="dropdown-header">Notifications</h6>
                 <div class="notifications-container" id="notificationsContainer">
-                    <form id="form_1">
-                        {% for alert in group_alerts %}
-                        <button role="link" type="submit" class="dropdown-item dropdown-notification">
-                            <input value="{{ alert._id }}" type="hidden" name="alert_id" id="alert_id">
-                            <div class="notification-read">
-                                <i class="fa fa-times"></i>
-                            </div>
-                            <div class="notifications-body">
-                                <p class="notification-texte"><i class="far fa-bell"></i>  {{ alert.title }}</p>
-                                <p class="notification-date text-muted">
-                                    {{ alert.content }}
-                                    <i class="far fa-clock" aria-hidden="true"></i> {{ alert.created_date }}
-                                </p>
-                            </div>
-                        </button>
-                        {% endfor %}
-                    </form>
+                    {% for alert in group_alerts %}
+                    <a class="dropdown-item dropdown-notification" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}">
+                        <div class="notification-read">
+                            <i class="fa fa-times"></i>
+                        </div>
+                        <i class="far fa-bell"></i>
+                        <div class="notifications-body">
+                            <p class="notification-texte">{{ alert.title }}</p>
+                            <p class="notification-date text-muted">
+                                {{ alert.content }}
+                                <i class="far fa-clock" aria-hidden="true"></i> {{ alert.created_date }}
+                            </p>
+                        </div>
+                    </a>
+                    {% endfor %}
                 </div>
 
                 <!-- TOUTES -->
-                <div class="dropdown-item dropdown-notification-all">
+                <div class="dropdown-item dropdown-notification-all" href="#">
                     SE.inc
                 </div>
             </div>
@@ -388,29 +386,6 @@ $('div.are').on('click', function(event){
     }
     event.stopPropagation(); //Always stop propagation
 });
-</script>
-<script>
-var session = "{{ session['_id'] }}";
-var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-socket.on('connect', function() {
-    socket.emit('send', {
-        data: 'User Connected'
-    })
-    var form = $('#form_1').on('submit', function(e) {
-        e.preventDefault();
-        let content = $('alert_id').val();
-        socket.emit('delete notifi', {
-            notifi_id: alert_id,
-        });
-    })
-})
-socket.on( 'response', function( data ) {
-
-    $(data['notifi_id']).remove();
-
-})
-
 </script>
 
 {% endif %}
