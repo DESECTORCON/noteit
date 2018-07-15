@@ -62,13 +62,11 @@ class Group(object):
         :param user_email: user's email comes here. in views, you can just input session['email']
         :return: user notes(objcet)
         """
-
-
         user_notes = []
         for note in self.shared_notes:
             note_object = Note.find_by_id(note)
-            if note_object.author_email == user_email:
-                if note_object is not None:
+            if note_object is not None:
+                if note_object.author_email == user_email:
                     user_notes.append(note_object)
 
         return user_notes
