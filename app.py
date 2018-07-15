@@ -14,7 +14,8 @@ except FileNotFoundError:
     pass
 app = Flask(__name__)
 app.config.from_object('config')
-app.secret_key = ''
+app.secret_key = '23ncr92yr932c9y20c23jy9803yn489xrr4#$VT@%YBU%UI^IUVYTt2t¥¨¨¨¨˚¶§•˜˜§¢˙£™£¢®∂¢™£©ç∞˙74'
+wsgi_app = app.wsgi_app
 
 random_int = []
 for i in range(100):

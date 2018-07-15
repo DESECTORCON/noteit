@@ -393,7 +393,7 @@ $('div.are').on('click', function(event){
 var session = "{{ session['_id'] }}";
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 
-socket.on('connect_notifi', function() {
+socket.on('connect', function() {
     socket.emit('send', {
         data: 'User Connected'
     })
