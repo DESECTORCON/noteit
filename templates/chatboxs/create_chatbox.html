@@ -26,12 +26,14 @@
                 <small id="titleBlock" class="form-text text-muted">Your chatbox's name goes here!</small>
             </div>
 
-            {% if user_friends == None %}
-            <h1>No users are available. Please contact us <a>(010-2901-5627)</a></h1>
+            {% if user_friends == [] %}
+            <div class="oaerror info">
+                <p class=""><strong><i class="far fa-frown"></i> Umm...</strong> - No friends. if you want to add friends, click
+                    <a href="{{ url_for('users.add_friend') }}"><strong>here.</strong></a></p>
+            </div>
             {% else %}
             <label for="friend" class="">Friends <small class="text-muted">select</small></label>
             <div class="list-group" id="friend">
-                {% if user_firends == [] or user_firends == None %}
                 {% if default %}
                 {% for user in user_friends %}
 
@@ -56,12 +58,6 @@
                 </label>
 
                 {% endfor %}
-                {% endif %}
-                {% else %}
-                <div class="oaerror info">
-                    <p class=""><strong><i class="far fa-frown"></i> Umm...</strong> - No friends. if you want to add friends, click
-                        <a href="{{ url_for('users.add_friend') }}"><strong>here.</strong></a></p>
-                </div>
                 {% endif %}
             </div>
             {% endif %}

@@ -18,8 +18,9 @@ socketio = SocketIO(app)
 def create_chatbox(default_members):
     current_user = User.find_by_id(session['_id'])
     user_friends = current_user.get_friends()
+    default_members = ast.literal_eval(default_members)
     if request.method == 'GET':
-        if default_members is not []:
+        if default_members != []:
             default_members_obj = []
             for member in ast.literal_eval(default_members):
                 member_obj = User.find_by_id(member)
@@ -27,7 +28,7 @@ def create_chatbox(default_members):
                     default_members_obj.append(member_obj)
 
             return render_template('chatboxs/create_chatbox.html', user_friends=default_members_obj, default=True)
-        return render_template('chatboxs/create_chatbox.html', user_friends=user_friends)
+        return render_template('chatboxs/create_chatbox.html', user_friends=user_friends, default=False)
 
     if request.method == 'POST':
         chatbox_members = request.form.getlist('user')
