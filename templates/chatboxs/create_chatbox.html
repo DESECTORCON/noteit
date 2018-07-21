@@ -60,7 +60,7 @@
                 {% else %}
                 <div class="oaerror info">
                     <p class=""><strong><i class="far fa-frown"></i> Umm...</strong> - No friends. if you want to add friends, click
-                        <a href=""><strong>here.</strong></a></p>
+                        <a href="{{ url_for('users.add_friend') }}"><strong>here.</strong></a></p>
                 </div>
                 {% endif %}
             </div>
