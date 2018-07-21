@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 right-header-contentChat">
+                <div class="col-md-12 right-header-contentChat" id="chatcontent">
                     <ul class="chat_log" id="my_list" style="overflow: hidden">
                         {% for message in messages %}
                         {% if message.sender_id == session['_id'] %}
@@ -124,14 +124,14 @@ socket.on('chat response', function(msg) {
                 $('ul.chat_log').append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-right">' + msg.content + '</p></div> </li>');
                 console.log(msg);
                 document.getElementById("content").value = "";
-                $('#my_list').last().addClass('active-li').focus();
-                $('#my_list').animate({scrollTop: $('#mylist').prop("scrollHeight")}, 500);
             } else {
                 $('ul.chat_log').append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-left">' + msg.content + '</p></div> </li>');
                 console.log(msg);
                 document.getElementById("content").value = "";
-                $('#my_list').last().addClass('active-li').focus();
+
             }
+            var objDiv = document.getElementById("chatcontent");
+            objDiv.scrollTop = objDiv.scrollHeight;
         });
 
 socket.on( 'response', function( data ) {
@@ -148,8 +148,8 @@ socket.on( 'response', function( data ) {
         $("#message_length").empty()
         $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
     }
-     $('#my_list').last().addClass('active-li').focus();
-
+    var objDiv = document.getElementById("chatcontent");
+    objDiv.scrollTop = objDiv.scrollHeight;
    }
 })
 
