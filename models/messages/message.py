@@ -9,7 +9,7 @@ from config import ELASTIC_PORT as port
 class Message(object):
 
     def __init__(self, title, content, reciver_id, sender_id, sender_name, sended_date=None, readed_date=None ,
-                 _id=None, readed_by_reciver=False, is_a_noteOBJ=False, is_invtation=False):
+                 _id=None, readed_by_reciver=False, is_a_noteOBJ=False, is_invtation=False, is_marker=False):
         self._id = uuid.uuid4().hex if _id is None else _id
         self.title = title
         self.content = content
@@ -21,6 +21,7 @@ class Message(object):
         self.is_a_noteOBJ = is_a_noteOBJ
         self.is_invtation = is_invtation
         self.sender_name = sender_name
+        self.is_marker = is_marker
 
     def __repr__(self):
         return "<Message title:{} with sender {} and reciver {}>".format(self.title, self.sender_id, self.reciver_id)
@@ -37,7 +38,8 @@ class Message(object):
             "is_a_noteOBJ": self.is_a_noteOBJ,
             "_id": self._id,
             "is_invtation": self.is_invtation,
-            "sender_name": self.sender_name
+            "sender_name": self.sender_name,
+            "is_marker": self.is_marker
         }
 
     def save_to_db(self):

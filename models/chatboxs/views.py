@@ -67,8 +67,12 @@ def secession_chatbox(secession_chatbox_id):
         chatbox_obj = ChatBox.find_by_id(secession_chatbox_id)
         chatbox_obj.user_ids.remove(session['_id'])
         chatbox_obj.save_to_mongo()
+        current_user_name = User.find_by_id(session['_id']).nick_name
 
         flash('Successfully secessioned chatbox ' + chatbox_obj.name)
+        message_bar = Message(title="User %s has secessioned." % (current_user_name), content=None, reciver_id=None
+                              , sender_id=None, sender_name="System")
+        message_bar.save_to_mongo()
         return redirect(url_for('chatboxs.chatboxs'))
 
     if request.method == 'POST':
