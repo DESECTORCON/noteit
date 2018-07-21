@@ -20,7 +20,11 @@
 
     {% include 'base_htmls/html_dependencies.html' %}
 </head>
+<style>
+    html, body {margin: 0; height: 100;}
+</style>
 <body id="BODY_BASE">
+
 <div class="container" id="myDIV">
         <div class="row">
             <div class="">
@@ -98,7 +102,7 @@ $(document).ready(function() {
     </div>
 
 </nav>
-<div>
+<div class="content container">
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     {% for message in messages %}
@@ -120,7 +124,7 @@ $(document).ready(function() {
 
     <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
 
-        <h7><span class="glyphicon glyphicon-console"></span> Made by <a href="https://www.jetbrains.com/pycharm/">Pycharm</a>
+        <h7><i class="fas fa-terminal"></i> Made by <a href="https://www.jetbrains.com/pycharm/">Pycharm</a>
             and
             <a href="http://flask.pocoo.org/">Flask</a> and <i class="fab fa-python"></i> <a href="https://www.python.org/">Python</a></h7>
 

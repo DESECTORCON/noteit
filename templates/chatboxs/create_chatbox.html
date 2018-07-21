@@ -1,11 +1,11 @@
-{% extends "base_htmls/base3.html" %}
+{% extends "base_htmls/base4.html" %}
 {% block title %}
 <title>Chatbox | Create chat</title>
 {% endblock %}
 {% block content %}
 
-<div class="container-fluid">
-
+<div class="container">
+    <br><br><br>
     <div class="page-header">
         <h1 class="title"><i class="far fa-comment"></i> Create Chatbox</h1>
         <p>Create a chatbox with your friends!</p>
@@ -31,30 +31,37 @@
             {% else %}
             <label for="friend" class="">Friends <small class="text-muted">select</small></label>
             <div class="list-group" id="friend">
+                {% if user_firends == [] or user_firends == None %}
                 {% if default %}
-                    {% for user in user_friends %}
+                {% for user in user_friends %}
 
-                    <label class="list-group-item list-group-item-action flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                            <input type="checkbox" value="{{ user._id }}" name="user" checked>
-                            <h5 class="mb-1">{{ user.nick_name }}</h5>
-                            <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
-                        </div>
-                    </label>
+                <label class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <input type="checkbox" value="{{ user._id }}" name="user" checked>
+                        <h5 class="mb-1">{{ user.nick_name }}</h5>
+                        <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                    </div>
+                </label>
 
-                    {% endfor %}
+                {% endfor %}
                 {% else %}
-                    {% for user in user_friends %}
+                {% for user in user_friends %}
 
-                    <label class="list-group-item list-group-item-action flex-column align-items-start">
-                        <div class="d-flex w-100 justify-content-between">
-                            <input type="checkbox" value="{{ user._id }}" name="user" />
-                            <h5 class="mb-1">{{ user.nick_name }}</h5>
-                            <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
-                        </div>
-                    </label>
+                <label class="list-group-item list-group-item-action flex-column align-items-start">
+                    <div class="d-flex w-100 justify-content-between">
+                        <input type="checkbox" value="{{ user._id }}" name="user" />
+                        <h5 class="mb-1">{{ user.nick_name }}</h5>
+                        <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                    </div>
+                </label>
 
-                    {% endfor %}
+                {% endfor %}
+                {% endif %}
+                {% else %}
+                <div class="oaerror info">
+                    <p class=""><strong><i class="far fa-frown"></i> Umm...</strong> - No friends. if you want to add friends, click
+                        <a href=""><strong>here.</strong></a></p>
+                </div>
                 {% endif %}
             </div>
             {% endif %}
