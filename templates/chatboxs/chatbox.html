@@ -185,9 +185,8 @@
 var session = "{{ session['_id'] }}";
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 socket.on('connect', function() {
-    socket.emit('enter room_', {
-        data: 'User Connected',
-        sid: {{ chatbox_._id }}
+    socket.emit('send', {
+        data: 'User Connected'
     })
     var form = $('form').on('submit', function(e) {
         e.preventDefault();

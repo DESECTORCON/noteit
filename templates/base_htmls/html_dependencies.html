@@ -10,15 +10,17 @@
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
-<script src="{{ url_for('static', filename='js/notify.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap-notify.min.js') }}"></script>
 
 <script>
 var session = "{{ session['_id'] }}";
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 
 socket.on('chat response', function(msg) {
+    var notify = $.notify('A message has arrived');
     if (msg.chatbox_members.includes(session)) {
-      $.notify('A message has arrived', 'info');
+        notify.close();
+      notify = $.notify('A message has arrived');
     }
 
 });
