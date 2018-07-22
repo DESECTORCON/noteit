@@ -212,7 +212,10 @@ socket.on('connect', function() {
 })
 
 socket.on('addfriend response', function(msg) {
-  $("#left_side_users").append('<li><div class="chat-left-img"><img src='+ msg.user_photo_path + '></div><div class="chat-left-detail"><a href="'+ msg.user_url +'" style=""><p>'+ msg.user_name + '</p></a><small class="text-muted">'+ user.email +'</small></div></li>')})
+  for (var i in msg.user_objs) {
+              $("#left_side_users").append('<li><div class="chat-left-img"><img src='+ msg.user_objs[i].user_photo_path + '></div><div class="chat-left-detail"><a href="'+ msg.user_objs[i].user_url +'" style=""><p>'+ msg.user_objs[i].user_name + '</p></a><small class="text-muted">'+ msg.user_objs[i].user_email +'</small></div></li>')
+  };
+});
 
 socket.on('chat response', function(msg) {
     if (session === msg['sender_id']) {

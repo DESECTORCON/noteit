@@ -191,27 +191,28 @@ def add_friend(json, methods=['POST', 'GET']):
     else:
         user_objs = []
         for dic in data:
-            chatbox.user_ids.append(dic['value'])
-            user_obj = User.find_by_id(dic['value'])
-            if user_obj.picture is None or user_obj.picture == '':
-                user_objs.append(
-                    {
-                        "user_name": user_obj.nick_name,
-                        "user_email": user_obj.email,
-                        "user_photo_path": url_for('static', filename='img/index.jpg'),
-                        "user_url": url_for('users.user_page', user_id=user_obj._id)
-                    }
-                )
-            else:
-                user_objs.append(
-                    {
-                        "user_name": user_obj.nick_name,
-                        "user_email": user_obj.email,
-                        "user_photo_path": url_for('static', filename=user_obj.picture),
-                        "user_url": url_for('users.user_page', user_id=user_obj._id)
-                    }
-                )
+            if not dic['value'] in chatbox.user_ids:
+                chatbox.user_ids.append(dic['value'])
+                user_obj = User.find_by_id(dic['value'])
+                if user_obj.picture is None or user_obj.picture == '':
+                    user_objs.append(
+                        {
+                            "user_name": user_obj.nick_name,
+                            "user_email": user_obj.email,
+                            "user_photo_path": url_for('static', filename='img/index.jpg'),
+                            "user_url": url_for('users.user_page', user_id=user_obj._id)
+                        }
+                    )
+                else:
+                    user_objs.append(
+                        {
+                            "user_name": user_obj.nick_name,
+                            "user_email": user_obj.email,
+                            "user_photo_path": url_for('static', filename=user_obj.picture),
+                            "user_url": url_for('users.user_page', user_id=user_obj._id)
+                        }
+                    )
 
-        chatbox.save_to_mongo()
+                chatbox.save_to_mongo()
 
     emit("addfriend response", {'data': data, 'user_objs': user_objs}, broadcast=True)
