@@ -163,13 +163,14 @@
                         {% endfor %}
                     </div>
                     {% endif %}
-                </form>
 
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-outline-success" type="submit"><i class="far fa-plus-square"></i>  Invite</button>
+                    </div>
+                </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                <a href="{{ url_for('chatboxs.secession_chatbox', secession_chatbox_id=chatbox_._id) }}" class="btn btn-outline-success" role="button"><i class="far fa-plus-square"></i>  Secession</a>
-            </div>
+
         </div>
     </div>
 </div>
