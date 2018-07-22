@@ -212,7 +212,7 @@ socket.on('connect', function() {
 })
 
 socket.on('addfriend response', function(msg) {
-  alert('wefwef');
+  alert('wefwef' + msg.toString());
 });
 
 socket.on('chat response', function(msg) {
