@@ -55,7 +55,11 @@ def chatbox(chatbox_id):
     users = chatbox_.get_members()
     session['chatbox_id'] = chatbox_._id
 
-    return render_template('chatboxs/chatbox.html', messages=messages, users=users, chatbox_=chatbox_)
+    current_user_friends = User.find_by_id(session['_id']).get_friends()
+
+
+    return render_template('chatboxs/chatbox.html', messages=messages, users=users, chatbox_=chatbox_,
+                           user_friends=current_user_friends)
 
 
 @chatbox_blueprint.route('/chat/chatbox/delete', defaults={'secession_chatbox_id': None}, methods=['POST', 'GET'])
