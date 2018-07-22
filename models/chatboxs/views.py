@@ -190,3 +190,4 @@ def add_friend(json, methods=['POST', 'GET']):
         return
     else:
         pass
+    emit("addfriend response", {}, broadcast=True)

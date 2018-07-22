@@ -141,7 +141,7 @@
             </div>
             <div class="modal-body">
 
-                <form method="POST" id="addfriendpost">
+                <form method="POST" id="addfriendpost" name="addfriendpost">
                     {% if user_friends == [] %}
                     <div class="oaerror info">
                         <p class=""><strong><i class="fas fa-user-slash"></i> Umm...</strong> - No friends. if you want to add friends, click
@@ -196,7 +196,7 @@ socket.on('connect', function() {
         });
     })
 })
-socket.on('addfriend', function() {
+socket.on('connect', function() {
     socket.emit('send', {
         data: 'User Connected'
     })
@@ -209,6 +209,10 @@ socket.on('addfriend', function() {
         });
     })
 })
+
+socket.on('addfriend response', function(msg) {
+  alert('HEY1');
+});
 
 socket.on('chat response', function(msg) {
     if (session === msg['sender_id']) {
