@@ -177,6 +177,11 @@ def send(json, methods=['POST', 'GET']):
 #     emit('status', {'msg': session['email'] + ' has left the room.'}, room=None)
 
 
+@socketio.on('enter room_')
+def connect(sid, data):
+    socketio.Server.enter_room(sid, data['room'])
+
+
 @socketio.on("request")
 def request_():
     latest_message_ = ChatBox.latest_message_()
