@@ -189,5 +189,8 @@ def add_friend(json, methods=['POST', 'GET']):
     if data is '':
         return
     else:
-        pass
+        for (name, value) in data:
+            chatbox.user_ids.append(value)
+        chatbox.save_to_mongo()
+
     emit("addfriend response", {'data': data}, broadcast=True)
