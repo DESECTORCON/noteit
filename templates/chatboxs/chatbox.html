@@ -196,12 +196,14 @@ socket.on('connect', function() {
         });
     })
 })
-socket.on('addfriend', function() {
-    var form = $('addfriendpost').on('submit', function(e) {
+socket.on('connect', function() {
+    socket.emit('send', {
+        data: 'User Connected'
+    });
+    var form = $('#addfriendpost').on('submit', function(e) {
         e.preventDefault();
-        // let content = $('input.content').val();
 
-        socket.emit('submit', {
+        socket.emit('addfriend', {
             data_: $.each($('#myForm').serializeArray(), function(i, field) {
                 values[field.name] = field.value;
             })
