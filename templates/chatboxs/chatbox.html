@@ -14,6 +14,7 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="color: gray; width:100%;">
                     <button class="dropdown-item" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-sign-out-alt"></i>  Secession</button>
+                    <button class="dropdown-item" data-toggle="modal" data-target="#inviteModal"><i class="fas fa-user-plus"></i>  Invite Friend</button>
                 </div>
             </div>
             <hr>
@@ -133,7 +134,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="inviteModalLabel"><i class="fas fa-sign-in-alt"></i> Invite friend</h5>
+                <h5 class="modal-title" id="inviteModalLabel"><i class="fas fa-user-plus"></i> Invite friend</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -143,25 +144,12 @@
                 <form method="POST">
                     {% if user_friends == [] %}
                     <div class="oaerror info">
-                        <p class=""><strong><i class="far fa-frown"></i> Umm...</strong> - No friends. if you want to add friends, click
+                        <p class=""><strong><i class="fas fa-user-slash"></i> Umm...</strong> - No friends. if you want to add friends, click
                             <a href="{{ url_for('users.add_friend') }}"><strong>here.</strong></a></p>
                     </div>
                     {% else %}
                     <label for="friend" class="">Friends <small class="text-muted">select</small></label>
                     <div class="list-group" id="friend">
-                        {% if default %}
-                        {% for user in user_friends %}
-
-                        <label class="list-group-item list-group-item-action flex-column align-items-start">
-                            <div class="d-flex w-100 justify-content-between">
-                                <input type="checkbox" value="{{ user._id }}" name="user" checked>
-                                <h5 class="mb-1">{{ user.nick_name }}</h5>
-                                <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
-                            </div>
-                        </label>
-
-                        {% endfor %}
-                        {% else %}
                         {% for user in user_friends %}
 
                         <label class="list-group-item list-group-item-action flex-column align-items-start">
@@ -173,13 +161,14 @@
                         </label>
 
                         {% endfor %}
-                        {% endif %}
+                    </div>
+                    {% endif %}
                 </form>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                <a href="{{ url_for('chatboxs.secession_chatbox', secession_chatbox_id=chatbox_._id) }}" class="btn btn-outline-danger" role="button"><i class="fas fa-sign-out-alt"></i>  Secession</a>
+                <a href="{{ url_for('chatboxs.secession_chatbox', secession_chatbox_id=chatbox_._id) }}" class="btn btn-outline-success" role="button"><i class="far fa-plus-square"></i>  Secession</a>
             </div>
         </div>
     </div>

@@ -56,6 +56,8 @@ def chatbox(chatbox_id):
     session['chatbox_id'] = chatbox_._id
 
     current_user_friends = User.find_by_id(session['_id']).get_friends()
+    for user in current_user_friends:
+        if
 
 
     return render_template('chatboxs/chatbox.html', messages=messages, users=users, chatbox_=chatbox_,
