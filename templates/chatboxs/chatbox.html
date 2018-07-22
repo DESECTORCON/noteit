@@ -141,7 +141,7 @@
             </div>
             <div class="modal-body">
 
-                <form method="POST">
+                <form method="POST" id="addfriendpost">
                     {% if user_friends == [] %}
                     <div class="oaerror info">
                         <p class=""><strong><i class="fas fa-user-slash"></i> Umm...</strong> - No friends. if you want to add friends, click
@@ -196,48 +196,63 @@ socket.on('connect', function() {
         });
     })
 })
-socket.on('chat response', function(msg) {
-            if (session === msg['sender_id']) {
-                $('ul.chat_log').append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-right">' + msg.content + '</p></div> </li>');
-                console.log(msg);
-                document.getElementById("content").value = "";
-            } else {
-                $('ul.chat_log').append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-left">' + msg.content + '</p></div> </li>');
-                console.log(msg);
-                document.getElementById("content").value = "";
-
-            }
-            var objDiv = document.getElementById("chatcontent");
-            objDiv.scrollTop = objDiv.scrollHeight;
+socket.on('addfriend', function() {
+    socket.emit('send', {
+        data: 'User Connected'
+    })
+    var form = $('addfriendpost').on('submit', function(e) {
+        e.preventDefault();
+        // let content = $('input.content').val();
+        let data_ = JSON.stringify($('addfriendpost').serializeArray())
+        socket.emit('submit', {
+            data_: data_,
         });
+    })
+})
 
-socket.on( 'response', function( data ) {
+socket.on('chat response', function(msg) {
+    if (session === msg['sender_id']) {
+        $('ul.chat_log').append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-right">' + msg.content + '</p></div> </li>');
+        console.log(msg);
+        document.getElementById("content").value = "";
+    } else {
+        $('ul.chat_log').append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-left">' + msg.content + '</p></div> </li>');
+        console.log(msg);
+        document.getElementById("content").value = "";
 
-  if (data['data'].sender_name === $('ul li')) {
-    if ( session === data['data'].sender_id ) {
-      $( 'ul.chat_log' ).append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
-        console.log( msg );document.getElementById("content").value = "";
-      $("#message_length").empty()
-      $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
-    }else{
-      $( 'ul.chat_log' ).append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
-        console.log( msg );document.getElementById("content").value = "";
-        $("#message_length").empty()
-        $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
     }
     var objDiv = document.getElementById("chatcontent");
     objDiv.scrollTop = objDiv.scrollHeight;
-   }
+});
+
+socket.on('response', function(data) {
+
+    if (data['data'].sender_name === $('ul li')) {
+        if (session === data['data'].sender_id) {
+            $('ul.chat_log').append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p>' + msg.content + '</p></div> </li>');
+            console.log(msg);
+            document.getElementById("content").value = "";
+            $("#message_length").empty()
+            $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
+        } else {
+            $('ul.chat_log').append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p>' + msg.content + '</p></div> </li>');
+            console.log(msg);
+            document.getElementById("content").value = "";
+            $("#message_length").empty()
+            $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
+        }
+        var objDiv = document.getElementById("chatcontent");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
 })
 
 function leave_room() {
-                socket.emit('left', {}, function() {
-                    socket.disconnect();
-                    // go back to the login page
-                    window.location.href = "{{ url_for('chatboxs.chatboxs') }}";
-                });
-            }
-
+    socket.emit('left', {}, function() {
+        socket.disconnect();
+        // go back to the login page
+        window.location.href = "{{ url_for('chatboxs.chatboxs') }}";
+    });
+}
 </script>
 <script>
 function goBack() {

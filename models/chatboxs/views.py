@@ -181,3 +181,12 @@ def request_():
     latest_message_ = ChatBox.latest_message_()
     emit("response", {'data': latest_message_, 'email': session['email']}, broadcast=True)
 
+
+@socketio.on('addfriend')
+def add_friend(json, methods=['POST', 'GET']):
+    data = json['data_']
+    chatbox = ChatBox.find_by_id(session['chatbox_id'])
+    if data is '':
+        return
+    else:
+        pass
