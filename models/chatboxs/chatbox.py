@@ -16,7 +16,7 @@ class ChatBox(object):
         self.created_date = created_date
         self.last_logined = last_logined
         id_gen_sid = shortid.ShortId()
-        self.name = id_gen_sid.generate() if name is None else name
+        self.name = id_gen_sid.generate() if name is '' else name
 
     def json(self):
         return {

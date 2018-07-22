@@ -11,7 +11,7 @@
 
 </head>
 <body id="BODY_BASE">
-<div class="container" id="myDIV">
+<div class="container" id="myDIV1">
         <div class="row">
             <div class="">
                 <h1><i class="fas fa-spinner fa-pulse"></i> Processing...</h1>
@@ -26,7 +26,7 @@
 
     function myFunction() {
         $('#BODY_BASE').hide();
-        var x = document.getElementById("myDIV");
+        var x = document.getElementById("myDIV1");
         if (x.style.display === "none") {
             x.style.display = "block";
         } else {
@@ -34,7 +34,7 @@
     }
 }
 $(document).ready(function() {
-   $('#myDIV').hide();
+   $('#myDIV1').hide();
 });
 </script>
 
