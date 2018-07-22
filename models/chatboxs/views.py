@@ -167,13 +167,13 @@ def send(json, methods=['POST', 'GET']):
         }
 
         socketio.emit('chat response', response_data, broadcast=True)
-
-
-@socketio.on('left')
-def left(message):
-    """Sent by clients when they leave a room.
-    A status message is broadcast to all people in the room."""
-    emit('status', {'msg': session['email'] + ' has left the room.'}, room=None)
+#
+#
+# @socketio.on('left')
+# def left(message):
+#     """Sent by clients when they leave a room.
+#     A status message is broadcast to all people in the room."""
+#     emit('status', {'msg': session['email'] + ' has left the room.'}, room=None)
 
 
 @socketio.on("request")
@@ -189,8 +189,18 @@ def add_friend(json, methods=['POST', 'GET']):
     if data is '':
         return
     else:
-        for (name, value) in data:
-            chatbox.user_ids.append(value)
+        user_objs = []
+        for dic in data:
+            chatbox.user_ids.append(dic['value'])
+            user_obj = User.find_by_id(dic['value'])
+            user_objs.append(
+                {
+                    "user_name": user_obj.nick_name,
+                    "user_email": user_obj.email,
+                    "user_photo_path": url_for('static', filename=user_obj.picture)
+                }
+            )
+
         chatbox.save_to_mongo()
 
-    emit("addfriend response", {'data': data}, broadcast=True)
+    emit("addfriend response", {'data': data, 'user_objs': user_objs}, broadcast=True)
