@@ -197,7 +197,8 @@ def add_friend(json, methods=['POST', 'GET']):
                 {
                     "user_name": user_obj.nick_name,
                     "user_email": user_obj.email,
-                    "user_photo_path": url_for('static', filename=user_obj.picture)
+                    "user_photo_path": url_for('static', filename=user_obj.picture),
+                    "user_url": url_for('user_page')
                 }
             )
 
