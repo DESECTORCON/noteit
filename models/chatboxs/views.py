@@ -163,7 +163,8 @@ def send(json, methods=['POST', 'GET']):
             "created_date": message.sended_date.strftime('%m/%d/%Y'),
             "content": message.content,
             "sender_name": message.sender_name,
-            "sender_id": message.sender_id
+            "sender_id": message.sender_id,
+            "chatbox_members": chatbox_.user_ids
         }
 
         socketio.emit('chat response', response_data, broadcast=True)
