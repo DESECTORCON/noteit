@@ -204,7 +204,7 @@ socket.on('connect', function() {
         e.preventDefault();
 
         socket.emit('addfriend', {
-            data_: $.each($('#myForm').serializeArray(), function(i, field) {
+            data_: $.each($('#user').serializeArray(), function(i, field) { var values = [];
                 values[field.name] = field.value;
             })
         });
@@ -212,7 +212,7 @@ socket.on('connect', function() {
 })
 
 socket.on('addfriend response', function(msg) {
-  alert('HEY1');
+  alert('wefwef');
 });
 
 socket.on('chat response', function(msg) {
