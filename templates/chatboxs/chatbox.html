@@ -154,7 +154,7 @@
 
                         <label class="list-group-item list-group-item-action flex-column align-items-start">
                             <div class="d-flex w-100 justify-content-between">
-                                <input type="checkbox" value="{{ user._id }}" name="user" />
+                                <input type="checkbox" value="{{ user._id }}" name="user" id="user" />
                                 <h5 class="mb-1">{{ user.nick_name }}</h5>
                                 <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
                             </div>
@@ -196,16 +196,15 @@ socket.on('connect', function() {
         });
     })
 })
-socket.on('connect', function() {
-    socket.emit('send', {
-        data: 'User Connected'
-    })
+socket.on('addfriend', function() {
     var form = $('addfriendpost').on('submit', function(e) {
         e.preventDefault();
         // let content = $('input.content').val();
-        let data_ = JSON.stringify($('addfriendpost').serializeArray())
+
         socket.emit('submit', {
-            data_: data_,
+            data_: $.each($('#myForm').serializeArray(), function(i, field) {
+                values[field.name] = field.value;
+            })
         });
     })
 })
