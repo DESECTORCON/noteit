@@ -12,16 +12,16 @@
 
 <script src="{{ url_for('static', filename='js/bootstrap-notify.min.js') }}"></script>
 
-<script>
-var session = "{{ session['_id'] }}";
-var socket = io.connect('http://' + document.domain + ':' + location.port);
+<!--<script>-->
+<!--var session = "{{ session['_id'] }}";-->
+<!--var socket = io.connect('http://' + document.domain + ':' + location.port);-->
 
-socket.on('chat response', function(msg) {
-    var notify = $.notify('A message has arrived');
-    if (msg.chatbox_members.includes(session)) {
-        notify.close();
-      notify = $.notify('A message has arrived');
-    }
+<!--socket.on('chat response', function(msg) {-->
+    <!--var notify = $.notify('A message has arrived');-->
+    <!--if (msg.chatbox_members.includes(session)) {-->
+        <!--notify.close();-->
+      <!--notify = $.notify('A message has arrived');-->
+    <!--}-->
 
-});
-</script>
+<!--});-->
+<!--</script>-->

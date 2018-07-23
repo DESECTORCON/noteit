@@ -92,13 +92,19 @@
             <div class="row">
                 <div class="col-md-12 right-chat-textbox">
                     <form method="POST" autocomplete="off" accept-charset="UTF-8">
-                        <input type="text" name="content" id="content" class="content" value="">  <button type="submit" class="fa fa-arrow-right" aria-hidden="true" style="    border: none;
-    padding: 14px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;border-radius: 50%;"></button>
+                        <style>
+
+                        #button_se {
+                                border: none;
+                                padding: 14px;
+                                text-align: center;
+                                text-decoration: none;
+                                display: inline-block;
+                                font-size: 16px;
+                                margin: 4px 2px;border-radius: 50%;
+                            }
+                        </style>
+                        <input type="text" name="content" id="content" class="content" value="">  <button type="submit" class="fa fa-arrow-right" aria-hidden="true" id="button_se"></button> <button id="button_se" onclick="go_down()"><i class="fas fa-chevron-down"></i></button>
                     </form>
 
                 </div>
@@ -183,10 +189,12 @@
 </script>
 <script>
 var session = "{{ session['_id'] }}";
+var room_id = "{{ chatbox_._id }}";
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 socket.on('connect', function() {
     socket.emit('send', {
-        data: 'User Connected'
+        data: room_id
+        room: room_id
     })
     var form = $('form').on('submit', function(e) {
         e.preventDefault();
@@ -259,6 +267,11 @@ function leave_room() {
         // go back to the login page
         window.location.href = "{{ url_for('chatboxs.chatboxs') }}";
     });
+}
+
+function go_down() {
+    var objDiv = document.getElementById("chatcontent");
+    objDiv.scrollTop = objDiv.scrollHeight;
 }
 </script>
 <script>

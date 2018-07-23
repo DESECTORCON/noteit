@@ -42,9 +42,14 @@ class ChatBox(object):
         try:
             messages = []
 
-            for message in self.messages:
-                messages.append(Message.find_by_id(message))
-            return messages
+            if len(self.messages) < 20:
+                for message in self.messages:
+                    messages.append(Message.find_by_id(message))
+                return messages
+            else:
+                for message in self.messages[20:]:
+                    messages.append(Message.find_by_id(message))
+                return messages
 
         except TypeError:
             return None
