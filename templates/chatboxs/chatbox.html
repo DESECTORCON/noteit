@@ -132,7 +132,11 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                <a href="{{ url_for('chatboxs.secession_chatbox', secession_chatbox_id=chatbox_._id) }}" class="btn btn-outline-danger" role="button"><i class="fas fa-sign-out-alt"></i>  Secession</a>
+                <form id="secessionform">
+                    <button class="btn btn-outline-danger" type="submit"><i class="fas fa-sign-out-alt"></i>  Secession</button>
+                    <input type="hidden" id="chatbox_id" name="chatbox_id" value="{{ chatbox_._id }}">
+                </form>
+<!--href="{{ url_for('chatboxs.secession_chatbox', secession_chatbox_id=chatbox_._id) }}"-->
             </div>
         </div>
     </div>
@@ -173,7 +177,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                        <button class="btn btn-outline-success" type="submit"><i class="far fa-plus-square"></i>  Invite</button>
+                        <button class="btn btn-outline-success"><i class="far fa-plus-square"></i>  Invite</button>
                     </div>
                 </form>
             </div>
@@ -211,6 +215,7 @@ socket.on('connect', function() {
         });
     })
 })
+
 socket.on('connect', function() {
     socket.emit('send', {
         data: 'User Connected'
@@ -226,12 +231,25 @@ socket.on('connect', function() {
     room: room_id
 });
     })
+    var form = $('secessionform').on('submit', function(e) {
+                e.preventDefault();
+                let content = $('input.chatbox_id').val();
+                socket.emit('secession', {
+                    room: room_id,
+                    chatbox_id: chatbox_id
+                });
+    })
+})
+
+socket.on('secession_response', function(msg) {
+  $.notify('<i class="fas fa-info"></i> User ' + msg.user_objs[i].user_email + ' has secessioned this room', 'info')
 })
 
 socket.on('addfriend response', function(msg) {
-  for (var i in msg.user_objs) {
-              $("#left_side_users").append('<li><div class="chat-left-img"><img src='+ msg.user_objs[i].user_photo_path + '></div><div class="chat-left-detail"><a href="'+ msg.user_objs[i].user_url +'" style=""><p>'+ msg.user_objs[i].user_name + '</p></a><small class="text-muted">'+ msg.user_objs[i].user_email +'</small></div></li>')
-  };
+    for (var i in msg.user_objs) {
+        $("#left_side_users").append('<li><div class="chat-left-img"><img src=' + msg.user_objs[i].user_photo_path + '></div><div class="chat-left-detail"><a href="' + msg.user_objs[i].user_url + '" style=""><p>' + msg.user_objs[i].user_name + '</p></a><small class="text-muted">' + msg.user_objs[i].user_email + '</small></div></li>')
+        $.notify('<i class="fas fa-info"></i> User ' + msg.user_objs[i].user_email + ' has joined this room', 'info')
+    };
 });
 
 socket.on('chat response', function(msg) {
@@ -248,6 +266,8 @@ socket.on('chat response', function(msg) {
     var objDiv = document.getElementById("chatcontent");
     objDiv.scrollTop = objDiv.scrollHeight;
 });
+
+
 
 socket.on('response', function(data) {
 
