@@ -219,10 +219,12 @@ socket.on('connect', function() {
         e.preventDefault();
 
         socket.emit('addfriend', {
-            data_: $.each($('#user').serializeArray(), function(i, field) { var values = [];
-                values[field.name] = field.value;
-            })
-        });
+    data_: $.each($('#user').serializeArray(), function(i, field) {
+        var values = [];
+        values[field.name] = field.value;
+    }),
+    room: room_id
+});
     })
 })
 

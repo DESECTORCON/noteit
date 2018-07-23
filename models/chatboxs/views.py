@@ -167,7 +167,7 @@ def send(json, methods=['POST', 'GET']):
             "chatbox_members": chatbox_.user_ids
         }
 
-        socketio.emit('chat response', response_data, broadcast=True, room=None)
+        socketio.emit('chat response', response_data, broadcast=True, room=json['room'])
 #
 #
 # @socketio.on('left')
@@ -232,4 +232,4 @@ def add_friend(json, methods=['POST', 'GET']):
 
                 chatbox.save_to_mongo()
 
-    emit("addfriend response", {'data': data, 'user_objs': user_objs}, broadcast=True)
+    emit("addfriend response", {'data': data, 'user_objs': user_objs}, broadcast=True, room=json['room'])
