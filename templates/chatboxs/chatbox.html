@@ -191,8 +191,12 @@
 <script>
 var session = "{{ session['_id'] }}";
 var room_id = "{{ chatbox_._id }}";
-var user_email = "{{ session['_email'] }}";
+var user_email = "{{ session['email'] }}";
 var socket = io.connect('http://' + document.domain + ':' + location.port);
+socket.emit('join', {
+        room: room_id,
+        user_email: user_email
+    })
 socket.on('connect', function() {
     socket.emit('send', {
         room: room_id,
@@ -203,6 +207,7 @@ socket.on('connect', function() {
         let content = $('input.content').val();
         socket.emit('submit', {
             content: content,
+            room: room_id
         });
     })
 })
@@ -264,7 +269,10 @@ socket.on('response', function(data) {
 })
 
 function leave_room() {
-    socket.emit('left', {}, function() {
+    socket.emit('left', {
+        room: room_id,
+        user_email: user_email
+    }, function() {
         socket.disconnect();
         // go back to the login page
         window.location.href = "{{ url_for('chatboxs.chatboxs') }}";

@@ -167,7 +167,7 @@ def send(json, methods=['POST', 'GET']):
             "chatbox_members": chatbox_.user_ids
         }
 
-        socketio.emit('chat response', response_data, broadcast=True)
+        socketio.emit('chat response', response_data, broadcast=True, room=None)
 #
 #
 # @socketio.on('left')
@@ -180,17 +180,17 @@ def send(json, methods=['POST', 'GET']):
 @socketio.on('join')
 def connect_join(data):
     useremail = data['user_email']
-    room = data['room_id']
+    room = data['room']
     join_room(room)
     socketio.send(useremail + 'has entered the room.', room=room)
 
 
-@socketio.on('leave')
+@socketio.on('left')
 def on_leave(data):
     username = data['user_email']
     room = data['room_id']
     leave_room(room)
-    send(username + ' has left the room.', room=room)
+    socketio.send(username + ' has left the room.', room=room)
 
 
 @socketio.on("request")
