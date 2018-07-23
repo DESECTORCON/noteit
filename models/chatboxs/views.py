@@ -5,7 +5,7 @@ import models.users.decorators as user_decorators
 from models.chatboxs.chatbox import ChatBox
 from models.messages.message import Message
 from models.users.user import User
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 from app import app
 import ast
 
@@ -177,9 +177,20 @@ def send(json, methods=['POST', 'GET']):
 #     emit('status', {'msg': session['email'] + ' has left the room.'}, room=None)
 
 
-@socketio.on('enter room_')
-def connect(sid, data):
-    socketio.Server.enter_room(sid, data['room'])
+@socketio.on('join')
+def connect_join(data):
+    useremail = data['user_email']
+    room = data['room_id']
+    join_room(room)
+    socketio.send(useremail + 'has entered the room.', room=room)
+
+
+@socketio.on('leave')
+def on_leave(data):
+    username = data['user_email']
+    room = data['room_id']
+    leave_room(room)
+    send(username + ' has left the room.', room=room)
 
 
 @socketio.on("request")

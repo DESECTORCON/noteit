@@ -15,6 +15,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="color: gray; width:100%;">
                     <button class="dropdown-item" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-sign-out-alt"></i>  Secession</button>
                     <button class="dropdown-item" data-toggle="modal" data-target="#inviteModal"><i class="fas fa-user-plus"></i>  Invite Friend</button>
+                    <button class="dropdown-item" onclick="leave_room()">Leave room</button>
                 </div>
             </div>
             <hr>
@@ -190,11 +191,12 @@
 <script>
 var session = "{{ session['_id'] }}";
 var room_id = "{{ chatbox_._id }}";
+var user_email = "{{ session['_email'] }}";
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 socket.on('connect', function() {
     socket.emit('send', {
-        data: room_id
-        room: room_id
+        room: room_id,
+        user_email: user_email
     })
     var form = $('form').on('submit', function(e) {
         e.preventDefault();
