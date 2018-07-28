@@ -160,6 +160,7 @@ def group(group_id):
         except:
             pass
         group_.save_to_mongo()
+
         return render_template('groups/group.html', group=group_, members=members, shared_notes=shared_notes,
                                is_in_group=is_in_group, session_id=session['_id'], group_alerts=group_alerts)
     except:

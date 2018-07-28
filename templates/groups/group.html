@@ -184,7 +184,7 @@ $(document).ready(function() {
         {% else %}
 
         <div class="page-header">
-            <h1><i class="far fa-object-group"></i> Group <small class="">{{ group.name }}</small></h1>
+            <h1><img src="{{ url_for('static', filename='group.group_img_name') }}" alt=""> Group <small class="">{{ group.name }}</small></h1>
         </div>
 
         <hr>
