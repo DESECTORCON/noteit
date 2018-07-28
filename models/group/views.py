@@ -224,35 +224,38 @@ def create_group():
             name = request.form['name']
             members = request.form.getlist('members')
             members.append(user._id)
-
-            try:
-                group_img = request.form['file']
-            except:
-                group_img = None
+            group_img = request.files.getlist('file')
 
             description = request.form['description']
             share = request.form['inputGroupSelect01']
-            if group_img is not None:
-                file_name, file_extenstion = os.path.splitext(group_img)
-                if file_extenstion not in ALLOWED_GROUP_IMG_FORMATS or len(group_img) > 1:
-                    all_firends_diclist = gen_all_friends_diclist()
-                    return render_template('groups/create_group.html',
-                                           all_firends=all_firends_diclist
-                                           , error_msg='Too much images!! Please upload just one image.',
-                                           name=name, members=members, share=share, description=description)
+            try:
 
-                # saving file
-                # create name for file
-                sid = shortid.ShortId()
-                # create path for file
-                file_path, file_extenstion = os.path.splitext(group_img.filename)
-                filename = secure_filename(sid.generate()) + file_extenstion
+                if group_img is not None:
+                    file_name, file_extenstion = os.path.splitext(group_img.filename)
+                    if file_extenstion not in ALLOWED_GROUP_IMG_FORMATS or len(group_img) > 1:
+                        all_firends_diclist = gen_all_friends_diclist()
+                        return render_template('groups/create_group.html',
+                                               all_firends=all_firends_diclist
+                                               , error_msg='Too much images!! Please upload just one image.',
+                                               name=name, members=members, share=share, description=description)
 
-                # os.chdir("static/img/file/")
-                # save file and add file to filenames list
-                group_img.save(os.path.join(filename))
-            else:
+                    # saving file
+                    # create name for file
+                    sid = shortid.ShortId()
+                    # create path for file
+                    file_path, file_extenstion = os.path.splitext(group_img.filename)
+                    filename = secure_filename(sid.generate()) + file_extenstion
+
+                    # os.chdir("static/img/file/")
+                    # save file and add file to filenames list
+                    group_img.save(os.path.join(filename))
+                else:
+                    filename = None
+            except:
+                group_img = None
                 filename = None
+
+
 
             # saving group
             group_id = uuid.uuid4().hex
@@ -275,8 +278,11 @@ def create_group():
                 message = Message(title='Do you want to join my group?', content='''
                     Join me on group {}!
                     If you want to join, please click the link below.
-                '''.format(group_for_save.name), is_invtation=group_id, reciver_id=member, sender_id=user._id)
-                message.save_to_elastic()
+                '''.format(group_for_save.name), is_invtation=group_id, reciver_id=member, sender_id=user._id, sender_name=user.nick_name)
+                try:
+                    message.save_to_elastic()
+                except:
+                    pass
                 message.save_to_mongo()
 
             # redirecting
