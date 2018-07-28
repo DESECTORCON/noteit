@@ -24,7 +24,7 @@
         <a href="{{ url_for('chatboxs.chatbox', chatbox_id=chatbox._id) }}" class="list-group-item list-group-item-action flex-column align-items-start card group">
 
             <div class="d-flex w-100 justify-content-between">
-                <h4 class="mb-1"><i class="fas fa-object-group"></i> {{ chatbox.name }}</h4>
+                <h4 class="mb-1"><i class="far fa-comments"></i> {{ chatbox.name }}</h4>
 
                 <p class="list-group-item-text">Created date {{ chatbox.created_date.strftime("%Y-%m-%d at %H:%M") }}<strong></strong></p>
                 <p class="list-group-item-text">{{ chatbox.user_ids|length }} Members</p>
