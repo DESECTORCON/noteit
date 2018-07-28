@@ -292,7 +292,7 @@ socket.on('response', function(data) {
 
 function leave_room() {
     socket.emit('left', {
-        room: room_id,
+        room_id: room_id,
         user_email: user_email
     }, function() {
         socket.disconnect();
