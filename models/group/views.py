@@ -226,7 +226,7 @@ def create_group():
             members.append(user._id)
 
             try:
-                group_img = request.form['img']
+                group_img = request.form['file']
             except:
                 group_img = None
 
@@ -260,7 +260,10 @@ def create_group():
             group_for_save = Group(_id=group_id, name=name, members=[user._id],
                                    group_img_name=filename, shared=share, shared_notes=[], description=description)
             group_for_save.save_to_mongo()
-            group_for_save.save_to_elastic()
+            try:
+                group_for_save.save_to_elastic()
+            except:
+                pass
 
             # # saving to user
             user.group_id = group_id
@@ -319,7 +322,10 @@ def get_out_group(group_id):
         note_ = Note.find_by_id(note['note_id'])
         note_.share_with_group = False
         note_.save_to_mongo()
-        note_.save_to_elastic()
+        try:
+            note_.save_to_elastic()
+        except:
+            pass
 
         # removing note from group
         try:
@@ -328,13 +334,19 @@ def get_out_group(group_id):
             pass
 
     if not group_.members:
-        group_.delete_on_elastic()
+        try:
+            group_.delete_on_elastic()
+        except:
+            pass
         group_.delete_img()
         group_.delete()
         flash('The group you secessioned was deleted because it has no members.')
     else:
         group_.save_to_mongo()
-        group_.update_to_elastic()
+        try:
+            group_.update_to_elastic()
+        except:
+            pass
         flash('Secession complete')
 
     return redirect(url_for('groups.groups'))

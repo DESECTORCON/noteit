@@ -8,6 +8,7 @@
 {% endif %}
 {% endblock %}
 <style>
+
 .dropdown-item.dropdown-notification:active, .dropdown-item.dropdown-notification.active {
   color: #1d1e1f;
   text-decoration: none;
@@ -182,10 +183,15 @@ $(document).ready(function() {
             </div>
         </div>
         {% else %}
-
+        {% if group.group_img_name == None %}
         <div class="page-header">
-            <h1><img src="{{ url_for('static', filename='group.group_img_name') }}" alt=""> Group <small class="">{{ group.name }}</small></h1>
+            <h1><i class="fas fa-users"></i> Group <small class="">{{ group.name }}</small></h1>
         </div>
+        {% else %}
+        <div class="page-header">
+            <h1><img src="{{ url_for('static', filename='group.group_img_name') }}"> Group <small class="">{{ group.name }}</small></h1>
+        </div>
+        {% endif %}
 
         <hr>
         {% if session['_id'] in group.members %}
