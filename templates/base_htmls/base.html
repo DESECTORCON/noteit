@@ -57,21 +57,21 @@ $(document).ready(function() {
 
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active"><a href="{{ url_for('notes.notes') }}" class="nav-link"><i class="far fa-clone"></i> Shared Notes</a></li>
-                <li class="nav-item active"><a href="{{ url_for('home3') }}" class="nav-link"><i class="fas fa-users"></i> Groups</a></li>
+                <li class="nav-item active"><a href="{{ url_for('home3') }}" class="nav-link"><i class="fas fa-users"></i></a></li>
             </ul>
 
             {% if session['email'] %}
 
             <ul class="nav navbar-nav navbar-right justify-content-end ml-auto">
-                <li class="nav-item active"><a href="{{ url_for('notes.user_notes') }}" class="nav-link"><i class="fas fa-sticky-note"></i>    My Notes</a></li>
+                <li class="nav-item active"><a href="{{ url_for('notes.user_notes') }}" class="nav-link"><i class="fas fa-sticky-note"></i></a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right justify-content-end">
-                <li class="nav-item active"><a href="{{ url_for('users.user_page', user_id=session['email']) }}" class="nav-link"><i class="fas fa-user-circle"></i>    My Profile</a></li>
+                <li class="nav-item active"><a href="{{ url_for('users.user_page', user_id=session['email']) }}" class="nav-link"><i class="fas fa-user-circle"></i></a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right justify-content-end ">
-                <li class="nav-item active"><a href="{{ url_for('home4') }}" class="nav-link"><i class="fab fa-rocketchat"></i>  Chatbox™</a></li>
+                <li class="nav-item active"><a href="{{ url_for('home4') }}" class="nav-link"><i class="fab fa-rocketchat"></i></a></li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right justify-content-end ">

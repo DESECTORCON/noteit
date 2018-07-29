@@ -52,16 +52,18 @@ class Message(object):
 
     @classmethod
     def find_by_sender_id(cls, sender_id):
-        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {'sender_id': sender_id})]
+        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {'sender_id': sender_id
+                                                                                    , "is_chat_message":False})]
 
     @classmethod
     def find_by_reciver_id(cls, reciver_id):
-        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {'reciver_id': reciver_id})]
+        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {'reciver_id': reciver_id
+                                                                                    , "is_chat_message":False})]
 
     @classmethod
     def find_by_id(cls, message_id):
         try:
-            return cls(**Database.find_one(MessageConstants.COLLECTION, {"_id": message_id}))
+            return cls(**Database.find_one(MessageConstants.COLLECTION, {"_id": message_id, "is_chat_message":False}))
         except TypeError:
             return None
 
