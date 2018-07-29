@@ -184,12 +184,17 @@ $(document).ready(function() {
         </div>
         {% else %}
         {% if group.group_img_name == None %}
-        <div class="page-header">
+        <div class="page-header ">
             <h1><i class="fas fa-users"></i> Group <small class="">{{ group.name }}</small></h1>
         </div>
         {% else %}
-        <div class="page-header">
-            <h1><img src="{{ url_for('static', filename='group.group_img_name') }}"> Group <small class="">{{ group.name }}</small></h1>
+        <div class="page-header ">
+            <h1><img class="hoverdiv" src="{{ url_for('static', filename=group.group_img_name) }}" style="    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 150px; img:hover {
+    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}"> Group <small class="">{{ group.name }}</small></h1>
         </div>
         {% endif %}
 
