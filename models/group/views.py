@@ -232,7 +232,7 @@ def create_group():
 
                 if group_img is not None:
                     file_name, file_extenstion = os.path.splitext(group_img.filename)
-                    if file_extenstion not in ALLOWED_GROUP_IMG_FORMATS or len(group_img) > 1:
+                    if file_extenstion not in ALLOWED_GROUP_IMG_FORMATS:
                         all_firends_diclist = gen_all_friends_diclist()
                         return render_template('groups/create_group.html',
                                                all_firends=all_firends_diclist
