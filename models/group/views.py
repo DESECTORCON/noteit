@@ -224,7 +224,7 @@ def create_group():
             name = request.form['name']
             members = request.form.getlist('members')
             members.append(user._id)
-            group_img = request.files.getlist('file')
+            group_img = request.files['file']
 
             description = request.form['description']
             share = request.form['inputGroupSelect01']
