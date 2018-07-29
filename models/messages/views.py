@@ -137,7 +137,8 @@ def send_message(user_to_send=None):
             sender_id = sender._id
 
             message = Message(title=title, content=content,
-                              reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False, sender_name=sender_name)
+                              reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False, sender_name=sender_name,
+                              is_chat_message=False)
             message.save_to_mongo()
             message.save_to_elastic()
 

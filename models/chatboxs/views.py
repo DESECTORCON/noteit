@@ -151,7 +151,7 @@ def send(json, methods=['POST', 'GET']):
 
         message = Message(title=title, content=content,
                           reciver_id=session['chatbox_id'], sender_id=sender_id, is_a_noteOBJ=False,
-                          sender_name=sender_name)
+                          sender_name=sender_name, is_chat_message=True)
         message.save_to_mongo()
         try:
             message.save_to_elastic()
