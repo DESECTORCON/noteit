@@ -52,6 +52,9 @@ def all_messages(user_id):
                                    messages=messages, user_nickname=user_nickname, form=form_, labels=labels)
         messages = Message.search_find_all('', user_id)
         labels = label_maker(messages, user_id)
+        if messages is None or None in messages:
+            messages = []
+            labels = []
 
         return render_template('messages/messages.html',
                                messages=messages, user_nickname=user_nickname, labels=labels)
