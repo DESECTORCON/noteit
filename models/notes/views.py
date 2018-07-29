@@ -298,9 +298,12 @@ def delete_note(note_id, redirect_to='.user_notes'):
         note.delete()
         user_ = User.find_by_id(session['_id'])
         user_group = Group.find_by_id(user_.group_id)
-        user_group.shared_notes.remove(note_id)
-        user_group.save_to_mongo()
-        user_group.save_to_elastic()
+        try:
+            user_group.shared_notes.remove(note_id)
+            user_group.save_to_mongo()
+            user_group.save_to_elastic()
+        except:
+            pass
 
         flash('Your note has successfully deleted.')
         return redirect(url_for(redirect_to))
