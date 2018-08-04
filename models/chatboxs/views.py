@@ -183,7 +183,7 @@ def secession_chatbox(json):
     flash('Successfully secessioned chatbox '+ chatbox_obj.name)
     socketio.emit('secession_response', {"user_id": session['_id'], "user_email": session['email']}
                   , broadcast=True, room=json['room'])
-    # return redirect(url_for('chatboxs.chatboxs'))
+    return redirect(url_for('chatboxs.chatboxs'))
 
 #
 #
