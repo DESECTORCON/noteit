@@ -44,13 +44,13 @@ class ChatBox(object):
 
             if len(self.messages) < 20:
                 for message in self.messages:
-                    message_obj = Message.find_by_id(message)
+                    message_obj = Message.find_by_id_chat(message)
                     if message_obj is not None:
                         messages.append(message_obj)
                 return messages
             else:
                 for message in self.messages[20:]:
-                    message_obj = Message.find_by_id(message)
+                    message_obj = Message.find_by_id_chat(message)
                     if message_obj is not None:
                         messages.append(message_obj)
                 return messages

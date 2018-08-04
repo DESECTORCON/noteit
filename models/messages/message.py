@@ -68,6 +68,13 @@ class Message(object):
             return None
 
     @classmethod
+    def find_by_id_chat(cls, message_id):
+        try:
+            return cls(**Database.find_one(MessageConstants.COLLECTION, {"_id": message_id, "is_chat_message": True}))
+        except TypeError:
+            return None
+
+    @classmethod
     def find_all(cls):
         return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {"is_chat_message":False})]
 
