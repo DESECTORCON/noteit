@@ -231,6 +231,14 @@ socket.on('connect', function() {
     room: room_id
 });
     })
+
+})
+
+socket.on('connect', function() {
+    socket.emit('send', {
+        data: 'User Connected'
+    });
+
     var form = $('secessionform').on('submit', function(e) {
                 e.preventDefault();
                 let content = $('input.chatbox_id').val();
@@ -239,6 +247,7 @@ socket.on('connect', function() {
                     chatbox_id: chatbox_id
                 });
     })
+
 })
 
 socket.on('secession_response', function(msg) {
