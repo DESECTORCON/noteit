@@ -100,7 +100,7 @@ def secession_chatbox(secession_chatbox_id):
             chatbox.user_ids.remove(session['_id'])
             chatbox.save_to_mongo()
         return redirect(url_for('chatboxs.chatboxs'))
-    socketio.emit('secession')
+    # socketio.emit('secession')
     return render_template('chatboxs/secession_chatbox.html', user_chatboxs=user_chatboxs)
 
 
@@ -181,8 +181,9 @@ def secession_chatbox(json):
     chatbox_obj.save_to_mongo()
 
     flash('Successfully secessioned chatbox '+ chatbox_obj.name)
-    socketio.emit('secession_response', {"user_id": session['_id']}, broadcast=True, room=json['room'])
-    return redirect(url_for('chatboxs.chatboxs'))
+    socketio.emit('secession_response', {"user_id": session['_id'], "user_email": session['email']}
+                  , broadcast=True, room=json['room'])
+    # return redirect(url_for('chatboxs.chatboxs'))
 
 #
 #
