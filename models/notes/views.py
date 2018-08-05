@@ -293,8 +293,10 @@ def create_note(box_id):
 def delete_note(note_id, redirect_to='.user_notes'):
     try:
         note = Note.find_by_id(note_id)
-        note.delete_on_elastic()
-        note.delete_img()
+        try:
+            note.delete_on_elastic()
+            note.delete_img()
+        except: pass
         note.delete()
         user_ = User.find_by_id(session['_id'])
         user_group = Group.find_by_id(user_.group_id)
