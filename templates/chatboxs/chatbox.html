@@ -246,13 +246,17 @@ socket.on('connect', function() {
 function secession() {
     var room_id = "{{ chatbox_._id }}";
     socket.emit('secession', {
-    room: room_id
+    room_id: room_id
    });
 }
 
 
 socket.on('secession_response', function(msg) {
   $.notify('<i class="fas fa-info"></i> User ' + msg.user_email + ' has secessioned this room', 'info')
+  if (msg.user_id === '{{ session['_id'] }}') {
+    window.location.replace("{{ url_for('chatboxs.chatboxs') }}");
+
+  }
 })
 
 socket.on('addfriend response', function(msg) {
