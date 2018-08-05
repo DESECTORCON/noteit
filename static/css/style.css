@@ -628,6 +628,15 @@ styling for chatbox
   flex: 0 1 40px;
 }
 
-body, h1, h2, h3, h4, h5, p {
-  font-size: 2vw;
+* {
+  font-size: 1.1vw;
+
+}
+
+nav {
+    font-size: 1vm;
+}
+
+#navbar {
+    font-size: 1vm;
 }
