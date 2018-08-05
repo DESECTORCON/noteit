@@ -176,13 +176,13 @@ def send(json, methods=['POST', 'GET']):
 
 @socketio.on('secession')
 def secession_chatbox(json):
-    chatbox_obj = ChatBox.find_by_id(json['chatbox_id'])
+    chatbox_obj = ChatBox.find_by_id(json['room_id'])
     chatbox_obj.user_ids.remove(session['_id'])
     chatbox_obj.save_to_mongo()
 
     flash('Successfully secessioned chatbox '+ chatbox_obj.name)
     socketio.emit('secession_response', {"user_id": session['_id'], "user_email": session['email']}
-                  , broadcast=True, room=json['room'])
+                  , broadcast=True, room=json['room_id'])
     return redirect(url_for('chatboxs.chatboxs'))
 
 #

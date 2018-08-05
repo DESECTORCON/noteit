@@ -133,8 +133,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
                 <form id="secessionform">
-                    <button class="btn btn-outline-danger" type="submit"><i class="fas fa-sign-out-alt"></i>  Secession</button>
-                    <input type="hidden" id="chatbox_id" name="chatbox_id" value="{{ chatbox_._id }}">
+                    <button class="btn btn-outline-danger" onclick="secession()"><i class="fas fa-sign-out-alt"></i>  Secession</button>
                 </form>
 <!--href="{{ url_for('chatboxs.secession_chatbox', secession_chatbox_id=chatbox_._id) }}"-->
             </div>
@@ -231,19 +230,29 @@ socket.on('connect', function() {
     room: room_id
 });
     })
+})
+
+socket.on('connect', function() {
+    socket.emit('send', {
+        data: 'User Connected'
+    });
     var form = $('secessionform').on('submit', function(e) {
-                e.preventDefault();
-                let content = $('input.chatbox_id').val();
                 socket.emit('secession', {
-                    room: room_id,
-                    chatbox_id: chatbox_id
+                    room: room_id
                 });
     })
 })
 
+function secession() {
+    var room_id = "{{ chatbox_._id }}";
+    socket.emit('secession', {
+    room: room_id
+   });
+}
+
 
 socket.on('secession_response', function(msg) {
-  $.notify('<i class="fas fa-info"></i> User ' + msg.user_objs[i].user_email + ' has secessioned this room', 'info')
+  $.notify('<i class="fas fa-info"></i> User ' + msg.user_email + ' has secessioned this room', 'info')
 })
 
 socket.on('addfriend response', function(msg) {
