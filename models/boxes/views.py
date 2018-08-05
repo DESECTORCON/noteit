@@ -78,7 +78,9 @@ def create_box():
 def delete_box(box_id):
     try:
         box = Box.find_by_id(box_id)
-        box.delete_on_elastic()
+        try:
+            box.delete_on_elastic()
+        except: pass
         box.delete()
         return redirect(url_for('.boxs'))
     except:

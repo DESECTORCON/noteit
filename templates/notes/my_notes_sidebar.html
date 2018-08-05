@@ -267,7 +267,11 @@
 
                                     function myFunction() {
                                         $('#MAINDIV').hide();
-                                        alert('Saving your note. Please wait');
+                                        if( document.getElementById("videoUploadFile").files.length == 0 ){
+                                            console.log("upload started");
+                                            alert('Saving your note. Please wait');
+                                        }
+
                                         var x = document.getElementById("myDIV");
                                         if (x.style.display === "none") {
                                             x.style.display = "block";
