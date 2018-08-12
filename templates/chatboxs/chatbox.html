@@ -92,7 +92,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 right-chat-textbox">
-                    <form method="POST" autocomplete="off" accept-charset="UTF-8">
+                    <form method="POST" autocomplete="off" accept-charset="UTF-8" id="form_">
                         <style>
 
                         #button_se {
@@ -202,8 +202,7 @@ socket.emit('join', {
     })
 socket.on('connect', function() {
     socket.emit('send', {
-        room: room_id,
-        user_email: user_email
+        data: 'User Connected'
     })
     var form = $('form').on('submit', function(e) {
         e.preventDefault();
