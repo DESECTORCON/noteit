@@ -88,7 +88,8 @@ $(document).ready(function() {
         if (messages != []) {
           //for (var message in messages) {
           messages.forEach(function (message) {
-           $.notify('<i class="fas fa-info"></i> Info <hr> '+message, { allow_dismiss: true, type: 'info', showProgressbar: false });
+          message = JSON.parse(message);
+           $.notify('<i class="fas fa-info"></i> Info <hr> '+message.message, { allow_dismiss: true, type: message.type, showProgressbar: false });
           });
         }
     </script>
