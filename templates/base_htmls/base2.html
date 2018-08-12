@@ -104,14 +104,15 @@ $(document).ready(function() {
 
 <div class="content container">
     {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close" id="close" name="close">&times;</a>
-        <i class="fas fa-info-circle"></i>  {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
+    <script>
+        var messages = {{ messages|tojson }};
+        if (messages != []) {
+          //for (var message in messages) {
+          messages.forEach(function (message) {
+           $.notify('<i class="fas fa-info"></i> Info <hr> '+message, { allow_dismiss: true, type: 'info', showProgressbar: false });
+          });
+        }
+    </script>
     {% endwith %}
 
     {% block content %}
