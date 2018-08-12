@@ -21,7 +21,7 @@
 
             <div class="form-group">
                 <label for="title">Chatbox Name</label>
-                <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="titleBlock" value="{{ title }}">
+                <input type="text" class="form-control" name="title" id="title" placeholder="Example title" aria-describedby="titleBlock" value="{{ title }}" required>
 
                 <small id="titleBlock" class="form-text text-muted">Your chatbox's name goes here!</small>
             </div>
@@ -51,7 +51,7 @@
 
                 <label class="list-group-item list-group-item-action flex-column align-items-start">
                     <div class="d-flex w-100 justify-content-between">
-                        <input type="checkbox" value="{{ user._id }}" name="user" />
+                        <input type="checkbox" value="{{ user._id }}" name="user">
                         <h5 class="mb-1">{{ user.nick_name }}</h5>
                         <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
                     </div>
