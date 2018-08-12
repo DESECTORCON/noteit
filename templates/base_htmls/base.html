@@ -102,7 +102,7 @@ $(document).ready(function() {
         if (messages != []) {
           //for (var message in messages) {
           messages.forEach(function (message) {
-           $.notify('<i class="fas fa-info"></i> '+message, "info")
+           $.notify('<i class="fas fa-info"></i> Info <hr> '+message, { allow_dismiss: true, type: 'info', showProgressbar: false });
           });
         }
     </script>
