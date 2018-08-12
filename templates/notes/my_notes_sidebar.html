@@ -264,12 +264,7 @@
 
 
                                         <script type="text/javascript">
-                                                $('#MAINDIV').hide();
-    if( document.getElementById("file").files.length == 0 ){
-        console.log("upload started");
-        alert('Saving your note. Please wait');
-    }
-
+                                                $('#MAINDIV1').hide();
     var x = document.getElementById("myDIV");
     if (x.style.display === "none") {
         x.style.display = "block";
@@ -281,8 +276,8 @@
     });
                                     </script>
 
-                                        <div class="form-size jumbotron" id="MAINDIV">
-                                            <form method="POST" enctype=multipart/form-data action="{{ url_for('notes.create_note', box_id=box_id) }}">
+                                        <div class="form-size jumbotron" id="MAINDIV1">
+                                            <form method="POST" enctype=multipart/form-data action="{{ url_for('notes.create_note', box_id=box_id) }}" id="notesumnit">
 
 
                                                 <div class="form-group">
