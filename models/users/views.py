@@ -58,11 +58,15 @@ def register_user():
 
             email = request.form['email']
             if email == '':
-                flash('Please type your email')
+                # flash('Please type your email')
+                flash('{ "message":"Please type your email", "type":"error" , "captaion":"Form Not Filled", "icon_id": "fas fa-exclamation-triangle"}')
+
                 return render_template("users/register.html")
             password = request.form['password']
             if password == '':
-                flash('Please type your password')
+                # flash('Please type your password')
+                flash('{ "message":"Please type your password", "type":"error" , "captaion":"Form Not Filled", "icon_id": "fas fa-exclamation-triangle"}')
+
                 return render_template("users/register.html")
             nick_name = request.form['nickname']
             file = request.files.get('file')
@@ -80,7 +84,9 @@ def register_user():
 
             # if extenstion is not supported
             elif file is not None:
-                flash("Sorry; your file's extension is supported.")
+                # flash("Sorry; your file's extension is supported.")
+                flash('{ "message":"Sorry; your file\'s extension is supported.", "type":"error" , "captaion":File Extension Not Supported", "icon_id": "fas fa-exclamation-triangle"}')
+
                 return render_template("users/register.html")
 
             try:

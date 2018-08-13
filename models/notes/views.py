@@ -190,7 +190,9 @@ def create_note(box_id):
 
                 # file length checker
                 if len(files) > 5:
-                    flash("Too much files!")
+                    # flash("Too much files!")
+                    flash('{ "message":"Too much files!", "type":"error" , "captaion":"File Overload Error", "icon_id": "fas fa-exclamation-triangle"}')
+
                     return render_template('/notes/create_note.html'
                                            , title=title, content_=content, share=share)
 
@@ -210,7 +212,9 @@ def create_note(box_id):
 
                     # if extenstion is not supported
                     elif file is not None:
-                        flash("Sorry; your file's extension is supported.")
+                        # flash("Sorry; your file's extension is supported.")
+                        flash('{ "message":"Sorry; your file\'s extension is not supported", "type":"error" , "captaion":"File Extension Error", "icon_id": "fas fa-exclamation-triangle"}')
+
                         return render_template('/notes/create_note.html'
                                                , title=title, content=content, share=share)
                     else:
@@ -229,7 +233,9 @@ def create_note(box_id):
 
             # if too much notes, then redirect
             if len(user_notes) > 20:
-                flash("You have the maximum amount of notes. Please delete your notes")
+                # flash("You have the maximum amount of notes. Please delete your notes")
+                flash('{ "message":"You have the maximum amount of notes. Please delete your notes", "type":"error" , "captaion":"Note Overload Error", "icon_id": "fas fa-exclamation-triangle"}')
+
                 return redirect(url_for(".user_notes", box_id=box_id))
 
             # saving note
@@ -248,7 +254,9 @@ def create_note(box_id):
                         group.save_to_mongo()
                         group.update_to_elastic()
                     except:
-                        flash("You aren't in a group. Please join a group to share with group users.")
+                        # flash("You aren't in a group. Please join a group to share with group users.")
+                        flash('{ "message":"You aren\'t in a group. Please join a group to share with group users.", "type":"info" , "captaion":"Group Share Error", "icon_id": "fas fa-exclamation-triangle"}')
+
                         return render_template('/notes/create_note.html'
                                         , title=title, content=content, share=share)
 
@@ -274,7 +282,8 @@ def create_note(box_id):
                 box_for_save.update_to_elastic()
 
             # flash message and redirect
-            flash('Your note has successfully created.')
+            # flash('Your note has successfully created.')
+            flash('{ "message":"Your note has successfully created.", "type":"success" , "captaion":"Note Saved", "icon_id": "far fa-save"}')
 
             return redirect(url_for('.user_notes'))
 
@@ -307,7 +316,9 @@ def delete_note(note_id, redirect_to='.user_notes'):
         except:
             pass
 
-        flash('Your note has successfully deleted.')
+        # flash('Your note has successfully deleted.')
+        flash('{ "message":"Your note has successfully deleted.", "type":"success" , "captaion":"Note Deleted", "icon_id": "far fa-check-circle"}')
+
         return redirect(url_for(redirect_to))
 
     except:
@@ -413,7 +424,8 @@ def edit_note(note_id):
             note.label = is_shared_validator(share, share_only_with_users)
             note.save_to_mongo()
             note.update_to_elastic()
-            flash('Your note has successfully saved.')
+            # flash('Your note has successfully saved.')
+            flash('{ "message":"Your note has successfully saved.", "type":"success" , "captaion":"Note Saved", "icon_id": "far fa-save"}')
 
             return redirect(url_for('.note', note_id=note_id))
 
@@ -469,7 +481,9 @@ def delete_multiple():
                 except:
                     note.delete()
 
-            flash('Your notes has successfully deleted.')
+            # flash('Your notes has successfully deleted.')
+            flash('{ "message":"Your notes has successfully deleted.", "type":"success" , "captaion":"Note Deleted", "icon_id": "far fa-check-circle"}')
+
             return redirect(url_for('.user_notes'))
 
         return render_template("/notes/delete_multiple.html", user_notes=user_notes, user_name=user_name)
@@ -525,7 +539,9 @@ def add_to_group():
 
     if request.method == 'POST':
         if user.group_id is None:
-            flash("You aren't in a group. Please join a group to share notes to friends.")
+            # flash("You aren't in a group. Please join a group to share notes to friends.")
+            flash('{ "message":"You aren\'t in a group. Please join a group to share notes to friends.", "type":"error" , "captaion":"Group Share Error", "icon_id": "fas fa-exclamation-triangle"}')
+
             return redirect(url_for('groups.groups'))
 
         group_ = Group.find_by_id(user.group_id)
