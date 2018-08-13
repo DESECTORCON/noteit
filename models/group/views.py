@@ -50,13 +50,16 @@ def join_group_(list_):
 
     if user_.group_id is not None:
         # flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
-        flash('{ "message":"You\'ve already joined this group!", "type":"info" , "captaion":"Group Join", "icon_id": "fas fa-question-circle"}')
+        flash('{ "message":"You\'ve already joined a group. If you want to join this group, please secession the other group.", "type":"warning" , "captaion":"Group Join Error", "icon_id": "fas fa-exclamation-triangle"}')
         return redirect(url_for('groups.group', group_id=group_._id))
 
     else:
 
         if len(group_.members) >= 25:
-            flash('Sorry, this group\'s member amount has reached it\'s limit!')
+            # flash('Sorry, this group\'s member amount has reached it\'s limit!')
+            flash(
+                '{ "message":"Sorry, this group\'s member amount has reached it\'s limit!", "type":"info" , "captaion":"Group Join", "icon_id": "fas fa-question-circle"}')
+
             return redirect(url_for('groups.groups'))
 
         group_.members.extend([session['_id']])
@@ -66,7 +69,9 @@ def join_group_(list_):
         # saving to user database
         user_.group_id = group_._id
         user_.save_to_mongo()
-        flash('Joined group successfully')
+        # flash('Joined group successfully')
+        flash('{ "message":"Joined group successfully", "type":"success" , "captaion":"Group Join", "icon_id": "fas fa-info-circle"}')
+
 
     # if invatation, then remove the message and flash a message
     message = Message.find_by_id(list__[0])
@@ -82,7 +87,9 @@ def join_group_(list_):
     session['group_id'] = group_._id
 
     # flashing
-    flash('Your invitation has expired.')
+    # flash('Your invitation has expired.')
+    flash(
+        '{ "message":"Your invitation has expired.", "type":"info" , "captaion":"Invitation Expired", "icon_id": "fas fa-info-circle"}')
 
     # redirecting
 
@@ -96,18 +103,22 @@ def join_group(group_id):
     user_ = User.find_by_id(session['_id'])
     group_ = Group.find_by_id(group_id)
     if group_ is None:
-        flash('The group you want to join does not exist!')
+        # flash('The group you want to join does not exist!')
+        flash('{ "message":"The group you want to join does not exist!", "type":"error" , "captaion":"Group Find Error", "icon_id": "fas fa-exclamation-triangle"}')
         return redirect(url_for('groups.groups'))
 
     if len(group_.members) >= 25:
-        flash('Sorry, this group\'s member amount has reached it\'s limit!')
+        # flash('Sorry, this group\'s member amount has reached it\'s limit!')
+        flash('{ "message":"You\'ve already joined this group!", "type":"info" , "captaion":"Group Join", "icon_id": "fas fa-question-circle"}')
         return redirect(url_for('groups.groups'))
     if session['_id'] in group_.members:
         flash('You\'ve already joined this group!')
         return redirect(url_for('groups.group', group_id=group_id))
 
     if user_.group_id is not None:
-        flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
+        # flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
+        flash('{ "message":"You\'ve already joined a group. If you want to join this group, please secession the other group.", "type":"warning" , "captaion":"Group Join Error", "icon_id": "fas fa-exclamation-triangle"}')
+
         return redirect(url_for('groups.group', group_id=group_._id))
 
     group_.members.extend([session['_id']])
@@ -128,7 +139,10 @@ def join_group(group_id):
     session['group_id'] = group_._id
 
     # redirecting
-    flash('Joined group successfully')
+    # flash('Joined group successfully')
+    flash(
+        '{ "message":"Joined group successfully", "type":"success" , "captaion":"Group Join", "icon_id": "fas fa-info-circle"}')
+
     return redirect(url_for('.group', group_id=group_id))
 
 
@@ -289,7 +303,10 @@ def create_group():
                 message.save_to_mongo()
 
             # redirecting
-            flash('Successfully created group! | Sended invitations to users')
+            # flash('Successfully created group! | Sended invitations to users')
+            flash(
+                '{ "message":"Successfully created group! | Sended invitations to users", "type":"info" , "captaion":"Success", "icon_id": "fas fa-info-circle"}')
+
             return redirect(url_for('groups.groups'))
 
 
@@ -349,14 +366,18 @@ def get_out_group(group_id):
             pass
         group_.delete_img()
         group_.delete()
-        flash('The group you secessioned was deleted because it has no members.')
+        # flash('The group you secessioned was deleted because it has no members.')
+        flash('{ "message":"The group you secessioned was deleted because it has no members.", "type":"warning" , "captaion":"Group Delete", "icon_id": "fas fa-info-circle"}')
+
     else:
         group_.save_to_mongo()
         try:
             group_.update_to_elastic()
         except:
             pass
-        flash('Secession complete')
+        # flash('Secession complete')
+        flash('{ "message":"Secession complete", "type":"success" , "captaion":"Group Secession", "icon_id": "far fa-check-circle"}')
+
 
     return redirect(url_for('groups.groups'))
 
@@ -411,7 +432,8 @@ def invite_friend():
                 message.save_to_elastic()
                 message.save_to_mongo()
 
-            flash('Successfully sended invitations to friends!')
+            # flash('Successfully sended invitations to friends!')
+            flash('{ "message":"Successfully sended invitations to friends!", "type":"success" , "captaion":"Invitation Sended", "icon_id": "far fa-check-circle"}')
 
         return redirect(url_for('groups.group', group_id=group_._id))
 
@@ -448,7 +470,9 @@ def delete_note_from_group(group_id):
         group.save_to_elastic()
         group.save_to_mongo()
         if flash_messages is not []:
-            flash(' '.join(flash_messages)+'can\'t be deleted. Please try again')
+            # flash(' '.join(flash_messages)+'can\'t be deleted. Please try again')
+            flash('{ "message":"' '.join(flash_messages)+\'can\'t be deleted. Please try again", "type":"error" , "captaion":"Message Delete Error", "icon_id": "far fa-check-circle"}')
+
 
         return redirect(url_for('groups.group', group_id=group_id))
 
