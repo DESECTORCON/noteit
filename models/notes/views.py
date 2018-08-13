@@ -514,14 +514,18 @@ def add_to_box(note_id):
     box_id = request.form['box']
 
     note_for_save = Note.find_by_id(note_id)
-    box_for_save  = Box.find_by_id(box_id)
+    box_for_save = Box.find_by_id(box_id)
 
-    note_for_save.box_id = box_id
-    box_for_save.notes.append(note_id)
-    note_for_save.save_to_mongo()
-    note_for_save.update_to_elastic()
-    box_for_save.save_to_mongo()
-    box_for_save.update_to_elastic()
+    if note_id not in box_for_save.notes:
+        note_for_save.box_id = box_id
+        box_for_save.notes.append(note_id)
+        box_for_save.save_to_mongo()
+        box_for_save.update_to_elastic()
+        note_for_save.save_to_mongo()
+        note_for_save.update_to_elastic()
+    else:
+        flash('{ "message":"The note has been already added", "type":"error" , "captaion":"Box Add Error", "icon_id": "fas fa-exclamation-triangle"}')
+
     return redirect(url_for('.user_notes', box_id=box_id))
 
 
