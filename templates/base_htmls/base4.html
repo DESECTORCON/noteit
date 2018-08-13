@@ -110,7 +110,7 @@ $(document).ready(function() {
           //for (var message in messages) {
           messages.forEach(function (message) {
           message = JSON.parse(message);
-           $.notify('<i class="fas fa-info"></i> Info <hr> '+message.message, { allow_dismiss: true, type: message.type, showProgressbar: false });
+           $.notify('<i class="'+ message.icon_id +'"></i> '+ message.captaion +' <hr> '+message.message, { allow_dismiss: true, type: message.type, showProgressbar: false });
           });
         }
     </script>
