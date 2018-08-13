@@ -48,7 +48,8 @@ def create_chatbox(default_members):
 def chatbox(chatbox_id):
     chatbox_ = ChatBox.find_by_id(chatbox_id)
     if chatbox_ is None:
-        flash('The chatbox you requested don\'t exists.')
+        # flash('The chatbox you requested don\'t exists.')
+        flash('{ "message":"The chatbox you requested don\'t exists.", "type":"error" , "captaion":"Chatbox Error", "icon_id": "fas fa-exclamation-triangle"}')
         return redirect(url_for('chatboxs.chatboxs'))
 
     messages = chatbox_.limit_find_messages()
@@ -77,7 +78,8 @@ def secession_chatbox(secession_chatbox_id):
         chatbox_obj.save_to_mongo()
         current_user_name = User.find_by_id(session['_id']).nick_name
 
-        flash('Successfully secessioned chatbox ' + chatbox_obj.name)
+        # flash('Successfully secessioned chatbox ' + chatbox_obj.name)
+        flash('{ "message":"Successfully secessioned chatbox " + chatbox_obj.name, "type":"success" , "captaion":"Chatbox Secession", "icon_id": "fas fa-sign-out-alt"}')
         message_bar = Message(title="User %s has secessioned." % (current_user_name), content=None, reciver_id=None
                               , sender_id=None, sender_name="System")
         message_bar.save_to_mongo()
@@ -89,7 +91,9 @@ def secession_chatbox(secession_chatbox_id):
             chatbox_obj.user_ids.remove(session['_id'])
             chatbox_obj.save_to_mongo()
 
-            flash('Successfully secessioned chatbox '+ chatbox_obj.name)
+            # flash('Successfully secessioned chatbox '+ chatbox_obj.name)
+            flash(
+                '{ "message":"Successfully secessioned chatbox " + chatbox_obj.name, "type":"success" , "captaion":"Chatbox Secession", "icon_id": "fas fa-sign-out-alt"}')
             return redirect(url_for('chatboxs.chatboxs'))
         secession_chatboxes = request.form.getlist('secession_chatboxes')
         chatbox_objs = []
@@ -180,7 +184,9 @@ def secession_chatbox(json):
     chatbox_obj.user_ids.remove(session['_id'])
     chatbox_obj.save_to_mongo()
 
-    flash('Successfully secessioned chatbox '+ chatbox_obj.name)
+    # flash('Successfully secessioned chatbox '+ chatbox_obj.name)
+    flash(
+        '{ "message":"Successfully secessioned chatbox " + chatbox_obj.name, "type":"success" , "captaion":"Chatbox Secession", "icon_id": "fas fa-sign-out-alt"}')
     socketio.emit('secession_response', {"user_id": session['_id'], "user_email": session['email']}
                   , broadcast=True, room=json['room_id'])
     # return redirect(url_for('chatboxs.chatboxs'))

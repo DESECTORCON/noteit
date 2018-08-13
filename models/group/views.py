@@ -39,15 +39,18 @@ def join_group_(list_):
 
     # checking if user can join group
     if group_ is None:
-        flash('The group you want to join does not exist!')
+        # flash('The group you want to join does not exist!')
+        flash('{ "message":"The group you want to join does not exist!", "type":"error" , "captaion":"Group Find Error", "icon_id": "fas fa-exclamation-triangle"}')
         return redirect(url_for('groups.groups'))
     # checking if user had alerady joined group
     if session['_id'] in group_.members:
-        flash('You\'ve already joined this group!')
+        # flash('You\'ve already joined this group!')
+        flash('{ "message":"You\'ve already joined this group!", "type":"info" , "captaion":"Group Join", "icon_id": "fas fa-question-circle"}')
         return redirect(url_for('groups.group', group_id=group_._id))
 
     if user_.group_id is not None:
-        flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
+        # flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
+        flash('{ "message":"You\'ve already joined this group!", "type":"info" , "captaion":"Group Join", "icon_id": "fas fa-question-circle"}')
         return redirect(url_for('groups.group', group_id=group_._id))
 
     else:
