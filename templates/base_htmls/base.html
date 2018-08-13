@@ -46,7 +46,7 @@ $(document).ready(function() {
 
         <div class="navbar-header">
 
-            <a href="/" class="navbar-brand" title="Home"><i class="far fa-sticky-note"></i>   Note-it™</a>
+            <a href="/" class="navbar-brand bounce" title="Home"><i class="far fa-sticky-note"></i>   Note-it™</a>
         </div>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,7 +103,7 @@ $(document).ready(function() {
           //for (var message in messages) {
           messages.forEach(function (message) {
           message = JSON.parse(message);
-           $.notify('<i class="fas fa-info"></i> Info <hr> '+message.message, { allow_dismiss: true, type: message.type, showProgressbar: false });
+           $.notify('<i class="'+ message.icon_id +'"></i> '+ message.captaion +' <hr> '+message.message, { allow_dismiss: true, type: message.type, showProgressbar: false });
           });
         }
     </script>

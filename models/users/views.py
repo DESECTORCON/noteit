@@ -33,7 +33,7 @@ def login_user():
                     session['_id'] = user._id
                     user.last_logined = datetime.datetime.now()
                     user.save_to_mongo()
-                    flash('{ "message":"You were successfully logged in", "type":"success" }')
+                    flash('{ "message":"You were successfully logged in", "type":"success" , "captaion":"User Login", "icon_id": "fas fa-sign-in-alt"}')
                     session['group_id'] = user.group_id
                     return redirect(url_for("home"))
 

@@ -132,7 +132,8 @@ def delete_box_mutiple():
                     box.delete_on_elastic()
                     box.delete()
 
-            flash('Your boxes has successfully deleted.')
+            # flash('Your boxes has successfully deleted.')
+            flash('{ "message":"Your boxes has successfully deleted.", "type":"success", "captaion":"BoxControl", "icon_id": "fas fa-clipboard-check" }')
             return redirect(url_for('.boxs'))
 
         return render_template("/boxs/delete_box_mutiple.html", user_boxs=user_boxs, user_name=user_name)
