@@ -131,6 +131,7 @@
 
                                     function myFunction() {
                                         $('#MAINDIV').hide();
+                                        $.notify('<i class="far fa-save"></i>  Saving<hr> Saving your note. Please wait...', { showProgressbar: true })
                                         var x = document.getElementById("#myDIV");
                                         if (x.style.display === "none") {
                                             x.style.display = "block";

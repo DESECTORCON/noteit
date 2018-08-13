@@ -204,7 +204,7 @@ socket.on('connect', function() {
     socket.emit('send', {
         data: 'User Connected'
     })
-    var form = $('form').on('submit', function(e) {
+    var form = $('forfm').on('submit', function(e) {
         e.preventDefault();
         let content = $('input.content').val();
         socket.emit('submit', {
