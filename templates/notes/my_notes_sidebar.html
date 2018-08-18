@@ -12,8 +12,9 @@
 
 <div class="container-fluid container">
     <div class="row">
-        <aside class="col-2 px-0 col-xs-12" id="left">
-            <h1><i class="fas fa-box"></i> Box <small class="text-muted">{{ box_name }}</small></h1>
+        <aside class="col-3 px-1 col-xs-10" id="left">
+            <br><br>
+            <h1 class=""><i class="fas fa-box"></i> Box <small class="text-muted">{{ box_name }}</small></h1>
             <div class="list-group w-100">
                 {% for box in boxs %}
 
@@ -52,7 +53,7 @@
                             {% else %}
                             <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="form" name="form" value="{{ form }}">
                             {% endif %}
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                            <button class="btn btn-outline-success my-2 my-sm-0" id="search__" type="submit" onmouseover="animationHover('search__', 'jello')">Search</button>
                         </form>
 
                         <br>
@@ -369,6 +370,22 @@
         </main>
     </div>
 </div>
+<script>
+    function animationHover(element, animation){
+    element = $(element);
+    element.hover(
+        function() {
+            element.addClass('animated ' + animation);
+        },
+        function(){
+            //wait for animation to finish before removing classes
+            window.setTimeout( function(){
+                element.removeClass('animated ' + animation);
+            }, 2000);
+        });
+}
+animationHover('#search__', 'jello')
+</script>
 
 
 
