@@ -105,7 +105,7 @@
                                 margin: 4px 2px;border-radius: 50%;
                             }
                         </style>
-                        <input type="text" name="content" id="content" class="content" value="">  <button type="submit" class="fa fa-arrow-right" aria-hidden="true" id="button_se"></button> <button id="button_se" onclick="go_down()"><i class="fas fa-chevron-down"></i></button>
+                        <input type="text" name="content" id="content" class="content" placeholder="Type your message here" value="">  <button type="submit" class="fa fa-arrow-right" aria-hidden="true" id="button_se"></button> <button id="button_se" onclick="go_down()"><i class="fas fa-chevron-down"></i></button>
                     </form>
 
                 </div>
@@ -204,7 +204,7 @@ socket.on('connect', function() {
     socket.emit('send', {
         data: 'User Connected'
     })
-    var form = $('forfm').on('submit', function(e) {
+    var form = $('form').on('submit', function(e) {
         e.preventDefault();
         let content = $('input.content').val();
         socket.emit('submit', {

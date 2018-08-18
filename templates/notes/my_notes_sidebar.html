@@ -62,8 +62,8 @@
 
                             <div class="d-flex w-100 justify-content-between">
                                 <h4 class="mb-1"><i class="far fa-sticky-note"></i>
-                                    {{ note.title }}</h4>
-
+                                    {{ note.title|truncate(10, True) }}</h4>
+                                <p class="list-group-item-text">Content:  {{ note.content|truncate(24, True) }}</p>
                                 <p class="list-group-item-text">Created date <strong>{{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</strong></p>
 
                             </div>
