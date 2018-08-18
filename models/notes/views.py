@@ -14,6 +14,7 @@ from models.error_logs.error_log import Error_
 import traceback
 from config import ELASTIC_PORT as port
 from werkzeug.utils import secure_filename
+from hurry.filesize import size, alternative, verbose
 
 note_blueprint = Blueprint('notes', __name__)
 
@@ -187,6 +188,15 @@ def create_note(box_id):
             try:
                 # getting files
                 files = request.files.getlist('file')
+
+                # checking file size
+                file_size = 0
+                for file in files:
+                    file_size += file.seek(0, os.SEEK_END).tell()
+
+                if file_size > 5e+8:
+                    flash('{ "message":"Too much files!", "type":"error" , "captaion":"File Overload Error", "icon_id": "fas fa-exclamation-triangle"}')
+
 
                 # file length checker
                 if len(files) > 5:
