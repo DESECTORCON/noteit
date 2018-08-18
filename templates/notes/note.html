@@ -16,28 +16,28 @@
 
 <hr class="my-4">
 
-<script>
+<!--<script>-->
 
-    var canvas = document.createElement('canvas'),
-    video = document.createElement('video'),
-    ctx = canvas.getContext('2d');
+    <!--var canvas = document.createElement('canvas'),-->
+    <!--video = document.createElement('video'),-->
+    <!--ctx = canvas.getContext('2d');-->
 
-video.preload = 'auto';
-video.addEventListener('canplay', start, false);
+<!--video.preload = 'auto';-->
+<!--video.addEventListener('canplay', start, false);-->
 
-if (video.canPlayType('video/mp4')) {
-    video.src = 'videoUrl.mp4';
+<!--if (video.canPlayType('video/mp4')) {-->
+    <!--video.src = 'videoUrl.mp4';-->
 
-}
-  $('#video_id').on('loadstart', function (event) {
-    $(this).addClass('loading');
-  });
-  $('#video_id').on('canplay', function (event) {
-    $(this).removeClass('loading');
-    $(this).attr('poster', '');
-  });
+<!--}-->
+  <!--$('#video_id').on('loadstart', function (event) {-->
+    <!--$(this).addClass('loading');-->
+  <!--});-->
+  <!--$('#video_id').on('canplay', function (event) {-->
+    <!--$(this).removeClass('loading');-->
+    <!--$(this).attr('poster', '');-->
+  <!--});-->
 
-</script>
+<!--</script>-->
 <script type="text/javascript">
 
     function myFunction() {
@@ -52,6 +52,7 @@ if (video.canPlayType('video/mp4')) {
 $(document).ready(function() {
    $('#myDIV').hide();
 });
+videojs('my-player');
 </script>
 
 
@@ -68,7 +69,7 @@ $(document).ready(function() {
         <!--</div>-->
     <!--</div>-->
     <div class="container" id="loader">
-        <p class="text-center font-weight-bold"><bold>{{ note.content }}</bold></p>
+        <p class="text-center font-weight-bold"><strong>{{ note.content }}</strong></p>
     </div>
 
     <br>
@@ -80,10 +81,11 @@ $(document).ready(function() {
     <h5>Media files: </h5>
     {% for url_ in url %}
     {% if url_['is_video'] %}
-    <video width="1050" style="width:100%;height: 50%;" controls>
+    <video width="100%" id="my-player" style="width:100%;height: 50%;" class="video-js vjs-default-skin" preload="auto" data-setup='{}' controls>
         <source src="{{ url_['url'] }}" type="video/mp4">
         <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
         Your browser does not support the video tag. Please use Chrome or Firefox
+        <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
     </video>
     <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
         <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
@@ -91,7 +93,7 @@ $(document).ready(function() {
     <hr class="my-4">
 
     {% elif url_['is_pic'] %}
-    <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="600" width="900">
+    <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="100%" width="100%">
     <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
         <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
     </div>
