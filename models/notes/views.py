@@ -189,13 +189,13 @@ def create_note(box_id):
                 # getting files
                 files = request.files.getlist('file')
 
-                # checking file size
-                file_size = 0
-                for file in files:
-                    file_size += file.seek(0, os.SEEK_END).tell()
-
-                if file_size > 5e+8:
-                    flash('{ "message":"Too much files!", "type":"error" , "captaion":"File Overload Error", "icon_id": "fas fa-exclamation-triangle"}')
+                # # checking file size
+                # file_size = 0
+                # for file in files:
+                #     file_size += file.seek(0, os.SEEK_END).tell()
+                #
+                # if file_size > 5e+8:
+                #     flash('{ "message":"Too much files!", "type":"error" , "captaion":"File Overload Error", "icon_id": "fas fa-exclamation-triangle"}')
 
 
                 # file length checker
