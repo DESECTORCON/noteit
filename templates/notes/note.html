@@ -26,29 +26,6 @@
 }
 
 </style>
-<!--<script>-->
-
-<!--var canvas = document.createElement('canvas'),-->
-<!--video = document.createElement('video'),-->
-<!--ctx = canvas.getContext('2d');-->
-
-<!--video.preload = 'auto';-->
-<!--video.addEventListener('canplay', start, false);-->
-
-<!--if (video.canPlayType('video/mp4')) {-->
-<!--video.src = 'videoUrl.mp4';-->
-
-<!--}-->
-<!--$('#video_id').on('loadstart', function (event) {-->
-<!--$(this).addClass('loading');-->
-<!--});-->
-<!--$('#video_id').on('canplay', function (event) {-->
-<!--$(this).removeClass('loading');-->
-<!--$(this).attr('poster', '');-->
-<!--});-->
-
-<!--</script>-->
-
 <div class="jumbotron" id="main">
     <!--<div class="container" id="myDIV">-->
     <!--<div class="row">-->
@@ -126,7 +103,7 @@
         <a href="{{ url_for('message.send_note_radio', note_id=note._id) }}" class="btn btn-outline-info" role="button">Send Note</a>
 
         <a href="{{ url_for('.edit_note', note_id=note._id) }}" class="btn btn-outline-info" role="button">Edit</a>
-        <a href="" android:layout_width="wrap_content" android:layout_height="wrap_content" class="btn btn-outline-info"><i class="fas fa-download"></i>  Download</a>
+        <a href="" android:layout_width="wrap_content" android:layout_height="wrap_content" class="btn btn-outline-info"  data-toggle="modal" data-target="#downloadmodel"><i class="fas fa-download"></i>  Download</a>
 
         {% endif %}
 
@@ -134,7 +111,41 @@
 
 
 
+    <div class="modal fade" id="downloadmodel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel2"><i class="fas fa-download"></i>  Download</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><i class="far fa-file-alt"></i> Files</p>
 
+                    <ul class="list-group">
+                        {% for url_ in url %}
+                        {% if url['is_video'] %}
+                        <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}"><li class="list-group-item"><i class="far fa-file-video"></i> {{ url_['filename'] }}</li></a>
+
+                        {% elif url['is_pic'] %}
+                        <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}"><li class="list-group-item"><i class="far fa-file-image"></i> {{ url_['filename'] }}</li></a>
+
+                        {% else %}
+                        <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}"><li class="list-group-item"><i class="far fa-file-video"></i> {{ url_['filename'] }}</li></a>
+
+                        {% endif %}
+                        {% endfor %}
+                    </ul>
+                    <div class="modal-footer">
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 
     <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -223,12 +234,4 @@ $(document).ready(function() {
 
 
 </script>
-
-<!--<script type="text/javascript">-->
-<!--urls = '{{ url }}';-->
-<!--for (url in urls) {-->
-<!--videojs('my-player', options, function onPlayerReady() {-->
-<!--videojs.log('Your player is ready!');})-->
-<!--}-->
-<!--</script>-->
 {% endblock %}
