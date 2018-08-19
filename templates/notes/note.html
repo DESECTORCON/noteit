@@ -15,7 +15,17 @@
 </div>
 
 <hr class="my-4">
+<style>
+    .video-js .vjs-menu-button-inline.vjs-slider-active,.video-js .vjs-menu-button-inline:focus,.video-js .vjs-menu-button-inline:hover,.video-js.vjs-no-flex .vjs-menu-button-inline {
+    width: 10em;
+    height: 10em;
+}
 
+.video-js .vjs-controls-disabled .vjs-big-play-button {
+    display: none!important
+}
+
+</style>
 <!--<script>-->
 
     <!--var canvas = document.createElement('canvas'),-->
@@ -64,7 +74,7 @@
     <h5>Media files: </h5>
     {% for url_ in url %}
     {% if url_['is_video'] %}
-    <video width="100%" id="url_" style="width:100%;height: 50%;" class="video-js vjs-default-skin" preload="auto" data-setup='{ "aspectRatio":"640:267", "playbackRates": [1, 1.5, 2] }' controls>
+    <video width="100%" id="{{ url_['url'] }}" style="width:100%;height: 100%;" class="video-js vjs-default-skin" preload="auto" data-setup='{}' controls>
         <source src="{{ url_['url'] }}" type="video/mp4">
         <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
         Your browser does not support the video tag. Please use Chrome or Firefox
