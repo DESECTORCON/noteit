@@ -60,22 +60,23 @@
             <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
         </video>
     </div>
-
-    <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
+    <br>
+    <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
         <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
     </div>
     <hr class="my-4">
 
     {% elif url_['is_pic'] %}
     <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="100%" width="100%">
-    <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
+    <br>
+    <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
         <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
     </div>
     <hr class="my-4">
 
     {% else %}
-
-    <div style="font-size:3em; color:Tomato" class="rounded mx-auto d-block">
+    <br>
+    <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
         <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
     </div>
     <hr class="my-4">
@@ -123,16 +124,16 @@
                 <div class="modal-body">
                     <p><i class="far fa-file-alt"></i> Files</p>
 
-                    <ul class="list-group">
+                    <ul class="list-group" style="font-size: 1.2em;">
                         {% for url_ in url %}
-                        {% if url['is_video'] %}
+                        {% if url_['is_video'] %}
                         <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}"><li class="list-group-item"><i class="far fa-file-video"></i> {{ url_['filename'] }}</li></a>
 
-                        {% elif url['is_pic'] %}
+                        {% elif url_['is_pic'] %}
                         <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}"><li class="list-group-item"><i class="far fa-file-image"></i> {{ url_['filename'] }}</li></a>
 
                         {% else %}
-                        <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}"><li class="list-group-item"><i class="far fa-file-video"></i> {{ url_['filename'] }}</li></a>
+                        <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}"><li class="list-group-item"><i class="far fa-file"></i> {{ url_['filename'] }}</></a>
 
                         {% endif %}
                         {% endfor %}
