@@ -62,10 +62,10 @@
     </div>
     <br>
     <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
-        <a href="{{ url_['url'] }}" onclick="return slide();" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
-        <a href="{{ url_['url'] }}" title="">{{ url_['filename'] }}</a>
+        <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
+        <a href="" title="" onclick="{{ url_['filename_only'] }}();">{{ url_['filename'] }}</a>
         <script>
-    {{ url_[''] }} = window.open(
+    {{ url_['filename_only'] }} = window.open(
     '{{ url_['url'] }}',
     '{{ url_['filename'] }}',
     "resizable,scrollbars,status"
@@ -80,6 +80,15 @@
     <br>
     <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
         <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
+        <a href="" title="" onclick="{{ url_['filename_only'] }}();">{{ url_['filename'] }}</a>
+        <script>
+    {{ url_['filename_only'] }}() { window.open(
+    '{{ url_['url'] }}',
+    '{{ url_['filename'] }}',
+    "resizable,scrollbars,status"
+  );}
+
+        </script>
     </div>
     <hr class="my-4">
 
