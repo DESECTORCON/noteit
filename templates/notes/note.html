@@ -24,7 +24,16 @@
 .video-js .vjs-controls-disabled .vjs-big-play-button {
     display: none!important
 }
-
+.button_ {
+     background:none!important;
+     color:inherit;
+     border:none;
+     padding:0!important;
+     font: inherit;
+     /*border is optional*/
+     border-bottom:1px solid #444;
+     cursor: alias;
+}
 </style>
 <div class="jumbotron" id="main">
     <!--<div class="container" id="myDIV">-->
@@ -63,13 +72,13 @@
     <br>
     <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
         <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
-        <a href="" title="" onclick="{{ url_['filename_only'] }}();">{{ url_['filename'] }}</a>
+        <button class="button_" onclick="{{ url_['filename_only'] }}();">{{ url_['filename'] }}</button>
         <script>
     function {{ url_['filename_only'] }}() { window.open(
     '{{ url_['url'] }}',
     '{{ url_['filename'] }}',
-    "resizable,scrollbars,status"
-  );}
+    "menubar=1,resizable=1,width=1000,height=1000,resizeable"
+  );return false;  }
 
         </script>
     <hr class="my-4">
@@ -79,13 +88,13 @@
     <br>
     <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
         <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
-        <a href="" title="" onclick="{{ url_['filename_only'] }}();">{{ url_['filename'] }}</a>
+        <button class="button_" title="" onclick="{{ url_['filename_only'] }}();">{{ url_['filename'] }}</button>
         <script>
     function {{ url_['filename_only'] }}() { window.open(
     '{{ url_['url'] }}',
     '{{ url_['filename'] }}',
-    "resizable,scrollbars=no,status"
-  );}
+    "menubar=1,resizable=1,width=1000,height=1000,resizeable"
+  );return false;  }
 
         </script>
     </div>
