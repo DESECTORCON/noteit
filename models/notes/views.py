@@ -106,6 +106,7 @@ def note(note_id):
             try:
                 for filename in filenames:
                     file_extenstion = filename.split('.')[1]
+                    filename_only = filename.split('.')[0]
                     if file_extenstion in ['mp4', 'ogg', 'mov', 'wmv']:
                         is_video = True
                     else:
@@ -118,9 +119,10 @@ def note(note_id):
 
                     urls.append({'url': url_for('static', filename=filename),
                                  'is_video': is_video, 'filename': filename, 'is_pic': is_pic,
-                                 'extenstion': file_extenstion})
+                                 'extenstion': file_extenstion ,"filename_only": filename_only})
             except:
                 file_extenstion = filenames.split('.')[1]
+                filename_only = filename.split('.')[0]
                 if file_extenstion in ['mp4', 'ogg', 'mov', 'wmv']:
                     is_video = True
                 else:
@@ -133,7 +135,7 @@ def note(note_id):
 
                 urls.append({'url': url_for('static', filename=filenames),
                              'is_video': is_video, 'filename': filenames, 'is_pic': is_pic,
-                             'extenstion': file_extenstion})
+                             'extenstion': file_extenstion,"filename_only": filename_only})
 
         try:
             if note.author_email == session['email']:
