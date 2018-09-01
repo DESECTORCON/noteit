@@ -551,7 +551,7 @@ def add_to_group():
     user = User.find_by_id(session['_id'])
     # getting user group notes
     group_notes = Group.find_by_id(user.group_id).get_user_shared_notes(session['email'])
-
+    not_added_notes = list(set(user.get_notes() + group_notes))
 
     if request.method == 'POST':
         if user.group_id is None:
@@ -576,4 +576,4 @@ def add_to_group():
 
         return redirect(url_for('groups.group', group_id=group_._id))
 
-    return render_template('notes/add_to_group.html', notes=group_notes)
+    return render_template('notes/add_to_group.html', notes=not_added_notes)

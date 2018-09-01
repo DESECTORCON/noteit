@@ -64,7 +64,7 @@ class Group(object):
         """
         user_notes = []
         for note in self.shared_notes:
-            note_object = Note.find_by_id(note)
+            note_object = Note.find_by_id(note['note_id'])
             if note_object is not None:
                 if note_object.author_email == user_email:
                     user_notes.append(note_object)
