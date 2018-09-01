@@ -554,7 +554,8 @@ def add_to_group():
     # getting user group notes
     group_notes = Group.find_by_id(user.group_id).get_user_shared_notes(session['email'])
     # not_added_notes = list(OrderedDict.fromkeys(user.get_notes() + group_notes))
-    not_added_notes = list(set(user.get_notes() + group_notes))
+    not_added_notes = list(set(user.get_notes()) - set(group_notes))
+    # not_added_notes = list(dict.fromkeys(user.get_notes() + group_notes))
 
     if request.method == 'POST':
         if user.group_id is None:
