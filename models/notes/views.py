@@ -1,5 +1,7 @@
 import os
 import uuid
+from collections import OrderedDict
+
 import shortid
 import werkzeug
 from elasticsearch import Elasticsearch
@@ -551,6 +553,7 @@ def add_to_group():
     user = User.find_by_id(session['_id'])
     # getting user group notes
     group_notes = Group.find_by_id(user.group_id).get_user_shared_notes(session['email'])
+    # not_added_notes = list(OrderedDict.fromkeys(user.get_notes() + group_notes))
     not_added_notes = list(set(user.get_notes() + group_notes))
 
     if request.method == 'POST':
