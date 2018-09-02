@@ -1,7 +1,7 @@
 {% extends "base_htmls/base.html" %}
 {% block title %}
 <title>Note-it™ | Public Notes</title>
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -20,9 +20,9 @@
     <form class="form-row my-2 my-lg-0" method="POST">
         <div class="col">
             {% if form %}
-            <input class="form-control mr-sm-2" type="search" placeholder="Search Author name, title and content!" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search Author name, title and content!" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}" v-model="query">
             {% else %}
-            <input class="form-control mr-sm-2" type="search" placeholder="Search Author name, title and content!" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search Author name, title and content!" aria-label="Search" id="Search_note" name="Search_note" value="{{ form }}" v-model="query">
             {% endif %}
 
         </div>
@@ -57,26 +57,74 @@
     {% endfor %}
 
 </div>
+<div class="row">
+        <div class="col-md-3" v-for="result in results">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                <!-- display the city name and country  -->
+                    {% raw %}{{ result._source.name }}, {{ result._source.country }}
+                </div>
+                <div class="panel-body">
+                <!-- display the latitude and longitude of the city  -->
+                    <p>lat:{{ result._source.lat }}, long: {{ result._source.lng }}.</p>
+                    {% endraw %}
+                </div>
+            </div>
+        </div>
+    </div>
 
 <script>
-//data.js
-//require the Elasticsearch librray
-const elasticsearch = require(['elasticsearch']);
-// instantiate an Elasticsearch client
-const client = new elasticsearch.Client({
-   hosts: [ 'http://localhost:9200']
+//template2.html
+// instantiate a new Elasticsearch client like you did on the client
+var client = new elasticsearch.Client({
+    hosts: ['http://127.0.0.1:9200']
 });
-// ping the client to be sure Elasticsearch is up
-client.ping({
-     requestTimeout: 30000,
- }, function(error) {
- // at this point, eastic search is down, please check your Elasticsearch service
-     if (error) {
-         console.error('Elasticsearch cluster is down!');
-     } else {
-         console.log('Everything is ok');
-     }
- });
+// create a new Vue instance
+var app = new Vue({
+    el: '#app',
+    // declare the data for the component (An array that houses the results and a query that holds the current search string)
+    data: {
+        results: [],
+        query: ''
+    },
+    // declare methods in this Vue component. here only one method which performs the search is defined
+    methods: {
+        // function that calls the elastic search. here the query object is set just as that of the server.
+        //Here the query string is passed directly from Vue
+        search: function() {
+            var body = {
+                    size: 200,
+                    from: 0,
+                    query: {
+                        match: {
+                            name: this.query
+                        }
+                    }
+                }
+                // search the Elasticsearch passing in the index, query object and type
+            client.search({ index: 'scotch.io-tutorial', body: body, type: 'cities_list' })
+                .then(results => {
+                    console.log(`found ${results.hits.total} items in ${results.took}ms`);
+                    // set the results to the result array we have
+                    this.results = results.hits.hits;
+                })
+                .catch(err => {
+                    console.log(err)
+
+                });
+
+
+        }
+    },
+    // declare Vue watchers
+    watch: {
+        // watch for change in the query string and recall the search method
+        query: function() {
+            this.search();
+        }
+    }
+
+})
 </script>
 
 
