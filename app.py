@@ -8,6 +8,7 @@ from models.messages.message import *
 import config as config
 from models.users.user import User
 
+
 try:
     os.chdir('static')
 except FileNotFoundError:

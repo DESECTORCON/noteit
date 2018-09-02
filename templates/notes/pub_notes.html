@@ -76,15 +76,15 @@
 <script>
 //template2.html
 // instantiate a new Elasticsearch client like you did on the client
-const client = new elasticsearch.Client({
-   hosts: [ 'http://localhost:9200']
+var client = new elasticsearch.Client({
+    hosts: ['http://127.0.0.1:9200']
 });
 //require Express
 const express = require(['express']);
 // instanciate an instance of express and hold the value in a constant called app
 const app     = express();
 //require the body-parser library. will be used for parsing body requests
-const bodyParser = require(['body-parser'])
+const bodyParser = require(['body-parser']);
 //require the path library
 const path    = require( ['path'] );
 
@@ -150,8 +150,10 @@ app.get('/search', function (req, res){
 app .listen( app.get( 'port' ), function(){
   console.log( 'Express server listening on port ' + app.get( 'port' ));
 } );
+
+
 // create a new Vue instance
-var app1 = new Vue({
+var app2 = new Vue({
     el: '#app',
     // declare the data for the component (An array that houses the results and a query that holds the current search string)
     data: {
@@ -173,11 +175,7 @@ var app1 = new Vue({
                     }
                 }
                 // search the Elasticsearch passing in the index, query object and type
-            client.search({
-                    index: 'scotch.io-tutorial',
-                    body: body,
-                    type: 'cities_list'
-                })
+            client.search({ index: 'scotch.io-tutorial', body: body, type: 'cities_list' })
                 .then(results => {
                     console.log(`found ${results.hits.total} items in ${results.took}ms`);
                     // set the results to the result array we have
@@ -199,13 +197,7 @@ var app1 = new Vue({
         }
     }
 
-})
-app.$get('/v2', function(req, res){
-  res.sendFile('template2.html', {
-     root: path.join( __dirname, 'views' )
-   });
-})
-</script>
+})</script>
 
 
 {% endblock %}
