@@ -58,9 +58,9 @@
 </div>
 
 <script>
-    //data.js
+//data.js
 //require the Elasticsearch librray
-const elasticsearch = require('elasticsearch');
+const elasticsearch = require(['elasticsearch']);
 // instantiate an Elasticsearch client
 const client = new elasticsearch.Client({
    hosts: [ 'http://localhost:9200']
