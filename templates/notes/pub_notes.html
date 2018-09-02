@@ -75,56 +75,61 @@
 
 <script>
 //template2.html
+var elasticsearch = require(['elasticsearch']);
 // instantiate a new Elasticsearch client like you did on the client
 var client = new elasticsearch.Client({
-    hosts: ['http://127.0.0.1:9200']
-});
-// create a new Vue instance
-var app = new Vue({
-    el: '#app',
-    // declare the data for the component (An array that houses the results and a query that holds the current search string)
-    data: {
-        results: [],
-        query: ''
-    },
-    // declare methods in this Vue component. here only one method which performs the search is defined
-    methods: {
-        // function that calls the elastic search. here the query object is set just as that of the server.
-        //Here the query string is passed directly from Vue
-        search: function() {
-            var body = {
-                    size: 200,
-                    from: 0,
-                    query: {
-                        match: {
-                            name: this.query
+        hosts: ['http://127.0.0.1:9200']
+    });
+    // create a new Vue instance
+    var app = new Vue({
+        el: '#app',
+        // declare the data for the component (An array that houses the results and a query that holds the current search string)
+        data: {
+            results: [],
+            query: ''
+        },
+        // declare methods in this Vue component. here only one method which performs the search is defined
+        methods: {
+            // function that calls the elastic search. here the query object is set just as that of the server.
+            //Here the query string is passed directly from Vue
+            search: function() {
+                var body = {
+                        size: 200,
+                        from: 0,
+                        query: {
+                            match: {
+                                name: this.query
+                            }
                         }
                     }
-                }
-                // search the Elasticsearch passing in the index, query object and type
-            client.search({ index: 'scotch.io-tutorial', body: body, type: 'cities_list' })
-                .then(results => {
-                    console.log(`found ${results.hits.total} items in ${results.took}ms`);
-                    // set the results to the result array we have
-                    this.results = results.hits.hits;
-                })
-                .catch(err => {
-                    console.log(err)
+                    // search the Elasticsearch passing in the index, query object and type
+                client.search({
+                        index: 'scotch.io-tutorial',
+                        body: body,
+                        type: 'cities_list'
+                    })
+                    .then(results => {
+                        console.log(`found ${results.hits.total} items in ${results.took}ms`);
+                        // set the results to the result array we have
+                        this.results = results.hits.hits;
+                    })
+                    .catch(err => {
+                        console.log(err)
 
-                });
+                    });
 
 
+            }
+        },
+        // declare Vue watchers
+        watch: {
+            // watch for change in the query string and recall the search method
+            query: function() {
+                this.search();
+            }
         }
-    },
-    // declare Vue watchers
-    watch: {
-        // watch for change in the query string and recall the search method
-        query: function() {
-            this.search();
-        }
-    }
 
-})
+    })
 </script>
 
 
