@@ -75,6 +75,8 @@ app_.get('/search', function (req, res){
 app_ .listen( app_.get( 'port' ), function(){
   console.log( 'Express server listening on port ' + app_.get( 'port' ));
 } );
+//var Vue = require('vuex').default;
+
 
 //template.html
 // create a new Vue instance
