@@ -57,21 +57,7 @@
     {% endfor %}
 
 </div>
-<div class="row">
-        <div class="col-md-3" v-for="result in results">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                <!-- display the city name and country  -->
-                    {% raw %}{{ result._source.name }}, {{ result._source.country }}
-                </div>
-                <div class="panel-body">
-                <!-- display the latitude and longitude of the city  -->
-                    <p>lat:{{ result._source.lat }}, long: {{ result._source.lng }}.</p>
-                    {% endraw %}
-                </div>
-            </div>
-        </div>
-    </div>
+
 
 
 {% endblock %}
