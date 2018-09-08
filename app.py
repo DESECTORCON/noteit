@@ -7,6 +7,7 @@ from models.notes.note import Note
 from models.messages.message import *
 import config as config
 from models.users.user import User
+import psutil
 
 
 try:
@@ -133,7 +134,7 @@ def http_error_404(e):
 
 @app.route('/ping', methods=['GET'])
 def ping_pong():
-    return jsonify('pong!')
+    return jsonify(str(psutil.cpu_percent()))
 
 
 from models.users.views import user_blueprint
