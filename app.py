@@ -1,6 +1,6 @@
 import os
 from datetime import timedelta
-from flask import Flask, render_template, session, url_for, flash
+from flask import Flask, render_template, session, url_for, flash, jsonify
 import random
 from werkzeug.utils import redirect
 from models.notes.note import Note
@@ -129,6 +129,11 @@ def loading():
 @app.errorhandler(404)
 def http_error_404(e):
     return render_template('base_htmls/error.html'), 404
+
+
+@app.route('/ping', methods=['GET'])
+def ping_pong():
+    return jsonify('pong!')
 
 
 from models.users.views import user_blueprint

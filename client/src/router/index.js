@@ -8,7 +8,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'ping',
+      name: 'Ping',
       component: Ping,
     },
   ],
