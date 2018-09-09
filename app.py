@@ -137,7 +137,7 @@ def ping_pong():
     return jsonify(str(psutil.cpu_percent()))
 
 
-@app.route('/sys/info/get/to__/esa_key_/20fefskdnfWwefwejfjwoif34h0t34g34G#$G#$G#G34jgi3g34yg34g4g#$G#$G#$G$G#$G#$UFopwerˆ¨¨¥ª¥•ªtpfwf/key2/@#R@#RCR@#Y*CRR@*#URC#YURC)@#URCR#@U(R@#UCR@U)(@#U(CR@U#(RC)@#URUCU@', methods=['GET'])
+@app.route('/sys/info/get/to__/esa_key_/20fefskdnfWwefwejfjwo¥', methods=['GET'])
 def getstatus():
     send_data = {'cpu': psutil.cpu_percent(), 'cpu_count': psutil.cpu_count()
         , 'ram': psutil.virtual_memory().available, 'disk_usage': psutil.disk_usage('/').percent}
