@@ -34,6 +34,40 @@
      border-bottom:1px solid #444;
      cursor: alias;
 }
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+/* Create four equal columns that sits next to each other */
+.column {
+  flex: 25%;
+  max-width: 25%;
+  padding: 0 4px;
+}
+
+.column img {
+  margin-top: 8px;
+  vertical-align: middle;
+}
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 800px) {
+  .column {
+    flex: 50%;
+    max-width: 50%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
+    flex: 100%;
+    max-width: 100%;
+  }
+}
 </style>
 <div class="jumbotron" id="main">
     <!--<div class="container" id="myDIV">-->
@@ -62,8 +96,8 @@
     <div class="row">
         {% for url_ in url %}
         {% if url_['is_video'] %}
-        <div class="container col">
-            <video width="100%" height="100%" class="video-js vjs-default-skin" preload="auto" data-setup='{"fluid": true}' controls>
+        <div class="column">
+            <video class="video-js vjs-default-skin" preload="auto" data-setup='{"fluid": true}' controls>
                 <source src="{{ url_['url'] }}" type="video/mp4">
                 <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
                 Your browser does not support the video tag. Please use Chrome or Firefox
@@ -73,54 +107,41 @@
                 <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
                 <button class="button_" onclick="{{ url_['filename_only'] }}();">{{ url_['filename'] }}</button>
                 <script>
-    function {{ url_['filename_only'] }}() { window.open(
-    '{{ url_['url'] }}',
-    '{{ url_['filename'] }}',
-    "menubar=1,resizable=1,width=1000,height=1000,resizeable"
-  );return false;  }
+                    function {{ url_['filename_only'] }}() { window.open(
+                    '{{ url_['url'] }}',
+                    '{{ url_['filename'] }}',
+                    "menubar=1,resizable=1,width=1000,height=1000,resizeable"
+                  );return false;  }
 
-        </script>
+            </script>
             </div>
         </div>
 
         {% elif url_['is_pic'] %}
-        <div class="col">
+        <div class="column">
             <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="100%" width="100%">
             <br>
             <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
                 <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
                 <button class="button_" title="" onclick="{{ url_['filename_only'] }}();">{{ url_['filename'] }}</button>
                 <script>
-    function {{ url_['filename_only'] }}() { window.open(
-    '{{ url_['url'] }}',
-    '{{ url_['filename'] }}',
-    "menubar=1,resizable=1,width=1000,height=1000,resizeable"
-  );return false;  }
-            
-        </script>
-                {% else %}
-                <br>
-                <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
-                    <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
-                </div>
-                <hr class="my-4">
-
-                {% endif %}
+                    function {{ url_['filename_only'] }}() { window.open(
+                    '{{ url_['url'] }}',
+                    '{{ url_['filename'] }}',
+                    "menubar=1,resizable=1,width=1000,height=1000,resizeable"
+                  );return false;  }
+                </script>
             </div>
         </div>
+        {% else %}
+        <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block column">
+            <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
+        </div>
 
+        {% endif %}
+        {% endfor %}
     </div>
-
-    <!--<hr class="my-4">-->
-
-
-    <!--<hr class="my-4">-->
-
-    {% endfor %}
-
     {% endif %}
-
-</div>
 
 <div class="card">
 
@@ -265,5 +286,46 @@ $(document).ready(function() {
 });
 
 
+// Get the elements with class="column"
+var elements = document.getElementsByClassName("column");
+
+// Declare a loop variable
+var i;
+
+// Full-width images
+function one() {
+    for (i = 0; i < elements.length; i++) {
+        elements[i].style.msFlex = "100%";  // IE10
+        elements[i].style.flex = "100%";
+    }
+}
+
+// Two images side by side
+function two() {
+    for (i = 0; i < elements.length; i++) {
+        elements[i].style.msFlex = "50%";  // IE10
+        elements[i].style.flex = "50%";
+    }
+}
+
+// Four images side by side
+function four() {
+    for (i = 0; i < elements.length; i++) {
+        elements[i].style.msFlex = "25%";  // IE10
+        elements[i].style.flex = "25%";
+    }
+}
+
+// Add active class to the current button (highlight it)
+var header = document.getElementById("myHeader");
+var btns = header.getElementsByClassName("btn");
+for (var i = 0; i < btns.length; i++) {
+  btns[i].addEventListener("click", function() {
+    var current = document.getElementsByClassName("active");
+    current[0].className = current[0].className.replace(" active", "");
+    this.className += " active";
+  });
+}
 </script>
+
 {% endblock %}
