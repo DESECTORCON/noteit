@@ -1,7 +1,5 @@
 import os
 import uuid
-from collections import OrderedDict
-
 import shortid
 import werkzeug
 from elasticsearch import Elasticsearch
@@ -16,7 +14,6 @@ from models.error_logs.error_log import Error_
 import traceback
 from config import ELASTIC_PORT as port
 from werkzeug.utils import secure_filename
-from hurry.filesize import size, alternative, verbose
 
 note_blueprint = Blueprint('notes', __name__)
 
