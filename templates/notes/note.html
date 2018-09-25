@@ -97,7 +97,7 @@
         {% for url_ in url %}
         {% if url_['is_video'] %}
         <div class="column">
-            <video class="video-js vjs-default-skin" preload="auto" data-setup='{"fluid": true}' controls>
+            <video class="video-js vjs-default-skin vjs-16-9" preload="auto" data-setup='{"fluid": true}' controls height="100%" width="100%">
                 <source src="{{ url_['url'] }}" type="video/mp4">
                 <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
                 Your browser does not support the video tag. Please use Chrome or Firefox
