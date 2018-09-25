@@ -58,22 +58,21 @@
 
     {% else %}
     <h5>Media files: </h5>
-    {% for url_ in url %}
-    {% if url_['is_video'] %}
     <br>
-    <div class="container">
-        <video width="100%" height="100%" class="video-js vjs-default-skin" preload="auto" data-setup='{"fluid": true}' controls>
-            <source src="{{ url_['url'] }}" type="video/mp4">
-            <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
-            Your browser does not support the video tag. Please use Chrome or Firefox
-            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
-        </video>
-    </div>
-    <br>
-    <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
-        <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
-        <button class="button_" onclick="{{ url_['filename_only'] }}();">{{ url_['filename'] }}</button>
-        <script>
+    <div class="row">
+        {% for url_ in url %}
+        {% if url_['is_video'] %}
+        <div class="container col">
+            <video width="100%" height="100%" class="video-js vjs-default-skin" preload="auto" data-setup='{"fluid": true}' controls>
+                <source src="{{ url_['url'] }}" type="video/mp4">
+                <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
+                Your browser does not support the video tag. Please use Chrome or Firefox
+                <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+            </video>
+            <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
+                <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
+                <button class="button_" onclick="{{ url_['filename_only'] }}();">{{ url_['filename'] }}</button>
+                <script>
     function {{ url_['filename_only'] }}() { window.open(
     '{{ url_['url'] }}',
     '{{ url_['filename'] }}',
@@ -81,33 +80,41 @@
   );return false;  }
 
         </script>
-    <hr class="my-4">
+            </div>
+        </div>
 
-    {% elif url_['is_pic'] %}
-    <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="100%" width="100%">
-    <br>
-    <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
-        <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
-        <button class="button_" title="" onclick="{{ url_['filename_only'] }}();">{{ url_['filename'] }}</button>
-        <script>
+        {% elif url_['is_pic'] %}
+        <div class="col">
+            <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="100%" width="100%">
+            <br>
+            <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
+                <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
+                <button class="button_" title="" onclick="{{ url_['filename_only'] }}();">{{ url_['filename'] }}</button>
+                <script>
     function {{ url_['filename_only'] }}() { window.open(
     '{{ url_['url'] }}',
     '{{ url_['filename'] }}',
     "menubar=1,resizable=1,width=1000,height=1000,resizeable"
   );return false;  }
-
+            
         </script>
-    </div>
-    <hr class="my-4">
+                {% else %}
+                <br>
+                <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
+                    <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
+                </div>
+                <hr class="my-4">
 
-    {% else %}
-    <br>
-    <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
-        <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
-    </div>
-    <hr class="my-4">
+                {% endif %}
+            </div>
+        </div>
 
-    {% endif %}
+    </div>
+
+    <!--<hr class="my-4">-->
+
+
+    <!--<hr class="my-4">-->
 
     {% endfor %}
 
