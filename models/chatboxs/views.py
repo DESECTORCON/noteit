@@ -38,7 +38,12 @@ def create_chatbox(default_members):
         chatbox_members.append(session['_id'])
 
         _id = uuid.uuid4().hex
-        chatbox_ = ChatBox(user_ids=chatbox_members, _id=_id, name=request.form['title'])
+        names = []
+        for i in chatbox_members:
+            names.append(User.find_by_id(chatbox_members).nick_name)
+
+        chatbox_ = ChatBox(user_ids=chatbox_members, _id=_id
+                           , name=request.form['title'] if request.form['title'] is not '' else ' and '.join(names))
         chatbox_.save_to_mongo()
         return redirect(url_for('chatboxs.chatbox', chatbox_id=_id))
 
