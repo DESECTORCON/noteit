@@ -47,7 +47,7 @@
     border: 1px solid #E1E1E1;
 }
 
-body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+
 
 .footer-size {
   margin: 0 auto;
@@ -198,6 +198,15 @@ section .section-title {
     width: 100%;
     z-index: 10000;
 }
+
+.animationload_small {
+    background-color: #fff;
+    left: 0;
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+}
+
 .osahanloading {
     animation: 1.5s linear 0s normal none infinite running osahanloading;
     background: #fed37f none repeat scroll 0 0;
@@ -627,4 +636,42 @@ styling for chatbox
 .box .row.footer {
   flex: 0 1 40px;
 }
+/*
+* {
+  font-size: 1.1vw;
 
+}
+
+nav {
+    font-size: 1vm;
+}
+
+#navbar {
+    font-size: 1vm;
+}*/
+
+body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+
+
+link {
+    cursor: pointer;
+}
+
+@media screen and (max-width:400px){
+    h1{
+        font-size: 1.5rem !important;
+    },
+    p {
+        font-size: 0.2rem;
+    },
+    h4 {
+        font-size: 0.5rem;
+    },
+    h2 {
+        font-size: 1rem;
+    }
+}
+
+button {
+
+}

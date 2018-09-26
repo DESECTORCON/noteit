@@ -1,28 +1,26 @@
-{% extends "base_htmls/base4.html" %}
+{% extends "base_htmls/base5.html" %}
 {% block title %}
 <title>Chatbox | {{ chatbox_.name }}</title>
 {% endblock %}
 {% block content %}
-<%@page pageEncoding="UTF-8"%>
 
-<div class="container-fluid" style="width: 100%;" id="row-full">
+<div class="container-fluid" style="width: 100%; height: 100%;" id="row-full">
     <div class="row">
         <div class="col-md-3 col-sm-3 col-xs-12 left-sidebar">
             <br>
             <div class="dropdown">
-                <button style="padding: 5px; color: inherit;" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fas fa-cog"></i> settings
+                <button style="padding: 5px; color: inherit; width:100%;" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-cog"></i> Menu
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="color: gray;">
-                    <form action="{{ url_for('chatboxs.secession_chatbox', secession_chatbox_id=chatbox_._id) }}">
-                        <button class="dropdown-item" type="submit">Secession</button>
-                    </form>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="color: gray; width:100%;">
+                    <button class="dropdown-item" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-sign-out-alt"></i>  Secession</button>
+                    <button class="dropdown-item" data-toggle="modal" data-target="#inviteModal"><i class="fas fa-user-plus"></i>  Invite Friend</button>
+                    <button class="dropdown-item" onclick="leave_room()"><i class="fas fa-outdent"></i>  Leave room</button>
                 </div>
             </div>
-            <a href="{{ url_for('chatboxs.chatboxs') }}" class="card-link" style="padding: 10px;"><i class="fas fa-long-arrow-alt-left"></i>  Go back</a>
             <hr>
             <div class="left-chat">
-                <ul>
+                <ul id="left_side_users">
                     {% for user in users %}
                     <li>
                         <div class="chat-left-img">
@@ -60,9 +58,18 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12 right-header-contentChat">
+                <div class="col-md-12 right-header-contentChat" id="chatcontent">
                     <ul class="chat_log" id="my_list" style="overflow: hidden">
                         {% for message in messages %}
+                        {% if message.message_bar %}
+                        <li>
+                            <div class="rightside-right-chat" style="overflow: hidden">
+                                <hr>
+                                <span class="text-right"><i class="fa fa-circle" aria-hidden="true"></i>{{ message.sender_name }}</span><br><br>
+                                <p class="text-right">{{ message.content }}</p>
+                            </div>
+                        </li>
+                        {% else %}
                         {% if message.sender_id == session['_id'] %}
                         <li>
                             <div class="rightside-right-chat" style="overflow: hidden">
@@ -78,24 +85,102 @@
                             </div>
                         </li>
                         {% endif %}
+                        {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12 right-chat-textbox">
-                    <form method="POST" autocomplete="off" accept-charset="UTF-8">
-                        <input type="text" name="content" id="content" class="content" value="">  <button type="submit" class="fa fa-arrow-right" aria-hidden="true" style="    border: none;
-    padding: 14px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;border-radius: 50%;"></button>
+                    <form method="POST" autocomplete="off" accept-charset="UTF-8" id="form_">
+                        <style>
+
+                        #button_se {
+                                border: none;
+                                padding: 14px;
+                                text-align: center;
+                                text-decoration: none;
+                                display: inline-block;
+                                font-size: 16px;
+                                margin: 4px 2px;border-radius: 50%;
+                            }
+                        </style>
+                        <input type="text" name="content" id="content" class="content" placeholder="Type your message here" value="">  <button type="submit" class="fa fa-arrow-right" aria-hidden="true" id="button_se"></button> <button id="button_se" onclick="go_down()"><i class="fas fa-chevron-down"></i></button>
                     </form>
 
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-sign-out-alt"></i>  Secession</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i>
+                    Do you really want to Secession this chatbox?
+                    <p>If you secession this chatbox, you can't go back in until someone invites you!</p>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                <form id="secessionform">
+                    <button class="btn btn-outline-danger" onclick="secession()"><i class="fas fa-sign-out-alt"></i>  Secession</button>
+                </form>
+<!--href="{{ url_for('chatboxs.secession_chatbox', secession_chatbox_id=chatbox_._id) }}"-->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="inviteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="inviteModalLabel"><i class="fas fa-user-plus"></i> Invite friend</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form method="POST" id="addfriendpost" name="addfriendpost">
+                    {% if user_friends == [] %}
+                    <div class="oaerror info">
+                        <p class=""><strong><i class="fas fa-user-slash"></i> Umm...</strong> - No friends. if you want to add friends, click
+                            <a href="{{ url_for('users.add_friend') }}"><strong>here.</strong></a></p>
+                    </div>
+                    {% else %}
+                    <label for="friend" class="">Friends <small class="text-muted">select</small></label>
+                    <div class="list-group" id="friend">
+                        {% for user in user_friends %}
+
+                        <label class="list-group-item list-group-item-action flex-column align-items-start">
+                            <div class="d-flex w-100 justify-content-between">
+                                <input type="checkbox" value="{{ user._id }}" name="user" id="user" />
+                                <h5 class="mb-1">{{ user.nick_name }}</h5>
+                                <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                            </div>
+                        </label>
+
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-outline-success"><i class="far fa-plus-square"></i>  Invite</button>
+                    </div>
+                </form>
+            </div>
+
         </div>
     </div>
 </div>
@@ -108,7 +193,13 @@
 </script>
 <script>
 var session = "{{ session['_id'] }}";
+var room_id = "{{ chatbox_._id }}";
+var user_email = "{{ session['email'] }}";
 var socket = io.connect('http://' + document.domain + ':' + location.port);
+socket.emit('join', {
+        room: room_id,
+        user_email: user_email
+    })
 socket.on('connect', function() {
     socket.emit('send', {
         data: 'User Connected'
@@ -118,53 +209,115 @@ socket.on('connect', function() {
         let content = $('input.content').val();
         socket.emit('submit', {
             content: content,
+            room: room_id
         });
-        $("#message_length").empty();
-        $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
     })
 })
+
+socket.on('connect', function() {
+    socket.emit('send', {
+        data: 'User Connected'
+    });
+    var form = $('#addfriendpost').on('submit', function(e) {
+        e.preventDefault();
+
+        socket.emit('addfriend', {
+    data_: $.each($('#user').serializeArray(), function(i, field) {
+        var values = [];
+        values[field.name] = field.value;
+    }),
+    room: room_id
+});
+    })
+})
+
+socket.on('connect', function() {
+    socket.emit('send', {
+        data: 'User Connected'
+    });
+    var form = $('secessionform').on('submit', function(e) {
+                socket.emit('secession', {
+                    room: room_id
+                });
+    })
+})
+
+function secession() {
+    var room_id = "{{ chatbox_._id }}";
+    socket.emit('secession', {
+    room_id: room_id
+   });
+}
+
+
+socket.on('secession_response', function(msg) {
+  $.notify('<i class="fas fa-info"></i> User ' + msg.user_email + ' has secessioned this room', 'info')
+  if (msg.user_id === '{{ session['_id'] }}') {
+    window.location.replace("{{ url_for('chatboxs.chatboxs') }}");
+
+  }
+})
+
+socket.on('addfriend response', function(msg) {
+    for (var i in msg.user_objs) {
+        $("#left_side_users").append('<li><div class="chat-left-img"><img src=' + msg.user_objs[i].user_photo_path + '></div><div class="chat-left-detail"><a href="' + msg.user_objs[i].user_url + '" style=""><p>' + msg.user_objs[i].user_name + '</p></a><small class="text-muted">' + msg.user_objs[i].user_email + '</small></div></li>')
+        $.notify('<i class="fas fa-info"></i> User ' + msg.user_objs[i].user_email + ' has joined this room', 'info')
+    };
+});
+
 socket.on('chat response', function(msg) {
-            if (session === msg['sender_id']) {
-                $('ul.chat_log').append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-right">' + msg.content + '</p></div> </li>');
-                console.log(msg);
-                document.getElementById("content").value = "";
-                $('#my_list').last().addClass('active-li').focus();
-                $('#my_list').animate({scrollTop: $('#mylist').prop("scrollHeight")}, 500);
-            } else {
-                $('ul.chat_log').append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-left">' + msg.content + '</p></div> </li>');
-                console.log(msg);
-                document.getElementById("content").value = "";
-                $('#my_list').last().addClass('active-li').focus();
-            }
-        });
+    if (session === msg['sender_id']) {
+        $('ul.chat_log').append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-right">' + msg.content + '</p></div> </li>');
+        console.log(msg);
+        document.getElementById("content").value = "";
+    } else {
+        $('ul.chat_log').append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p class="text-left">' + msg.content + '</p></div> </li>');
+        console.log(msg);
+        document.getElementById("content").value = "";
 
-socket.on( 'response', function( data ) {
-
-  if (data['data'].sender_name === $('ul li')) {
-    if ( session === data['data'].sender_id ) {
-      $( 'ul.chat_log' ).append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
-        console.log( msg );document.getElementById("content").value = "";
-      $("#message_length").empty()
-      $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
-    }else{
-      $( 'ul.chat_log' ).append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  '+ msg.sender_name +'<small>  '+ msg.created_date +'</small> </span><br><br><p>'+ msg.content +'</p></div> </li>');
-        console.log( msg );document.getElementById("content").value = "";
-        $("#message_length").empty()
-        $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
     }
-     $('#my_list').last().addClass('active-li').focus();
+    var objDiv = document.getElementById("chatcontent");
+    objDiv.scrollTop = objDiv.scrollHeight;
+});
 
-   }
+
+
+socket.on('response', function(data) {
+
+    if (data['data'].sender_name === $('ul li')) {
+        if (session === data['data'].sender_id) {
+            $('ul.chat_log').append('<li><div class="rightside-left-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p>' + msg.content + '</p></div> </li>');
+            console.log(msg);
+            document.getElementById("content").value = "";
+            $("#message_length").empty()
+            $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
+        } else {
+            $('ul.chat_log').append('<li><div class="rightside-right-chat"><span><i class="fa fa-circle" aria-hidden="true"></i>  ' + msg.sender_name + '<small>  ' + msg.created_date + '</small> </span><br><br><p>' + msg.content + '</p></div> </li>');
+            console.log(msg);
+            document.getElementById("content").value = "";
+            $("#message_length").empty()
+            $("#message_length").append(document.getElementById("my_list").getElementsByTagName("li").length + ' messages');
+        }
+        var objDiv = document.getElementById("chatcontent");
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
 })
 
 function leave_room() {
-                socket.emit('left', {}, function() {
-                    socket.disconnect();
-                    // go back to the login page
-                    window.location.href = "{{ url_for('chatboxs.chatboxs') }}";
-                });
-            }
+    socket.emit('left', {
+        room_id: room_id,
+        user_email: user_email
+    }, function() {
+        socket.disconnect();
+        // go back to the login page
+        window.location.href = "{{ url_for('chatboxs.chatboxs') }}";
+    });
+}
 
+function go_down() {
+    var objDiv = document.getElementById("chatcontent");
+    objDiv.scrollTop = objDiv.scrollHeight;
+}
 </script>
 <script>
 function goBack() {

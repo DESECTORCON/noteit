@@ -9,7 +9,7 @@ from config import ELASTIC_PORT as port
 class Message(object):
 
     def __init__(self, title, content, reciver_id, sender_id, sender_name, sended_date=None, readed_date=None ,
-                 _id=None, readed_by_reciver=False, is_a_noteOBJ=False, is_invtation=False):
+                 _id=None, readed_by_reciver=False, is_a_noteOBJ=False, is_invtation=False, is_marker=False, is_chat_message=False):
         self._id = uuid.uuid4().hex if _id is None else _id
         self.title = title
         self.content = content
@@ -21,6 +21,8 @@ class Message(object):
         self.is_a_noteOBJ = is_a_noteOBJ
         self.is_invtation = is_invtation
         self.sender_name = sender_name
+        self.is_marker = is_marker
+        self.is_chat_message = is_chat_message
 
     def __repr__(self):
         return "<Message title:{} with sender {} and reciver {}>".format(self.title, self.sender_id, self.reciver_id)
@@ -37,7 +39,9 @@ class Message(object):
             "is_a_noteOBJ": self.is_a_noteOBJ,
             "_id": self._id,
             "is_invtation": self.is_invtation,
-            "sender_name": self.sender_name
+            "sender_name": self.sender_name,
+            "is_marker": self.is_marker,
+            "is_chat_message": self.is_chat_message
         }
 
     def save_to_db(self):
@@ -48,22 +52,31 @@ class Message(object):
 
     @classmethod
     def find_by_sender_id(cls, sender_id):
-        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {'sender_id': sender_id})]
+        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {'sender_id': sender_id
+                                                                                    , "is_chat_message":False})]
 
     @classmethod
     def find_by_reciver_id(cls, reciver_id):
-        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {'reciver_id': reciver_id})]
+        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {'reciver_id': reciver_id
+                                                                                    , "is_chat_message":False})]
 
     @classmethod
     def find_by_id(cls, message_id):
         try:
-            return cls(**Database.find_one(MessageConstants.COLLECTION, {"_id": message_id}))
+            return cls(**Database.find_one(MessageConstants.COLLECTION, {"_id": message_id, "is_chat_message":False}))
+        except TypeError:
+            return None
+
+    @classmethod
+    def find_by_id_chat(cls, message_id):
+        try:
+            return cls(**Database.find_one(MessageConstants.COLLECTION, {"_id": message_id, "is_chat_message": True}))
         except TypeError:
             return None
 
     @classmethod
     def find_all(cls):
-        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {})]
+        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {"is_chat_message":False})]
 
     def delete(self):
         Database.remove(MessageConstants.COLLECTION, {"_id": self._id})
@@ -76,11 +89,12 @@ class Message(object):
     @classmethod
     def find_by_recivers_not_readed(cls, reciver_id):
         return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION,
-                                                      {'reciver_id': reciver_id, "readed_by_reciver":False})]
+                                                      {'reciver_id': reciver_id, "readed_by_reciver":False,
+                                                       "is_chat_message": False})]
 
     @classmethod
     def find_by_viewers_id(cls, viewer_id):
-        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {"reciver_id": [viewer_id]})]
+        return [cls(**elem) for elem in Database.find(MessageConstants.COLLECTION, {"reciver_id": [viewer_id], "is_chat_message":False})]
 
     def save_to_elastic(self):
         el = Elasticsearch(port=port)
@@ -92,7 +106,8 @@ class Message(object):
             "sended_date": self.sended_date.strftime('%Y-%m-%d'),
             "readed_by_reciver": self.readed_by_reciver,
             "is_a_noteOBJ": self.is_a_noteOBJ,
-            "message_id": self._id
+            "message_id": self._id,
+            "is_chat_message": self.is_chat_message
         }
         el.index(index="messages", doc_type='message', body=doc)
         del el
@@ -115,7 +130,8 @@ class Message(object):
             "sended_date": self.sended_date.strftime('%Y-%m-%d'),
             "readed_by_reciver": self.readed_by_reciver,
             "is_a_noteOBJ": self.is_a_noteOBJ,
-            "message_id": self._id
+            "message_id": self._id,
+            "is_chat_message": self.is_chat_message
         }
 
         el.delete_by_query(index="messages", doc_type='message', body=doc1)
@@ -155,7 +171,7 @@ class Message(object):
                         ],
                         "filter": [
                             {
-                                "match": {"reciver_id": user_id}
+                                "match": {"reciver_id": user_id},
                             }
                         ]
                     }

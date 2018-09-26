@@ -1,12 +1,14 @@
 import os
 from datetime import timedelta
-from flask import Flask, render_template, session, url_for, flash
+from flask import Flask, render_template, session, url_for, flash, jsonify
 import random
 from werkzeug.utils import redirect
 from models.notes.note import Note
 from models.messages.message import *
 import config as config
 from models.users.user import User
+import psutil
+
 
 try:
     os.chdir('static')
@@ -14,7 +16,8 @@ except FileNotFoundError:
     pass
 app = Flask(__name__)
 app.config.from_object('config')
-app.secret_key = ''
+app.secret_key = '23ncr92yr932c9y20c23jy9803yn489xrr4#$VT@%YBU%UI^IUVYTt2t¥¨¨¨¨˚¶§•˜˜§¢˙£™£¢®∂¢™£©ç∞˙74'
+wsgi_app = app.wsgi_app
 
 random_int = []
 for i in range(100):
@@ -63,7 +66,7 @@ def init():
     Database.initialize()
     session['_id'] = None
     session['email'] = None
-    flash('Do not like the new Note-it™? Time travel back to the old Note-it™! 49.236.135.247:5000')
+    flash('Heads up! service user finding and service Message Centre has been closed.')
 
 
 def get_read_messages(session_id):
@@ -127,6 +130,18 @@ def loading():
 @app.errorhandler(404)
 def http_error_404(e):
     return render_template('base_htmls/error.html'), 404
+
+
+@app.route('/ping', methods=['GET'])
+def ping_pong():
+    return jsonify(str(psutil.cpu_percent()))
+
+
+@app.route('/sys/info/get/to__/esa_key_/20fefskdnfWwefwejfjwo¥', methods=['GET'])
+def getstatus():
+    send_data = {'cpu': psutil.cpu_percent(), 'cpu_count': psutil.cpu_count()
+        , 'ram': psutil.virtual_memory().available, 'disk_usage': psutil.disk_usage('/').percent}
+    return jsonify(send_data)
 
 
 from models.users.views import user_blueprint

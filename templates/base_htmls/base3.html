@@ -20,7 +20,34 @@
 
     {% include 'base_htmls/html_dependencies.html' %}
 </head>
-<body>
+<body id="BODY_BASE">
+<div class="container" id="myDIV">
+        <div class="row">
+            <div class="">
+                <h1><i class="fas fa-spinner fa-pulse"></i> Processing...</h1>
+                <p>Please wait. This will take a few minutes</p>
+            </div>
+            <div class="animationload">
+                <div class="osahanloading"></div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+
+    function myFunction() {
+        $('#BODY_BASE').hide();
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+    }
+}
+$(document).ready(function() {
+   $('#myDIV').hide();
+});
+</script>
+
 <br><br><br>
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
 
@@ -42,11 +69,12 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active"><a href="{{ url_for('groups.groups') }}" class="nav-link"><i class="far fa-object-group"></i> Groups</a></li>
                 <li class="nav-item active"><a href="{{ url_for('groups.my_group') }}" class="nav-link"><i class="far fa-id-badge"></i> My group</a></li>
-                <li class="nav-item active"><a href="{{ url_for('home') }}" class="nav-link"><i class="fas fa-home"></i> Go to home</a></li>
+
                 {% block navbar__ %}
                 {% endblock %}
             </ul>
             <ul class="nav navbar-nav navbar-right justify-content-end ">
+                <li class="nav-item active"><a href="{{ url_for('home') }}" class="nav-link"><i class="fas fa-home"></i></a></li>
                 <li class="nav-item active"><a href="{{ url_for('users.logout_user') }}" class="nav-link"><i class="fas fa-sign-out-alt"></i>    Log out</a></li>
             </ul>
 
@@ -81,14 +109,16 @@
 
 <div class="content container">
     {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close" id="close" name="close">&times;</a>
-        <i class="fas fa-info-circle"></i>  {{ message }}
-    </div>
-    {% endfor %}
-    {% endif %}
+    <script>
+        var messages = {{ messages|tojson }};
+        if (messages != []) {
+          //for (var message in messages) {
+          messages.forEach(function (message) {
+          message = JSON.parse(message);
+           $.notify('<i class="'+ message.icon_id +'"></i> '+ message.captaion +' <hr> '+message.message, { allow_dismiss: true, type: message.type, showProgressbar: false });
+          });
+        }
+    </script>
     {% endwith %}
 
     {% block content %}

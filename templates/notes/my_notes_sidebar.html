@@ -12,8 +12,9 @@
 
 <div class="container-fluid container">
     <div class="row">
-        <aside class="col-2 px-0 col-xs-12" id="left">
-            <h1><i class="fas fa-box"></i> Box <small class="text-muted">{{ box_name }}</small></h1>
+        <aside class="col-3 px-1 col-xs-10" id="left">
+            <br><br>
+            <h1 class=""><i class="fas fa-box"></i> Box <small class="text-muted">{{ box_name }}</small></h1>
             <div class="list-group w-100">
                 {% for box in boxs %}
 
@@ -52,7 +53,7 @@
                             {% else %}
                             <input class="form-control mr-sm-2" type="search" placeholder="Search Notes" aria-label="Search" id="form" name="form" value="{{ form }}">
                             {% endif %}
-                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                            <button class="btn btn-outline-success my-2 my-sm-0" id="search__" type="submit" onmouseover="animationHover('search__', 'jello')">Search</button>
                         </form>
 
                         <br>
@@ -62,8 +63,8 @@
 
                             <div class="d-flex w-100 justify-content-between">
                                 <h4 class="mb-1"><i class="far fa-sticky-note"></i>
-                                    {{ note.title }}</h4>
-
+                                    {{ note.title|truncate(10, True) }}</h4>
+                                <p class="list-group-item-text">Content:  {{ note.content|truncate(24, True) }}</p>
                                 <p class="list-group-item-text">Created date <strong>{{ note.created_date.strftime("%Y-%m-%d at %H:%M") }}</strong></p>
 
                             </div>
@@ -81,7 +82,7 @@
                     <a href="{{ url_for('notes.add_to_group') }}" class="btn btn-outline-info" role="button">Add notes to group</a>
 
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
+                        <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-trash-alt"></i>  Create note</h5>
@@ -131,6 +132,7 @@
 
                                     function myFunction() {
                                         $('#MAINDIV').hide();
+                                        $.notify('<i class="far fa-save"></i>  Saving<hr> Saving your note. Please wait...', { showProgressbar: true, delay: 100000, arrowShow: true })
                                         var x = document.getElementById("#myDIV");
                                         if (x.style.display === "none") {
                                             x.style.display = "block";
@@ -227,7 +229,7 @@
                             </div>
                             <!--add note to group-->
                         </div>
-                        <div class="modal fade" id="addnotestogroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade bd-example-modal-lg" id="addnotestogroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -264,23 +266,20 @@
 
 
                                         <script type="text/javascript">
-
-                                    function myFunction() {
-                                        $('#MAINDIV').hide();
-                                        var x = document.getElementById("myDIV");
-                                        if (x.style.display === "none") {
-                                            x.style.display = "block";
-                                        } else {
-                                            x.style.display = "none";
-                                    }
-                                }
-                                    $(document).ready(function() {
-                                       $('#myDIV').hide();
-                                    });
+                                                $('#MAINDIV1').hide();
+    var x = document.getElementById("myDIV");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+    $(document).ready(function() {
+       $('#myDIV').hide();
+    });
                                     </script>
 
-                                        <div class="form-size jumbotron" id="MAINDIV">
-                                            <form method="POST" enctype=multipart/form-data action="{{ url_for('notes.create_note', box_id=box_id) }}">
+                                        <div class="form-size jumbotron" id="MAINDIV1">
+                                            <form method="POST" enctype=multipart/form-data action="{{ url_for('notes.create_note', box_id=box_id) }}" id="notesumnit">
 
 
                                                 <div class="form-group">
@@ -371,6 +370,22 @@
         </main>
     </div>
 </div>
+<script>
+    function animationHover(element, animation){
+    element = $(element);
+    element.hover(
+        function() {
+            element.addClass('animated ' + animation);
+        },
+        function(){
+            //wait for animation to finish before removing classes
+            window.setTimeout( function(){
+                element.removeClass('animated ' + animation);
+            }, 2000);
+        });
+}
+animationHover('#search__', 'jello')
+</script>
 
 
 

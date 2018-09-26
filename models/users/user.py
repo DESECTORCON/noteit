@@ -182,7 +182,9 @@ class User(object):
     def get_friends(self):
         return_data = []
         for friend in self.friends:
-            return_data.append(User.find_by_id(friend))
+            firend_obj = self.find_by_id(friend)
+            if firend_obj is not None:
+                return_data.append(firend_obj)
 
         return return_data
 

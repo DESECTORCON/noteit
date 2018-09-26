@@ -15,10 +15,13 @@ message_blueprint = Blueprint('message', __name__)
 def label_maker(messages, user_id):
     labels = []
     for message in messages:
-        if message.sender_id == user_id:
-            labels.append({"message_id": message._id, "label": "sended"})
-        elif user_id in message.reciver_id:
-            labels.append({"message_id": message._id, "label": "recived"})
+        try:
+            if message.sender_id == user_id:
+                labels.append({"message_id": message._id, "label": "sended"})
+            elif user_id in message.reciver_id:
+                labels.append({"message_id": message._id, "label": "recived"})
+        except:
+            pass
         # else:
         #     raise Exception(message.sender_id + ' ' + user_id + ' ' + str(message.reciver_id))
 
@@ -49,6 +52,9 @@ def all_messages(user_id):
                                    messages=messages, user_nickname=user_nickname, form=form_, labels=labels)
         messages = Message.search_find_all('', user_id)
         labels = label_maker(messages, user_id)
+        if messages is None or None in messages:
+            messages = []
+            labels = []
 
         return render_template('messages/messages.html',
                                messages=messages, user_nickname=user_nickname, labels=labels)
@@ -137,7 +143,8 @@ def send_message(user_to_send=None):
             sender_id = sender._id
 
             message = Message(title=title, content=content,
-                              reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False, sender_name=sender_name)
+                              reciver_id=recivers, sender_id=sender_id, is_a_noteOBJ=False, sender_name=sender_name,
+                              is_chat_message=False)
             message.save_to_mongo()
             message.save_to_elastic()
 
@@ -212,7 +219,8 @@ def delete_message(message_id):
         message.delete_on_elastic()
         message.delete()
 
-        flash('Your message has successfully deleted.')
+        # flash('Your message has successfully deleted.')
+        flash('{ "message":"Your message has successfully deleted.", "type":"success" , "captaion":"Delete Success", "icon_id": "far fa-check-circle"}')
 
         return redirect(url_for('.my_recived_messages', user_id=session['_id']))
 
@@ -264,7 +272,8 @@ def send_note():
             message.save_to_mongo()
             message.save_to_elastic()
 
-            flash('Your message has been successfully sended.')
+            # flash('Your message has been successfully sended.')
+            flash('{ "message":"Your message has been successfully sended.", "type":"success" , "captaion":"Send Success", "icon_id": "far fa-check-circle"}')
 
             return redirect(url_for('.my_sended_messages', user_id=sender_id))
 
@@ -318,7 +327,8 @@ def send_note_radio(note_id):
             message.save_to_mongo()
             message.save_to_elastic()
 
-            flash('Your message has been successfully sended.')
+            # flash('Your message has been successfully sended.')
+            flash('{ "message":"Your message has been successfully sended.", "type":"success" , "captaion":"Send Success", "icon_id": "far fa-check-circle"}')
 
             return redirect(url_for('.my_sended_messages', user_id=sender_id))
 

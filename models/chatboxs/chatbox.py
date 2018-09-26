@@ -16,7 +16,7 @@ class ChatBox(object):
         self.created_date = created_date
         self.last_logined = last_logined
         id_gen_sid = shortid.ShortId()
-        self.name = id_gen_sid.generate() if name is None else name
+        self.name = id_gen_sid.generate() if name is '' else name
 
     def json(self):
         return {
@@ -42,9 +42,18 @@ class ChatBox(object):
         try:
             messages = []
 
-            for message in self.messages:
-                messages.append(Message.find_by_id(message))
-            return messages
+            if len(self.messages) < 20:
+                for message in self.messages:
+                    message_obj = Message.find_by_id_chat(message)
+                    if message_obj is not None:
+                        messages.append(message_obj)
+                return messages
+            else:
+                for message in self.messages[20:]:
+                    message_obj = Message.find_by_id_chat(message)
+                    if message_obj is not None:
+                        messages.append(message_obj)
+                return messages
 
         except TypeError:
             return None

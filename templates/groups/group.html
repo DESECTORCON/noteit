@@ -6,364 +6,269 @@
 {% else %}
 <title>Groups.io | Error</title>
 {% endif %}
+<link href="{{ url_for('static', filename='css/group.css') }}" rel="stylesheet">
 {% endblock %}
-<style>
-.dropdown-item.dropdown-notification:active, .dropdown-item.dropdown-notification.active {
-  color: #1d1e1f;
-  text-decoration: none;
-  background-color: #f7f7f9;
-}
-
-.dropdown-notification:hover .notification-read {
-  color: #34495E;
-}
-
-.dropdown-notification-all {
-  text-align: center;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  font-style: oblique;
-  background-color: #34495E;
-  color: white;
-}
-
-.dropdown-notification-all:hover {
-  background-color: #34495E;
-  color: white;
-}
-
-.notifications-container {
-  max-height: 300px;
-  overflow: auto;
-}
-
-.notification-dropdown-menu {
-  padding-bottom: 0;
-  min-width: 528px;
-}
-
-.notification-img {
-  width: 48px;
-  display: inline-block;
-  vertical-align: top;
-}
-
-.notifications-body {
-  display: inline-block;
-}
-
-.notification-texte {
-  text-align: left;
-  margin: 0;
-}
-
-.notification-read {
-  margin: 0;
-  height: 48px;
-  vertical-align: top;
-  line-height: 48px;
-  padding-left: 15px;
-  color: white;
-  float: right;
-}
-
-.notification-date {
-  text-align: left;
-  color: #2980b9;
-  margin: 0;
-}
-
-.notification-solo {
-  margin-top: 1rem;
-}
-
-.notification-unread {
-  text-decoration: none;
-  background-color: #f7f7f9;
-}
-
-      html{
-  }
-  body{
-      margin: 0;
-      padding: 0;
-      background: #e7ecf0;
-      font-family: Arial, Helvetica, sans-serif;
-  }
-  *{
-      margin: 0;
-      padding: 0;
-  }
-  p{
-      font-size: 12px;
-      color: #373737;
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 18px;
-  }
-  p a{
-      color: #218bdc;
-      font-size: 12px;
-      text-decoration: none;
-  }
-  a{
-      outline: none;
-  }
-  .f-left{
-      float:left;
-  }
-  .f-right{
-      float:right;
-  }
-  .clear{
-      clear: both;
-      overflow: hidden;
-  }
-  #block_error{
-      width: 845px;
-      height: 384px;
-      border: 1px solid #cccccc;
-      margin: 72px auto 0;
-      -moz-border-radius: 4px;
-      -webkit-border-radius: 4px;
-      border-radius: 4px;
-      background: #fff url(http://www.ebpaidrev.com/systemerror/block.gif) no-repeat 0 51px;
-  }
-  #block_error {
-      padding: 100px 40px 0 186px;
-  }
-  #block_error h2{
-      color: #218bdc;
-      font-size: 24px;
-      display: block;
-      padding: 0 0 14px 0;
-      border-bottom: 1px solid #cccccc;
-      margin-bottom: 12px;
-      font-weight: normal;
-  }
-</style>
 {% block content %}
+<div id="MAINDIV">
 
-<div class="container-fluid">
+        <!-- Page Content  -->
+        <div id="content">
+            <div class="container-fluid header">
 
-    {% if error_msg %}
-    <div id="block_error">
-        <div>
-            <h2>Error 404. &nbspOops you've have encountered an error</h2>
-            <p>
-                It apperrs that Either something went wrong or the page doesn't exist anymore..<br />
-                This website is temporarily unable to service your request as it has exceeded it’s resource limit. Please check back shortly.
-            </p>
-        </div>
-    </div>
-    {% else %}
+                {% if error_msg %}
+                <div id="block_error">
+                    <div>
+                        <h2>Error 404. &nbspOops you've have encountered an error</h2>
+                        <p>
+                            It apperrs that Either something went wrong or the page doesn't exist anymore..<br />
+                            This website is temporarily unable to service your request as it has exceeded it’s resource limit. Please check back shortly.
+                        </p>
+                    </div>
+                </div>
+                {% else %}
+                {% if group.group_img_name == None %}
+                <div class="page-header ">
+                    <h1><i class="fas fa-users"></i> Group <small class="">{{ group.name }}</small></h1>
+                </div>
+                {% else %}
+                <div class="page-header ">
+                    <h1><img class="hoverdiv" src="{{ url_for('static', filename=group.group_img_name) }}" style="    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 150px; img:hover {
+    box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+}"> Group <small class="">{{ group.name }}</small></h1>
+                </div>
+                {% endif %}
 
-    <div class="page-header">
-        <h1><i class="far fa-object-group"></i> Group <small class="">{{ group.name }}</small></h1>
-    </div>
+                <hr>
+                {% if session['_id'] in group.members %}
+                {% if group_alerts %}
 
-    <hr>
-    {% if session['_id'] in group.members %}
-    {% if group_alerts %}
+                <div class="are">
 
-    <div class="are">
+                    <!-- ICON -->
+                    <div class="dropdown notifications-button hidden-sm-down">
 
-        <!-- ICON -->
-        <div class="dropdown notifications-button hidden-sm-down">
+                        <a class="btn btn-secondary dropdown-toggle" href="" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-bell"></i>
+                            <span id="notificationsBadge" class="badge badge-danger">{{ group_alerts|length }}</span>
+                        </a>
+                        <button type="button" id="sidebarCollapse" class="btn btn-info">
+                            <i class="fas fa-align-left"></i>
+                            <span>Toggle Sidebar</span>
+                        </button>
 
-            <a class="btn btn-secondary dropdown-toggle" href="" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-bell"></i>
-                <span id="notificationsBadge" class="badge badge-danger">{{ group_alerts|length }}</span>
-            </a>
+                        <!-- NOTIFICATIONS -->
+                        <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown" id="">
+                            <h6 class="dropdown-header">Notifications</h6>
+                            <div class="notifications-container" id="notificationsContainer">
+                                {% for alert in group_alerts %}
+                                <a class="dropdown-item dropdown-notification" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}">
+                                    <div class="notification-read">
+                                        <i class="fa fa-times"></i>
+                                    </div>
+                                    <i class="far fa-bell"></i>
+                                    <div class="notifications-body">
+                                        <p class="notification-texte">{{ alert.title }}</p>
+                                        <p class="notification-date text-muted">
+                                            {{ alert.content }}
+                                            <i class="far fa-clock" aria-hidden="true"></i> {{ alert.created_date }}
+                                        </p>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
 
-            <!-- NOTIFICATIONS -->
-            <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown" id="">
-                <h6 class="dropdown-header">Notifications</h6>
-                <div class="notifications-container" id="notificationsContainer">
-                    {% for alert in group_alerts %}
-                    <a class="dropdown-item dropdown-notification" href="{{ url_for('notification.dismis_notifi', notification_id=alert._id) }}">
-                        <div class="notification-read">
-                            <i class="fa fa-times"></i>
+                            <!-- TOUTES -->
+                            <div class="dropdown-item dropdown-notification-all" href="#">
+                                SE.inc
+                            </div>
                         </div>
-                        <i class="far fa-bell"></i>
-                        <div class="notifications-body">
-                            <p class="notification-texte">{{ alert.title }}</p>
-                            <p class="notification-date text-muted">
-                                {{ alert.content }}
-                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ alert.created_date }}
-                            </p>
-                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% else %}
+
+
+            <div class="are">
+
+                <!-- ICON -->
+                <div class="dropdown notifications-button hidden-sm-down">
+
+                    <a class="btn btn-secondary dropdown-toggle" href="#" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-bell"></i>
+                        <span id="notificationsBadge" class="badge badge-danger"></span>
                     </a>
-                    {% endfor %}
-                </div>
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Toggle Sidebar</span>
+                    </button>
 
-                <!-- TOUTES -->
-                <div class="dropdown-item dropdown-notification-all" href="#">
-                    SE.inc
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                    <!-- NOTIFICATIONS -->
+                    <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown">
+                        <h6 class="dropdown-header">Notifications</h6>
+                        <div class="notifications-container" id="notificationsContainer">
 
-{% else %}
+                            <div class="dropdown-item dropdown-notification-all">
+                                No new notifications!
+                            </div>
 
-
-<div class="are">
-
-    <!-- ICON -->
-    <div class="dropdown notifications-button hidden-sm-down">
-
-        <a class="btn btn-secondary dropdown-toggle" href="#" id="notifications-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fas fa-bell"></i>
-            <span id="notificationsBadge" class="badge badge-danger"></span>
-        </a>
-
-        <!-- NOTIFICATIONS -->
-        <div class="dropdown-menu notification-dropdown-menu" aria-labelledby="notifications-dropdown">
-            <h6 class="dropdown-header">Notifications</h6>
-            <div class="notifications-container" id="notificationsContainer">
-
-                <div class="dropdown-item dropdown-notification-all">
-                    No new notifications!
-                </div>
-
-                <!-- TOUTES -->
-                <div class="dropdown-item dropdown-notification-all">
-                    SE.inc
-                </div>
-            </div>
-        </div>
-    </div>
-    </ul>
-
-
-    {% endif %}
-    {% endif %}
-    <hr>
-
-    <div class="container">
-        <h3 class="text-monospace"><i class="fas fa-users"></i> Members <small>total: {{ group.members|length }}</small></h3>
-    </div>
-
-    <br>
-
-    <div class="container">
-        <div class="list-group">
-
-            {% if members != [] %}
-            {% for user in members %}
-
-            <div class="hoverdiv">
-                <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start hover_">
-                    <div class="d-flex w-100 justify-content-between">
-                        {% if session_id == user._id %}
-                        {% if user.picture == None %}
-                        <h5 class="mb-1"><img src="{{ url_for('static', filename='img/index.png' , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
-                        {% else %}
-                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
-                        {% endif %}
-                        {% else %}
-                        {% if user.picture == None %}
-                        <h5 class="mb-1"><img src="{{ url_for('static', filename='img/index.png' , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }}</h5>
-                        {% else %}
-                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }}</h5>
-                        {% endif %}
-                        {% endif %}
-
+                            <!-- TOUTES -->
+                            <div class="dropdown-item dropdown-notification-all">
+                                SE.inc
+                            </div>
+                        </div>
                     </div>
-                    <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
-                </a>
-            </div>
+                </div>
+                </ul>
 
-            {% endfor %}
-            {% else %}
-            <h4 class="text-muted"><i class="fas fa-question"></i> There are no members!</h4>
-            {% endif %}
 
-        </div>
-    </div>
+                {% endif %}
+                {% endif %}
+                <hr>
+                <div class="row">
 
-    <br>
+                    <div class="column">
+                        <div class="s">
+                            <h3 class="text-monospace"><i class="fas fa-users"></i> Members <small>total: {{ group.members|length }}</small></h3>
+                        </div>
 
-    <div class="container">
-        <h3 class="text-monospace"><i class="fas fa-sticky-note"></i> Notes <small>total: {{ shared_notes|length }}</small></h3>
-    </div>
+                        <br>
 
-    <br>
+                        <div class="container">
+                            <div class="list-group">
 
-    <div class="container">
+                                {% if members != [] %}
+                                {% for user in members %}
 
-        <div class="list-group">
-            {% if shared_notes != [] %}
-            {% for note in shared_notes %}
-            {% if note['error_note'] %}
-            <div class="group hoverdiv">
-                <a href="" class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1" style="color:red;"><i class="fas fa-exclamation-triangle"></i>  this note has been deleted.</h5>
+                                <div class="hoverdiv">
+                                    <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start hover_">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            {% if session_id == user._id %}
+                                            {% if user.picture == None %}
+                                            <h5 class="mb-1"><img src="{{ url_for('static', filename='img/index.png' , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
+                                            {% else %}
+                                            <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
+                                            {% endif %}
+                                            {% else %}
+                                            {% if user.picture == None %}
+                                            <h5 class="mb-1"><img src="{{ url_for('static', filename='img/index.png' , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }}</h5>
+                                            {% else %}
+                                            <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }}</h5>
+                                            {% endif %}
+                                            {% endif %}
+
+                                        </div>
+                                        <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
+                                    </a>
+                                </div>
+
+                                {% endfor %}
+                                {% else %}
+                                <h4 class="text-muted"><i class="fas fa-question"></i> There are no members!</h4>
+                                {% endif %}
+
+                            </div>
+                        </div>
                     </div>
-                </a>
-            </div>
-            {% else %}
-            <div class="group hoverdiv">
-                <a href="{{ url_for('notes.note', note_id=note['data']._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1"><i class="fas fa-sticky-note"></i> {{ note['data'].title }}</h5>
-                        <small class="text-muted">Made by: {{ note['data'].author_nickname }}</small>
-                        <small class="text-muted">Created at {{ note['data'].created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+
+
+                    <br>
+                    <div class="column">
+                        <div class="container">
+                            <h3 class="text-monospace"><i class="fas fa-sticky-note"></i> Notes <small>total: {{ shared_notes|length }}</small></h3>
+                        </div>
+
+                        <br>
+
+                        <div class="list-group">
+                            {% if shared_notes != [] %}
+                            {% for note in shared_notes %}
+                            {% if note['error_note'] %}
+                            <div class="group hoverdiv">
+                                <a href="" class="list-group-item list-group-item-action flex-column align-items-start">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1" style="color:red;"><i class="fas fa-exclamation-triangle"></i>  this note has been deleted.</h5>
+                                    </div>
+                                </a>
+                            </div>
+                            {% else %}
+                            <div class="group hoverdiv">
+                                <a href="{{ url_for('notes.note', note_id=note['data']._id) }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h5 class="mb-1"><i class="fas fa-sticky-note"></i> {{ note['data'].title }}</h5>
+                                        <small class="text-muted">Made by: {{ note['data'].author_nickname }}</small>
+                                        <small class="text-muted">Created at {{ note['data'].created_date.strftime("%Y-%m-%d at %H:%M") }}</small>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endif %}
+
+                            {% endfor %}
+                            {% else %}
+                            <h4 class="text-muted"><i class="fas fa-question"></i> There are no shared notes!</h4>
+                            {% endif %}
+
+                        </div>
                     </div>
-                </a>
-            </div>
-            {% endif %}
+                    <hr class="my-4">
+                </div>
+                <div class="card footer">
 
-            {% endfor %}
-            {% else %}
-            <h4 class="text-muted"><i class="fas fa-question"></i> There are no shared notes!</h4>
-            {% endif %}
-
-        </div>
-    </div>
-    <hr class="my-4">
-
-    <div class="card">
-
-        <div class="card-body">
-            {% if is_in_group %}
-            <a href="" class="btn btn-outline-warning" role="button" data-toggle="modal" data-target="#exampleModal">Secession</a>
-            <a href="{{ url_for('groups.invite_friend') }}" class="btn btn-outline-secondary" role="button">Invite friend</a>
-            <a href="{{ url_for('notes.add_to_group') }}" class="btn btn-outline-info" role="button">Add Notes</a>
-            <a href="{{ url_for('groups.delete_note_from_group', group_id=group._id) }}" class="btn btn-outline-warning" role="button">Delete notes</a>
-            <a href="{{ url_for('chatboxs.create_chatbox', default_members=group.members) }}" class="btn btn-outline-secondary" role="button">Start Chat <small>With group members</small></a>
-            {% else %}
-            <a href="{{ url_for('groups.join_group', group_id=group._id) }}" class="btn btn-outline-secondary" role="button">Join group</a>
-            {% endif %}
-        </div>
-    </div>
-
-</div>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-trash-alt"></i>  Secession Group: {{ group.name }}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i>
-                    Do you really want to secession?
+                    <div class="card-body">
+                        {% if is_in_group %}
+                        <a href="" class="btn btn-outline-warning" role="button" data-toggle="modal" data-target="#exampleModal">Secession</a>
+                        <a href="{{ url_for('groups.invite_friend') }}" class="btn btn-outline-secondary" role="button">Invite friend</a>
+                        <a href="{{ url_for('notes.add_to_group') }}" class="btn btn-outline-info" role="button">Add Notes</a>
+                        <a href="{{ url_for('groups.delete_note_from_group', group_id=group._id) }}" class="btn btn-outline-warning" role="button">Delete notes</a>
+                        <a href="{{ url_for('chatboxs.create_chatbox', default_members=group.members) }}" class="btn btn-outline-secondary" role="button">Start Chat <small>With group members</small></a>
+                        {% else %}
+                        <a href="{{ url_for('groups.join_group', group_id=group._id) }}" class="btn btn-outline-secondary" role="button">Join group</a>
+                        {% endif %}
+                    </div>
                 </div>
 
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
-                <a href="{{ url_for('groups.get_out_group', group_id=group._id) }}" class="btn btn-outline-warning" role="button">Secession</a>
+
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel"><i class="fas fa-trash-alt"></i>  Secession Group: {{ group.name }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i>
+                                Do you really want to secession?
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                            <a href="{{ url_for('groups.get_out_group', group_id=group._id) }}" class="btn btn-outline-warning" role="button">Secession</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <!--<div class="container" id="myDIV">-->
+    <!--<div class="row">-->
+    <!--<div class="">-->
+    <!--<h1><i class="fas fa-spinner fa-pulse"></i> Processing...</h1>-->
+    <!--<p>Please wait. This will take a few minutes</p>-->
+    <!--</div>-->
+    <!--<div class="animationload">-->
+    <!--<div class="osahanloading"></div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+
 </div>
 <script>
 $('div.are').on('click', function(event){
@@ -387,5 +292,50 @@ $('div.are').on('click', function(event){
     event.stopPropagation(); //Always stop propagation
 });
 </script>
+<script type="text/javascript">
+
+    function myFunction() {
+        $('#MAINDIV').hide();
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+    }
+}
+$(document).ready(function() {
+   $('#myDIV').hide();
+});
+
+$(document).ready(function () {
+
+    $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+    });
+
+});
+$(document).ready(function () {
+        $("#sidebar").mCustomScrollbar({
+            theme: "minimal"
+        });
+
+        $('#dismiss, .overlay').on('click', function () {
+            // hide sidebar
+            $('#sidebar').removeClass('active');
+            // hide overlay
+            $('.overlay').removeClass('active');
+        });
+
+        $('#sidebarCollapse').on('click', function () {
+            // open sidebar
+            $('#sidebar').addClass('active');
+            // fade in the overlay
+            $('.overlay').addClass('active');
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+    });
+</script>
+
 {% endif %}
 {% endblock %}

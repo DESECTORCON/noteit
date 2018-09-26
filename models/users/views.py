@@ -33,7 +33,7 @@ def login_user():
                     session['_id'] = user._id
                     user.last_logined = datetime.datetime.now()
                     user.save_to_mongo()
-                    flash('You were successfully logged in')
+                    flash('{ "message":"You were successfully logged in", "type":"success" , "captaion":"User Login", "icon_id": "fas fa-sign-in-alt"}')
                     session['group_id'] = user.group_id
                     return redirect(url_for("home"))
 
@@ -58,11 +58,15 @@ def register_user():
 
             email = request.form['email']
             if email == '':
-                flash('Please type your email')
+                # flash('Please type your email')
+                flash('{ "message":"Please type your email", "type":"error" , "captaion":"Form Not Filled", "icon_id": "fas fa-exclamation-triangle"}')
+
                 return render_template("users/register.html")
             password = request.form['password']
             if password == '':
-                flash('Please type your password')
+                # flash('Please type your password')
+                flash('{ "message":"Please type your password", "type":"error" , "captaion":"Form Not Filled", "icon_id": "fas fa-exclamation-triangle"}')
+
                 return render_template("users/register.html")
             nick_name = request.form['nickname']
             file = request.files.get('file')
@@ -80,7 +84,9 @@ def register_user():
 
             # if extenstion is not supported
             elif file is not None:
-                flash("Sorry; your file's extension is supported.")
+                # flash("Sorry; your file's extension is supported.")
+                flash('{ "message":"Sorry; your file\'s extension is supported.", "type":"error" , "captaion":File Extension Not Supported", "icon_id": "fas fa-exclamation-triangle"}')
+
                 return render_template("users/register.html")
 
             try:
@@ -172,9 +178,8 @@ def users_page():
 def user_page(user_id):
 
     try:
-        try:
-            user = User.find_by_id(user_id)
-        except:
+        user = User.find_by_id(user_id)
+        if user is None:
             user = User.find_by_email(user_id)
         user_notes = Note.find_shared_notes_by_user(user.email)
         try:

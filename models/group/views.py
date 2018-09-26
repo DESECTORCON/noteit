@@ -37,22 +37,29 @@ def join_group_(list_):
 
     group_ = Group.find_by_id(list__[1])
 
+    # checking if user can join group
     if group_ is None:
-        flash('The group you want to join does not exist!')
+        # flash('The group you want to join does not exist!')
+        flash('{ "message":"The group you want to join does not exist!", "type":"error" , "captaion":"Group Find Error", "icon_id": "fas fa-exclamation-triangle"}')
         return redirect(url_for('groups.groups'))
-
+    # checking if user had alerady joined group
     if session['_id'] in group_.members:
-        flash('You\'ve already joined this group!')
+        # flash('You\'ve already joined this group!')
+        flash('{ "message":"You\'ve already joined this group!", "type":"info" , "captaion":"Group Join", "icon_id": "fas fa-question-circle"}')
         return redirect(url_for('groups.group', group_id=group_._id))
 
-    if user_.group_id is not None or user_.group_id == '':
-        flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
+    if user_.group_id is not None:
+        # flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
+        flash('{ "message":"You\'ve already joined a group. If you want to join this group, please secession the other group.", "type":"warning" , "captaion":"Group Join Error", "icon_id": "fas fa-exclamation-triangle"}')
         return redirect(url_for('groups.group', group_id=group_._id))
 
     else:
 
-        if len(group_.members) >= 30:
-            flash('Sorry, this group\'s member amount has reached it\'s limit!')
+        if len(group_.members) >= 25:
+            # flash('Sorry, this group\'s member amount has reached it\'s limit!')
+            flash(
+                '{ "message":"Sorry, this group\'s member amount has reached it\'s limit!", "type":"info" , "captaion":"Group Join", "icon_id": "fas fa-question-circle"}')
+
             return redirect(url_for('groups.groups'))
 
         group_.members.extend([session['_id']])
@@ -62,7 +69,9 @@ def join_group_(list_):
         # saving to user database
         user_.group_id = group_._id
         user_.save_to_mongo()
-        flash('Joined group successfully')
+        # flash('Joined group successfully')
+        flash('{ "message":"Joined group successfully", "type":"success" , "captaion":"Group Join", "icon_id": "fas fa-info-circle"}')
+
 
     # if invatation, then remove the message and flash a message
     message = Message.find_by_id(list__[0])
@@ -78,7 +87,9 @@ def join_group_(list_):
     session['group_id'] = group_._id
 
     # flashing
-    flash('Your invitation has expired.')
+    # flash('Your invitation has expired.')
+    flash(
+        '{ "message":"Your invitation has expired.", "type":"info" , "captaion":"Invitation Expired", "icon_id": "fas fa-info-circle"}')
 
     # redirecting
 
@@ -92,18 +103,22 @@ def join_group(group_id):
     user_ = User.find_by_id(session['_id'])
     group_ = Group.find_by_id(group_id)
     if group_ is None:
-        flash('The group you want to join does not exist!')
+        # flash('The group you want to join does not exist!')
+        flash('{ "message":"The group you want to join does not exist!", "type":"error" , "captaion":"Group Find Error", "icon_id": "fas fa-exclamation-triangle"}')
         return redirect(url_for('groups.groups'))
 
-    if len(group_.members) >= 30:
-        flash('Sorry, this group\'s member amount has reached it\'s limit!')
+    if len(group_.members) >= 25:
+        # flash('Sorry, this group\'s member amount has reached it\'s limit!')
+        flash('{ "message":"You\'ve already joined this group!", "type":"info" , "captaion":"Group Join", "icon_id": "fas fa-question-circle"}')
         return redirect(url_for('groups.groups'))
     if session['_id'] in group_.members:
         flash('You\'ve already joined this group!')
         return redirect(url_for('groups.group', group_id=group_id))
 
-    if user_.group_id is not None or user_.group_id == '':
-        flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
+    if user_.group_id is not None:
+        # flash('You\'ve already joined a group. If you want to join this group, please secession the other group.')
+        flash('{ "message":"You\'ve already joined a group. If you want to join this group, please secession the other group.", "type":"warning" , "captaion":"Group Join Error", "icon_id": "fas fa-exclamation-triangle"}')
+
         return redirect(url_for('groups.group', group_id=group_._id))
 
     group_.members.extend([session['_id']])
@@ -124,7 +139,10 @@ def join_group(group_id):
     session['group_id'] = group_._id
 
     # redirecting
-    flash('Joined group successfully')
+    # flash('Joined group successfully')
+    flash(
+        '{ "message":"Joined group successfully", "type":"success" , "captaion":"Group Join", "icon_id": "fas fa-info-circle"}')
+
     return redirect(url_for('.group', group_id=group_id))
 
 
@@ -154,8 +172,12 @@ def group(group_id):
             is_in_group = False
 
         group_alerts = Notification.find_by_type('to_group', group_._id, session['_id'])
-        group_.save_to_elastic()
+        try:
+            group_.save_to_elastic()
+        except:
+            pass
         group_.save_to_mongo()
+
         return render_template('groups/group.html', group=group_, members=members, shared_notes=shared_notes,
                                is_in_group=is_in_group, session_id=session['_id'], group_alerts=group_alerts)
     except:
@@ -219,35 +241,38 @@ def create_group():
             name = request.form['name']
             members = request.form.getlist('members')
             members.append(user._id)
-
-            try:
-                group_img = request.form['img']
-            except:
-                group_img = None
+            group_img = request.files['file']
 
             description = request.form['description']
             share = request.form['inputGroupSelect01']
-            if group_img is not None:
-                file_name, file_extenstion = os.path.splitext(group_img)
-                if file_extenstion not in ALLOWED_GROUP_IMG_FORMATS or len(group_img) > 1:
-                    all_firends_diclist = gen_all_friends_diclist()
-                    return render_template('groups/create_group.html',
-                                           all_firends=all_firends_diclist
-                                           , error_msg='Too much images!! Please upload just one image.',
-                                           name=name, members=members, share=share, description=description)
+            try:
 
-                # saving file
-                # create name for file
-                sid = shortid.ShortId()
-                # create path for file
-                file_path, file_extenstion = os.path.splitext(group_img.filename)
-                filename = secure_filename(sid.generate()) + file_extenstion
+                if group_img is not None:
+                    file_name, file_extenstion = os.path.splitext(group_img.filename)
+                    if file_extenstion not in ALLOWED_GROUP_IMG_FORMATS:
+                        all_firends_diclist = gen_all_friends_diclist()
+                        return render_template('groups/create_group.html',
+                                               all_firends=all_firends_diclist
+                                               , error_msg='Too much images!! Please upload just one image.',
+                                               name=name, members=members, share=share, description=description)
 
-                # os.chdir("static/img/file/")
-                # save file and add file to filenames list
-                group_img.save(os.path.join(filename))
-            else:
+                    # saving file
+                    # create name for file
+                    sid = shortid.ShortId()
+                    # create path for file
+                    file_path, file_extenstion = os.path.splitext(group_img.filename)
+                    filename = secure_filename(sid.generate()) + file_extenstion
+
+                    # os.chdir("static/img/file/")
+                    # save file and add file to filenames list
+                    group_img.save(os.path.join(filename))
+                else:
+                    filename = None
+            except:
+                group_img = None
                 filename = None
+
+
 
             # saving group
             group_id = uuid.uuid4().hex
@@ -255,7 +280,10 @@ def create_group():
             group_for_save = Group(_id=group_id, name=name, members=[user._id],
                                    group_img_name=filename, shared=share, shared_notes=[], description=description)
             group_for_save.save_to_mongo()
-            group_for_save.save_to_elastic()
+            try:
+                group_for_save.save_to_elastic()
+            except:
+                pass
 
             # # saving to user
             user.group_id = group_id
@@ -267,12 +295,18 @@ def create_group():
                 message = Message(title='Do you want to join my group?', content='''
                     Join me on group {}!
                     If you want to join, please click the link below.
-                '''.format(group_for_save.name), is_invtation=group_id, reciver_id=member, sender_id=user._id)
-                message.save_to_elastic()
+                '''.format(group_for_save.name), is_invtation=group_id, reciver_id=member, sender_id=user._id, sender_name=user.nick_name)
+                try:
+                    message.save_to_elastic()
+                except:
+                    pass
                 message.save_to_mongo()
 
             # redirecting
-            flash('Successfully created group! | Sended invitations to users')
+            # flash('Successfully created group! | Sended invitations to users')
+            flash(
+                '{ "message":"Successfully created group! | Sended invitations to users", "type":"info" , "captaion":"Success", "icon_id": "fas fa-info-circle"}')
+
             return redirect(url_for('groups.groups'))
 
 
@@ -314,7 +348,10 @@ def get_out_group(group_id):
         note_ = Note.find_by_id(note['note_id'])
         note_.share_with_group = False
         note_.save_to_mongo()
-        note_.save_to_elastic()
+        try:
+            note_.save_to_elastic()
+        except:
+            pass
 
         # removing note from group
         try:
@@ -323,14 +360,24 @@ def get_out_group(group_id):
             pass
 
     if not group_.members:
-        group_.delete_on_elastic()
+        try:
+            group_.delete_on_elastic()
+        except:
+            pass
         group_.delete_img()
         group_.delete()
-        flash('The group you secessioned was deleted because it has no members.')
+        # flash('The group you secessioned was deleted because it has no members.')
+        flash('{ "message":"The group you secessioned was deleted because it has no members.", "type":"warning" , "captaion":"Group Delete", "icon_id": "fas fa-info-circle"}')
+
     else:
         group_.save_to_mongo()
-        group_.update_to_elastic()
-        flash('Secession complete')
+        try:
+            group_.update_to_elastic()
+        except:
+            pass
+        # flash('Secession complete')
+        flash('{ "message":"Secession complete", "type":"success" , "captaion":"Group Secession", "icon_id": "far fa-check-circle"}')
+
 
     return redirect(url_for('groups.groups'))
 
@@ -385,7 +432,8 @@ def invite_friend():
                 message.save_to_elastic()
                 message.save_to_mongo()
 
-            flash('Successfully sended invitations to friends!')
+            # flash('Successfully sended invitations to friends!')
+            flash('{ "message":"Successfully sended invitations to friends!", "type":"success" , "captaion":"Invitation Sended", "icon_id": "far fa-check-circle"}')
 
         return redirect(url_for('groups.group', group_id=group_._id))
 
@@ -422,7 +470,9 @@ def delete_note_from_group(group_id):
         group.save_to_elastic()
         group.save_to_mongo()
         if flash_messages is not []:
-            flash(' '.join(flash_messages)+'can\'t be deleted. Please try again')
+            # flash(' '.join(flash_messages)+'can\'t be deleted. Please try again')
+            flash('{ "message":"' '.join(flash_messages)+\'can\'t be deleted. Please try again", "type":"error" , "captaion":"Message Delete Error", "icon_id": "far fa-check-circle"}')
+
 
         return redirect(url_for('groups.group', group_id=group_id))
 
