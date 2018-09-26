@@ -92,10 +92,10 @@
     {% else %}
     <h5>Media files: </h5>
     <br>
-    <div class="row flex-container">
+    <div class="row flex-container container">
         {% for url_ in url %}
         {% if url_['is_video'] %}
-        <div class="column" style="margin: auto;">
+        <div class="column" style="">
             <video class="video-js vjs-default-skin vjs-16-9" preload="auto" data-setup='{"fluid": true}' controls height="100%" width="100%">
                 <source src="{{ url_['url'] }}" type="video/mp4">
                 <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
