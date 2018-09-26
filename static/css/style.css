@@ -656,3 +656,12 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 link {
     cursor: pointer;
 }
+
+@media screen and (max-width:400px){
+    h1{
+        font-size: 5px !important;
+    }
+    p {
+        font-size: 0.7px;
+    }
+}
