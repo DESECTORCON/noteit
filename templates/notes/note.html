@@ -68,7 +68,7 @@
   }
 }
 </style>
-<div class="jumbotron" id="main" style="padding: 30px; margin-bottom: 10px; margin-left: 0px; margin-right: 0px;">
+<div class="jumbotron container" id="main" style="padding: 30px; margin-bottom: 10px; margin-left: 0px; margin-right: 0px; padding: 50px;">
     <!--<div class="container" id="myDIV">-->
     <!--<div class="row">-->
     <!--<div class="">-->
@@ -95,7 +95,7 @@
     <div class="row flex-container">
         {% for url_ in url %}
         {% if url_['is_video'] %}
-        <div class="column" style="margin: 20px; 20px; 50px; 20px;">
+        <div class="column" style="margin: auto;">
             <video class="video-js vjs-default-skin vjs-16-9" preload="auto" data-setup='{"fluid": true}' controls height="100%" width="100%">
                 <source src="{{ url_['url'] }}" type="video/mp4">
                 <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
@@ -117,7 +117,7 @@
         </div>
 
         {% elif url_['is_pic'] %}
-        <div class="column" style="margin: 20px; 20px; 50px; 20px;">
+        <div class="column" style="margin: auto;">
             <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="100%" width="100%">
             <br>
             <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
