@@ -96,7 +96,7 @@
     <div class="row">
         {% for url_ in url %}
         {% if url_['is_video'] %}
-        <div class="column">
+        <div class="column" style="margin: 10px; 10px; 10px; 10px;">
             <video class="video-js vjs-default-skin vjs-16-9" preload="auto" data-setup='{"fluid": true}' controls height="100%" width="100%">
                 <source src="{{ url_['url'] }}" type="video/mp4">
                 <source src="{{ url_['url'] }}" type="video/{{ url_['extension'] }}">
@@ -118,7 +118,7 @@
         </div>
 
         {% elif url_['is_pic'] %}
-        <div class="column">
+        <div class="column" style="margin: 10px; 10px; 10px; 10px;">
             <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="100%" width="100%">
             <br>
             <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
@@ -134,7 +134,7 @@
             </div>
         </div>
         {% else %}
-        <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block column">
+        <div style="font-size:1.2em; color:Tomato margin: 10px; 10px; 10px; 10px;" class="rounded mx-auto d-block column" >
             <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
         </div>
 

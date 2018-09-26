@@ -104,7 +104,7 @@ def note(note_id):
         else:
             try:
                 for filename in filenames:
-                    file_extenstion = filename.split('.')[1]
+                    file_extenstion = filename.split('.')[1].lower()
                     filename_only = filename.split('.')[0]
                     if file_extenstion in ['mp4', 'ogg', 'mov', 'wmv']:
                         is_video = True
