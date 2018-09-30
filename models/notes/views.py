@@ -93,6 +93,7 @@ def user_notes(box_id=None):
 @note_blueprint.route('/note/<string:note_id>')
 def note(note_id):
     try:
+        raise   ArithmeticError
         all_boxs = Box.get_user_boxes(session['_id'])
         note = Note.find_by_id(note_id)
         user = User.find_by_email(note.author_email)
