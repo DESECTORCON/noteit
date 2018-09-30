@@ -306,24 +306,24 @@ body {
                                             {% if members != [] %}
                                             {% for user in members %}
 
-                                            <div class="hoverdiv">
+                                            <div class="hoverdiv" style="border: 2px #eaebed solid">
                                                 <a href="{{ url_for('users.user_page', user_id=user._id) }}" class="list-group-item list-group-item-action flex-column align-items-start hover_">
-                                                    <div class="d-flex w-100 justify-content-between">
+                                                    <!--<div class="d-flex w-100 justify-content-between">-->
                                                         {% if session_id == user._id %}
                                                         {% if user.picture == None %}
-                                                        <h5 class="mb-1"><img src="{{ url_for('static', filename='img/index.png' , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
+                                                        <h5 class="mb-1"><img src="{{ url_for('static', filename='img/index.png' , quality=1) }}" id="img" class="tumbnailimgSmaller"> <h5 class="mb-1"> {{ user.nick_name }} <small style="color:red">--me</small></h5> <a href="" style="border-radius: 25px; border: 2px solid #eaebed" class="btn btn-outline-warning" role="button"><i class="far fa-comment"></i></a></h5>
                                                         {% else %}
-                                                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }} <small style="color:red">--me</small></h5>
+                                                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture , quality=1) }}" id="img" class="tumbnailimgSmaller"> <h5 class="mb-1"> {{ user.nick_name }} <small style="color:red">--me</small></h5> <a href="" style="border-radius: 25px; border: 2px solid #eaebed" class="btn btn-outline-warning" role="button"><i class="far fa-comment"></i></a></h5>
                                                         {% endif %}
                                                         {% else %}
                                                         {% if user.picture == None %}
-                                                        <h5 class="mb-1"><img src="{{ url_for('static', filename='img/index.png' , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }}</h5>
+                                                        <img src="{{ url_for('static', filename='img/index.png' , quality=1) }}" id="img" class="tumbnailimgSmaller"><h5 class="mb-1"> {{ user.nick_name }} </h5> <a href="" style="border-radius: 25px; border: 2px solid #eaebed" class="btn btn-outline-warning" role="button"><i class="far fa-comment"></i></a>
                                                         {% else %}
-                                                        <h5 class="mb-1"><img src="{{ url_for('static', filename=user.picture , quality=50) }}" id="img" class="tumbnailimgSmaller"> {{ user.nick_name }}</h5>
+                                                        <img src="{{ url_for('static', filename=user.picture , quality=1) }}" id="img" class="tumbnailimgSmaller"><h5 class="mb-1"> {{ user.nick_name }}  </h5><a href="" style="border-radius: 25px; border: 2px solid #eaebed" class="btn btn-outline-warning" role="button"><i class="far fa-comment"></i></a>
                                                         {% endif %}
                                                         {% endif %}
 
-                                                    </div>
+                                                    <!--</div>-->
                                                     <small class="text-muted">Last logined at {{ user.last_logined.strftime("%Y-%m-%d at %H:%M") }}</small>
                                                 </a>
                                             </div>
@@ -435,7 +435,8 @@ body {
             </div>
         </div>
     </div>
-    <script>
+</div>
+<script>
 $('div.are').on('click', function(event){
     var events = $._data(document, 'events') || {};
     events = events.click || [];
@@ -457,7 +458,7 @@ $('div.are').on('click', function(event){
     event.stopPropagation(); //Always stop propagation
 });
 </script>
-    <script type="text/javascript">
+<script type="text/javascript">
 
     function myFunction() {
         $('#MAINDIV').hide();
@@ -477,5 +478,5 @@ $("#menu-toggle").click(function(e) {
         $("#wrapper").toggleClass("toggled");
     });
 </script>
-    {% endif %}
-    {% endblock %}
+{% endif %}
+{% endblock %}
