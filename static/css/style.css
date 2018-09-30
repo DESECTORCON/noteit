@@ -683,3 +683,31 @@ footer {
   border-top-width: 1px;
   margin-top:50px;
 }
+
+/* ADD STYLING (button) */
+.btn,.form-control,.alert,.progress,.panel,.list-group,.well,.list-group-item:first-child {border-radius:1px;box-shadow:0 0 0;}
+.btn {border-color:#f7f7f7; border-radius: 25px;}
+.btn-default,.well {
+  background-color:#cccccc;
+  border-color:#c0c0c0;
+}
+.btn-primary,.label-primary,.list-group-item.active,.list-group-item.active:hover,.list-group-item.active:focus,.btn.active,a.list-group-item.active, a.list-group-item.active:hover, a.list-group-item.active:focus {
+   background-color:#0099CC;
+   border-color:transparent;
+}
+.btn-info,.label-info,.progress-bar-info {
+  background-color:#33b5e5;
+}
+.btn-success,.label-success,.progress-bar-success {
+  background-color:#669900;
+}
+.btn-danger,.label-danger,.progress-bar-danger {
+  background-color:#FF4444;
+}
+.btn-warning,.label-warning,.progress-bar-warning {
+  background-color:#FFBB33;
+  color:#444444;
+}
+.nav-tabs>li>a {
+  border-radius:0;
+}
