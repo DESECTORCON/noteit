@@ -1,7 +1,7 @@
 import os
 from datetime import timedelta
 from flask import Flask, render_template, session, url_for, flash, jsonify
-import random
+import zlib
 from werkzeug.utils import redirect
 from models.notes.note import Note
 from models.messages.message import *
@@ -18,20 +18,6 @@ app = Flask(__name__)
 app.config.from_object('config')
 app.secret_key = '23ncr92yr932c9y20c23jy9803yn489xrr4#$VT@%YBU%UI^IUVYTt2t¥¨¨¨¨˚¶§•˜˜§¢˙£™£¢®∂¢™£©ç∞˙74'
 wsgi_app = app.wsgi_app
-
-random_int = []
-for i in range(100):
-    random_int.append(random.randint(1, 10000))
-    app.secret_key = ''.join(str(random_int))
-#
-#
-# @app.route('/upload', methods=['GET', 'POST'])
-# @require_login
-# def upload():
-#     if request.method == 'POST' and 'media' in request.files:
-#         filename = files.save(request.files['media'])
-#
-#     return redirect(url_for('user_notes'))
 
 
 @app.before_request
