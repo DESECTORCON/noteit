@@ -675,3 +675,11 @@ link {
 button {
 
 }
+
+/* footer styling */
+
+footer {
+  height: 120px;
+  border-top-width: 1px;
+  margin-top:50px;
+}
