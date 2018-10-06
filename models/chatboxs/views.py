@@ -15,10 +15,10 @@ socketio = SocketIO(app)
 
 @chatbox_blueprint.route('/chat/create_chat/<string:default_members>', methods=['POST', 'GET'])
 @user_decorators.require_login
-def create_chatbox(default_members):
+def create_chatbox(default_members_):
     current_user = User.find_by_id(session['_id'])
     user_friends = current_user.get_friends()
-    default_members = ast.literal_eval(default_members)
+    default_members = ast.literal_eval(default_members_)
     if request.method == 'GET':
         if default_members != []:
             default_members_obj = []
