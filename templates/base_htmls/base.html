@@ -73,22 +73,26 @@ $(document).ready(function() {
             <!--<li class="nav-item active"><a href="{{ url_for('users.user_page', user_id=session['email']) }}" class="nav-link"><i class="fas fa-user-circle"></i></a></li>-->
             <!--</ul>-->
 
-            <ul class="nav navbar-nav navbar-right justify-content-end dropdown">
+            <ul class="nav navbar-nav navbar-right justify-content-end dropdown" >
                 <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                     <i class="fas fa-user-circle"></i>
                 </a>
-                <div class="dropdown-menu">
-                    <div class="container">
+                <div class="dropdown-menu" id="notcollapse">
+                    <div class="container" style="">
                         <div class="image_outer_container">
                             <div class="green_icon"></div>
                             <div class="image_inner_container">
-                                <img src="{{ session['pic_path'] }}" alt="IMAGE ERROR">
+                                <img src="{{ session['pic_path'] }}" alt="IMAGE ERROR" style="">
                             </div>
                         </div>
                     </div>
-                    <a class="dropdown-item" href="#">Link 1</a>
-                    <a class="dropdown-item" href="#">Link 2</a>
-                    <a class="dropdown-item" href="#">Link 3</a>
+                    <br>
+                    <div class="container">
+                        <p>{{ session['email'] }}</p>
+                    </div>
+                    <a class="dropdown-item" href="#"><i class="fas fa-sliders-h"></i> My Profile</a>
+                    <a class="dropdown-item" href="#">Friends</a>
+                    <a class="dropdown-item" href="#">Settings</a>
                 </div>
             </ul>
 
@@ -153,8 +157,28 @@ function myTimer() {
     var d = new Date();
     document.getElementById("demo").innerHTML = d.toLocaleTimeString();
 }
+$('#notcollapse').on('click', function(event){
+    var events = $._data(document, 'events') || {};
+    events = events.click || [];
+    for(var i = 0; i < events.length; i++) {
+        if(events[i].selector) {
 
+            //Check if the clicked element matches the event selector
+            if($(event.target).is(events[i].selector)) {
+                events[i].handler.call(event.target, event);
+            }
+
+            // Check if any of the clicked element parents matches the
+            // delegated event selector (Emulating propagation)
+            $(event.target).parents(events[i].selector).each(function(){
+                events[i].handler.call(this, event);
+            });
+        }
+    }
+    event.stopPropagation(); //Always stop propagation
+});
 </script>
+
 
 
         <h7><span class="glyphicon glyphicon-console"></span> Made by <a href="https://www.jetbrains.com/pycharm/">Pycharm</a>
