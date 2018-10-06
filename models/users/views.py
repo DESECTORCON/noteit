@@ -95,6 +95,7 @@ def register_user():
                         user = User.find_by_email(email)
                         session['email'] = email
                         session['_id'] = user._id
+                        session['pic_path'] = url_for('static', filename='img/index.jpg') if user.picture is None else url_for('static', filename=user.picture)
                         session['group_id'] = user.group_id
 
                         return redirect(url_for("home"))
@@ -103,6 +104,7 @@ def register_user():
                         user = User.find_by_email(email)
                         session['email'] = email
                         session['_id'] = user._id
+                        session['pic_path'] = url_for('static', filename='img/index.jpg') if user.picture is None else url_for('static', filename=user.picture)
                         session['group_id'] = user.group_id
 
                         return redirect(url_for("home"))

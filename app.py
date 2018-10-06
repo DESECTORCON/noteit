@@ -1,14 +1,12 @@
 import os
 from datetime import timedelta
 from flask import Flask, render_template, session, url_for, flash, jsonify
-import zlib
 from werkzeug.utils import redirect
 from models.notes.note import Note
 from models.messages.message import *
 import config as config
 from models.users.user import User
 import psutil
-
 
 try:
     os.chdir('static')
@@ -18,7 +16,6 @@ app = Flask(__name__)
 app.config.from_object('config')
 app.secret_key = '23ncr92yr932c9y20c23jy9803yn489xrr4#$VT@%YBU%UI^IUVYTt2t¥¨¨¨¨˚¶§•˜˜§¢˙£™£¢®∂¢™£©ç∞˙74'
 wsgi_app = app.wsgi_app
-
 
 @app.before_request
 def before_request():
