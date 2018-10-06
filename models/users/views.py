@@ -31,6 +31,8 @@ def login_user():
                     session['email'] = email
                     user = User.find_by_email(email)
                     session['_id'] = user._id
+                    session['pic_path'] = url_for('static', filename='img/index.jpg') if user.picture is None else url_for('static', filename=user.picture)
+
                     user.last_logined = datetime.datetime.now()
                     user.save_to_mongo()
                     flash('{ "message":"You were successfully logged in", "type":"success" , "captaion":"User Login", "icon_id": "fas fa-sign-in-alt"}')
@@ -146,10 +148,10 @@ def users_page():
 
             el = Elasticsearch(port=port)
             data = el.search(index='users', doc_type='user', body={
-                                                    "query": {
-                                                        "prefix": {"nick_name": request.form['Search_user']}
-                                                    }
-                                              })
+                "query": {
+                    "prefix": {"nick_name": request.form['Search_user']}
+                }
+            })
             # For debug
             # print(request.form['Search_user'])
             # print(data)
@@ -268,20 +270,20 @@ def add_friend():
 
     users_list = []
     for user in all_users_:
+        try:
+            users_list.append({'url': url_for('static', filename=user.picture), 'user_id': user._id,
+                               "last_logined":user.last_logined,
+                               "nickname": user.nick_name,
+                               "email": user.email})
+
+        except werkzeug.routing.BuildError:
             try:
-                users_list.append({'url': url_for('static', filename=user.picture), 'user_id': user._id,
+                users_list.append({'url': url_for('static', filename='img/index.jpg'), 'user_id': user._id,
                                    "last_logined":user.last_logined,
                                    "nickname": user.nick_name,
                                    "email": user.email})
-
-            except werkzeug.routing.BuildError:
-                try:
-                    users_list.append({'url': url_for('static', filename='img/index.jpg'), 'user_id': user._id,
-                                       "last_logined":user.last_logined,
-                                       "nickname": user.nick_name,
-                                       "email": user.email})
-                except:
-                    raise Exception('File image not exists. server shutdown')
+            except:
+                raise Exception('File image not exists. server shutdown')
 
     if request.method == 'POST':
         current_user.friends.extend(request.form.getlist('users'))
