@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base_style.css') }}">
+
     {% block title %}
 
     {% endblock %}
@@ -68,7 +70,7 @@ $(document).ready(function() {
             </ul>
 
             <!--<ul class="nav navbar-nav navbar-right justify-content-end">-->
-                <!--<li class="nav-item active"><a href="{{ url_for('users.user_page', user_id=session['email']) }}" class="nav-link"><i class="fas fa-user-circle"></i></a></li>-->
+            <!--<li class="nav-item active"><a href="{{ url_for('users.user_page', user_id=session['email']) }}" class="nav-link"><i class="fas fa-user-circle"></i></a></li>-->
             <!--</ul>-->
 
             <ul class="nav navbar-nav navbar-right justify-content-end dropdown">
@@ -76,7 +78,14 @@ $(document).ready(function() {
                     <i class="fas fa-user-circle"></i>
                 </a>
                 <div class="dropdown-menu">
-                    <img src="{{ session['pic_path'] }}" alt="IMAGE ERROR">
+                    <div class="d-flex justify-content-center h-100">
+                        <div class="image_outer_container">
+                            <div class="green_icon"></div>
+                            <div class="image_inner_container">
+                                <img src="{{ session['pic_path'] }}" alt="IMAGE ERROR">
+                            </div>
+                        </div>
+                    </div>
                     <a class="dropdown-item" href="#">Link 1</a>
                     <a class="dropdown-item" href="#">Link 2</a>
                     <a class="dropdown-item" href="#">Link 3</a>
