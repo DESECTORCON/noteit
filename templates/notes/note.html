@@ -118,7 +118,7 @@
 
         {% elif url_['is_pic'] %}
         <div class="column" style="margin: auto;">
-            <img src="{{ url_['url'] }}" alt="" class="rounded mx-auto d-block text-center"  height="100%" width="100%">
+            <img src="{{ url_for('static', filename=url_['filename'], quality=1) }}" alt="" class="rounded mx-auto d-block text-center"  height="100%" width="100%">
             <br>
             <div style="font-size:1.2em; color:Tomato" class="rounded mx-auto d-block">
                 <a href="{{ url_['url'] }}" download="_.{{ url_['extension'] }}" title=""><i class="fas fa-download">{{ url_['filename'] }}</i></a>
