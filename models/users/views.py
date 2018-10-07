@@ -324,3 +324,12 @@ def search_for_above():
         return render_template('users/add_friend.html', all_users=users, form=form, selected=request.form['users'])
     except:
         return render_template('users/add_friend.html', all_users=users, form=form)
+
+
+@user_blueprint.route('/friends')
+def friends_page():
+    current_user = User.find_by_id(session['_id'])
+    friends = []
+    for friend in current_user.friends:
+        friend_ = User.find_by_id(friend)
+
